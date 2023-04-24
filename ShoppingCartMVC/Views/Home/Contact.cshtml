@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <script src=" https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/contactStyle.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+
+</head>
+
+<body>
+    <section class="contact">
+        <div class="content">
+            <h2>Contact Us</h2>
+
+            <p class="text-center w-responsive mx-auto mb-5">
+                Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within
+                a matter of hours to help you.
+            </p>
+        </div>
+
+        <div class="container">
+            <div class="contactInfo">
+
+                <div class="box">
+                    <div class="icon"><i class="fa fa-map-marker-alt" aria-hidden="true"></i></div>
+                    <div class="text">
+                        <h3>Address</h3>
+                        <p>165 Bayview Road,<br />Park Avenue,Durban,<br />4087</p>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="icon"><i class="fa fa-phone" aria-hidden="true"></i></div>
+                    <div class="text">
+                        <h3>Phone</h3>
+                        <p>031-456-2547</p>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="icon"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                    <div class="text">
+                        <h3>Email</h3>
+                        <p>turbomeals123@gmail.com</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="contactForm">
+                <form id="contact-Form" name="contact-form" action="~/mail.php" method="POST">
+
+                    <h2>Get in touch</h2>
+
+                    <div class="inputbox">
+                        <input type="text" id="name" name="name" required="required" />
+                        <span>Full Name</span>
+                    </div>
+
+                    <div class="inputbox">
+                        <input type="text" id="email" name="email" required="required" />
+                        <span>Email</span>
+                    </div>
+
+                    <div class="inputbox">
+                        <input type="text" id="subject" name="subject" required="required" />
+                        <span>Subject</span>
+                    </div>
+
+
+                    <div class="inputbox">
+                        <textarea typeof="text" id="message" name="message" required="required"></textarea>
+                        <span>Type your Message...</span>
+                    </div>
+
+                    <div class="inputbox">
+                        <input type="submit" class="form-control submit" value="Send" />
+
+                    </div>
+
+
+
+                </form>
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</body>
+
+</html>

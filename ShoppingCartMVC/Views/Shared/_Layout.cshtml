@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/animate.css">
+
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="~/css/aos.css">
+
+    <link rel="stylesheet" href="~/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="~/css/jquery.timepicker.css">
+
+
+    <link rel="stylesheet" href="~/css/flaticon.css">
+    <link rel="stylesheet" href="~/css/icomoon.css">
+    <link rel="stylesheet" href="~/css/style.css">
+
+
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            line-height: 1.5;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1170px;
+            margin: auto;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .footer {
+            background-color: #24262b;
+            padding: 70px 0;
+        }
+
+        .footer-col {
+            width: 25%;
+            padding: 0 15px;
+        }
+
+            .footer-col h4 {
+                font-size: 18px;
+                color: #ffffff;
+                text-transform: capitalize;
+                margin-bottom: 35px;
+                font-weight: 500;
+                position: relative;
+            }
+
+                .footer-col h4::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    bottom: -10px;
+                    background-color: rgb(255 106 0);
+                    height: 2px;
+                    box-sizing: border-box;
+                    width: 50px;
+                }
+
+            .footer-col ul li:not(:last-child) {
+                margin-bottom: 10px;
+            }
+
+            .footer-col ul li a {
+                font-size: 16px;
+                text-transform: capitalize;
+                color: #ffffff;
+                text-decoration: none;
+                font-weight: 300;
+                color: #bbbbbb;
+                display: block;
+                transition: all 0.3s ease;
+            }
+
+                .footer-col ul li a:hover {
+                    color: #ffffff;
+                    padding-left: 8px;
+                }
+
+            .footer-col .social-links a {
+                display: inline-block;
+                height: 40px;
+                width: 40px;
+                background-color: rgba(255,255,255,0.2);
+                margin: 0 10px 10px 0;
+                text-align: center;
+                line-height: 40px;
+                border-radius: 50%;
+                color: #ffffff;
+                transition: all 0.5s ease;
+            }
+
+                .footer-col .social-links a:hover {
+                    color: #24262b;
+                    background-color: #ffffff;
+                }
+
+        /responsive/
+        @@media(max-width: 767px) {
+            .footer-col
+
+        {
+            width: 50%;
+            margin-bottom: 30px;
+        }
+
+        }
+
+        @@media(max-width: 574px) {
+            .footer-col {
+                width: 100%;
+            }
+        }
+    </style>
+
+
+
+</head>
+<body>
+
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light sleep" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index","Home")">Turbo Meals</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+
+                    @* User Rights authentication & authorization Rolebase*@
+
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+
+                        <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link">Login</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link">Register</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link">Contact Us</a></li>
+                        if (TempData["cart"] != null)
+                        {
+                            TempData.Keep();
+                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="icon-shopping_cart"></span>[@TempData["item_count"]]</a></li>
+                        }
+
+                    } @if (User.Identity.IsAuthenticated)
+                    {
+
+                        if (User.IsInRole("1"))
+                        {
+
+                            <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Category")">Add Category</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Category")">View Categories</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Products")">Add Product</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Products")">View Products</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="@Url.Action("GetAllUser", "Home")" class="nav-link">Users</a></li>
+                            <li class="nav-item"><a href="@Url.Action("GetAllOrderDetail", "Home")" class="nav-link">Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
+                        }
+                        if (User.IsInRole("2"))
+                        {
+
+                            <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
+                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link">Orders</a></li>
+                            if (TempData["cart"] != null)
+                            {
+                                TempData.Keep();
+                                <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="icon-shopping_cart"></span>[@TempData["item_count"]]</a></li>
+
+                            }
+
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
+                        }
+                    }
+
+
+
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    @*<section class="ftco-section">
+        <div class="container">
+            <div class="row no-gutters ftco-services">
+                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                    <div class="media block-6 services mb-md-0 mb-4">
+                        <div class="icon bg-color-1 active d-flex justify-content-center align-items-center mb-2">
+                            <span class="flaticon-shipped"></span>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="heading">Order</h3>
+                            <span>Order Your Favourite Meal</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                    <div class="media block-6 services mb-md-0 mb-4">
+                        <div class="icon bg-color-2 d-flex justify-content-center align-items-center mb-2">
+                            <span class="flaticon-diet"></span>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="heading">Delivery</h3>
+                            <span>Get Food Delivered Right To Your Doorstep</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                    <div class="media block-6 services mb-md-0 mb-4">
+                        <div class="icon bg-color-3 d-flex justify-content-center align-items-center mb-2">
+                            <span class="flaticon-award"></span>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="heading">Superior Quality</h3>
+                            <span>Get Quality Food The Turbo Way</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate fadeInUp ftco-animated">
+                    <div class="media block-6 services mb-md-0 mb-4">
+                        <div class="icon bg-color-4 d-flex justify-content-center align-items-center mb-2">
+                            <span class="flaticon-customer-service"></span>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="heading">Mission</h3>
+                            <span>Ensuring Customer Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>*@
+
+
+
+    @RenderBody()
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>Restaurant</h4>
+                    <ul>
+                        <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                        <li><a href="@Url.Action("Index","Home")">Menu</a></li>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Reviews</a></li>
+                        <li><a href="@Url.Action("Login","Account")">Login</a></li>
+                        <li><a href="@Url.Action("Register", "Account")">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Get Help</h4>
+                    <ul>
+                        <li><a href="@Url.Action("Contact", "Home")">Contact us</a></li>
+                        <li><a href="@Url.Action("Login","Account")">Order</a></li>
+                        <li><a href="#">Payment</a></li>
+                        <li><a href="#">Delivery</a></li>
+                        <li><a href="#">payment options</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Online Menu</h4>
+                    <ul>
+                        <li><a href="#">Burgers</a></li>
+                        <li><a href="#">Wraps and Pita's'</a></li>
+                        <li><a href="#">Pizzas</a></li>
+                        <li><a href="#">Tasty Treats</a></li>
+                        <li><a href="#">Cold Beverages</a></li>
+                        <li><a href="#">Hot Beverages</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+    <!-- footer links -->
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.easing.1.3.js"></script>
+    <script src="~/js/jquery.waypoints.min.js"></script>
+    <script src="~/js/jquery.stellar.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/aos.js"></script>
+    <script src="~/js/jquery.animateNumber.min.js"></script>
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <script src="~/js/scrollax.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="~/js/google-map.js"></script>
+    <script src="~/js/main.js"></script>
+</body>
+</html>
