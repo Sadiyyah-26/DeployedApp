@@ -185,6 +185,7 @@
     <Content Include="css\css\bootstrap-reboot.css" />
     <Content Include="css\css\mixins\_text-hide.css" />
     <Content Include="css\flaticon.css" />
+    <Content Include="css\HomeStyle.css" />
     <Content Include="css\icomoon.css" />
     <Content Include="css\ionicons.min.css" />
     <Content Include="css\jquery.timepicker.css" />
@@ -197,6 +198,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\contactBG.jpg" />
+    <Content Include="Images\HomepageBD.png" />
     <Content Include="Images\LogoW2.jpg" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
@@ -215,6 +217,7 @@
     <Content Include="js\popper.min.js" />
     <Content Include="js\range.js" />
     <Content Include="js\scrollax.min.js" />
+    <Content Include="mail.php" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -270,7 +273,6 @@
     <Content Include="Views\Home\Single.cshtml" />
     <Content Include="Views\Home\Success.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\mail.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
