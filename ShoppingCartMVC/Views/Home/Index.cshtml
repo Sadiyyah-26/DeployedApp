@@ -1,76 +1,113 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblProduct>
-<section class="ftco-section">
-    <div class="container">
-        <div class="row justify-content-center mb-3 pb-3">
-            <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
-                <span class="subheading">Featured Meals</span>
-                <h2 class="mb-4">Menu</h2>
-                <p>
-                    A fast-food restaurant that provides delectable hot and cold delicacies in a snap without
-                    compromising on taste, quality or quantity.
-                </p>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AboutusPage</title>
+    <link href="~/css/HomeStyle.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <section class="header">
+        <div class="main">
+            <div class="men_text">
+                <h1>Get Fresh<span>Food</span><br>the Turbo Way</h1>
             </div>
         </div>
-    </div>
-    <script src="~/js/jquery.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
+        <p>
+            Get ready for an authentic experience from our fast-food restaurant providing you with turbo meals right at your doortep.
+            Whether you sitting in at our restaurant or eating out, we got you covered.
+        </p>
 
-            $("#searchBox").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#result .col-md-6").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        <div class="main_btn">
+            <a href="#">Order Now</a>
+            <i class="fa-solid fa-angle-right"></i>
+        </div>
+    </section>
+    <br />
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center mb-3 pb-3">
+                <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
+                    <span class="subheading">Featured Meals</span>
+                    <h2 class="mb-4">Menu</h2>
+                    <p>
+                        A fast-food restaurant that provides delectable hot and cold delicacies in a snap without
+                        compromising on taste, quality or quantity.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script src="~/js/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                $("#searchBox").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#result .col-md-6").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
                 });
             });
-        });
-    </script>
-    <div class="container">
-        <div class="form-group">
-            <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
-        </div>
+        </script>
+        <div class="container">
+            <div class="form-group">
+                <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+            </div>
 
-        <div class="row" id="result">
-
+            <div class="row" id="result">
 
 
-            @foreach (var item in Model)
-            {
+
+                @foreach (var item in Model)
+                {
 
 
-                <div class="col-md-6 col-lg-3 ftco-animate fadeInUp ftco-animated">
-                    <div class="product">
-                        <a href="@Url.Action("AddtoCart", "Home", new { id = @item.ProID })" class="img-prod">
-                            <img class="img-fluid" src="~/Uploads/@item.Image" style="height:250px" alt="Colorlib Template">
-                            
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
+                    <div class="col-md-6 col-lg-3 ftco-animate fadeInUp ftco-animated">
+                        <div class="product">
+                            <a href="@Url.Action("AddtoCart", "Home", new { id = @item.ProID })" class="img-prod">
+                                <img class="img-fluid" src="~/Uploads/@item.Image" style="height:250px" alt="Colorlib Template">
 
-                            <h3><a href="#">@item.Name</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span class="mr-2 price-dc">Rs.00</span><span class="price-sale">Rs.@item.Unit</span></p>
+                                <div class="overlay"></div>
+                            </a>
+                            <div class="text py-3 pb-4 px-3 text-center">
+
+                                <h3><a href="#">@item.Name</a></h3>
+                                <div class="d-flex">
+                                    <div class="pricing">
+                                        <p class="price"><span class="mr-2 price-dc">Rs.00</span><span class="price-sale">Rs.@item.Unit</span></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center ">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
+                                <div class="bottom-area d-flex px-3">
+                                    <div class="m-auto d-flex">
+                                        <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
+                                            <span><i class="ion-ios-menu"></i></span>
+                                        </a>
+                                        <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
+                                            <span><i class="ion-ios-cart"></i></span>
+                                        </a>
+                                        <a href="#" class="heart d-flex justify-content-center align-items-center ">
+                                            <span><i class="ion-ios-heart"></i></span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
-    </div>
-    </div>
-</section>
+    </section>
+    </body>
+</html>
