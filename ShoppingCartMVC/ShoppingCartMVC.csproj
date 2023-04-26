@@ -197,6 +197,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\burger.jpg" />
     <Content Include="Images\contactBG.jpg" />
     <Content Include="Images\HomepageBD.png" />
     <Content Include="Images\LogoW2.jpg" />
