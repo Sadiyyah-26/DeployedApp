@@ -270,5 +270,10 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
+        public ActionResult ThankYou()
+        {
+            return View();
+        }
+
     }
 }

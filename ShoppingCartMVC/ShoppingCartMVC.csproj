@@ -274,6 +274,7 @@
     <Content Include="Views\Home\Single.cshtml" />
     <Content Include="Views\Home\Success.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\ThankYou.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
