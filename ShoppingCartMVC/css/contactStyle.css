@@ -147,7 +147,7 @@ body {
         transform: translateY(-20px);
     }
 
-    .contactForm .inputbox input[type="submit"]
+    .contactForm .inputbox button
     {
         width:100px;
         background:#00bcd4;
