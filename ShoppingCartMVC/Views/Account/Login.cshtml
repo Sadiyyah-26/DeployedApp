@@ -1,33 +1,62 @@
 ﻿@model ShoppingCartMVC.Models.tblUser
 
+<!DOCTYPE html>
+<html lang="en">
 
-@using (Html.BeginForm())
-{
-    <div class="container">
-        <h2>Login</h2>
-        <div class="row">
-            <div class="col-lg-4">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/css/css/Login.css" rel="stylesheet" />
+    <title>AboutusPage</title>
+    </head>
+<body>
 
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    @using (Html.BeginForm())
+    {
+        <div class="container">
+            <h2>Login</h2>
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="~/Images/LoginPic.png" />
 
-                <form class="bg-white p-5 contact-form">
-                    <div class="form-group">
-                        <span>Email:</span>
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        <span>Password:</span>
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                    </div>
+                    <form class="bg-white p-5 contact-form">
+                        <div class="form-group">
+                            <br />
+                            <span>Email:</span>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <span>Password:</span>
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
+                        </div>
+                    </form>
+                    <h3 style="color:red;">@TempData["msg"]</h3>
 
-                    <div class="form-group">
-                        <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
-                    </div>
-                </form>
-                <h3 style="color:red;">@TempData["msg"]</h3>
+                </div>
 
             </div>
 
         </div>
-
-    </div>
-}
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    }
+</body>
+</html>
