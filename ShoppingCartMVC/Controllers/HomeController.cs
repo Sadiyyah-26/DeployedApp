@@ -275,5 +275,19 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
+        public ActionResult About()
+        {
+            return View();
+        }
+
+        public ActionResult Reviews()
+        {
+            return View();
+        }
+
+        public ActionResult Turbo_Deals()
+        {
+            return View();
+        }
     }
 }
