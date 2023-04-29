@@ -6,35 +6,72 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AboutusPage</title>
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+  
+    <style>
+        .fcc-btn
+        {
+        margin-top: 1rem;
+        display: inline-block;
+        font-size: 13px;
+        color: white;
+        background: #ff6a00;
+        border-radius: .4rem;
+        cursor: pointer;
+        padding: .3rem 2rem;
+        }
+        
+
+        .fcc-btn:hover 
+        {
+            background-color: #000000;
+            color:white;
+        }
+    </style>
 </head>
 <body>
-
 
     <section class="header">
         <div class="main">
             <div class="men_text">
+                <img src="~/Images/LogoPlain.png" width="230" height="240" />
                 <h1>Get Fresh<span>Food</span><br>the Turbo Way</h1>
             </div>
         </div>
 
         <p>
-            Get ready for an authentic experience from our fast-food restaurant providing you with turbo meals right at your doortep.
-            Whether you sitting in at our restaurant or eating out, we got you covered.
+            Get ready for an authentic experience from our fast-food restaurant providing you with turbo meals right at your doorstep
         </p>
 
         <div class="main_btn">
-            <a href="#">Order Now</a>
+            <a href="#">&nbsp;&nbsp;Order Now</a>
             <i class="fa-solid fa-angle-right"></i>
         </div>
+        <br />
+        <div class="main_btn">
+            <a href="#video" onclick="openFullscreen();">&nbsp; Watch Video</a>
+        </div>
+
+        <video width="0" controls id="myvideo">
+            <source src="~/Images/TurboVideo.mp4" type="video/mp4" />
+        </video>
+
+
     </section>
     <br />
+
+
+
+
+
+
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center mb-3 pb-3">
@@ -48,6 +85,7 @@
                 </div>
             </div>
         </div>
+
         <script src="~/js/jquery.min.js"></script>
 
         <script>
@@ -76,8 +114,8 @@
 
                     <div class="col-md-6 col-lg-3 ftco-animate fadeInUp ftco-animated">
                         <div class="product">
-                            <a href="@Url.Action("AddtoCart", "Home", new { id = @item.ProID })" class="img-prod">
-                                <img class="img-fluid" src="~/Uploads/@item.Image" style="height:250px" alt="Colorlib Template">
+                            <a class="fcc-btn"href="@Url.Action("AddtoCart", "Home", new { id = @item.ProID })">Add to cart
+                                <img class="img-fluid" src="~/Uploads/@item.Image" style="height:250px" alt="">
 
                                 <div class="overlay"></div>
                             </a>
@@ -108,6 +146,63 @@
                 }
             </div>
         </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <br />
     </section>
-    </body>
+
+
+    <script>
+
+        var elem = document.getElementById("myvideo");
+
+        /* Function to open fullscreen mode */
+        function openFullscreen() {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+
+
+    </script>
+
+</body>
 </html>

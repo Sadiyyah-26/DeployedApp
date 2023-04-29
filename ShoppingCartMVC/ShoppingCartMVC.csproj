@@ -183,7 +183,11 @@
     <Content Include="css\bootstrap\bootstrap-reboot.css" />
     <Content Include="css\contactStyle.css" />
     <Content Include="css\css\bootstrap-reboot.css" />
+    <Content Include="css\css\Login.css" />
     <Content Include="css\css\mixins\_text-hide.css" />
+    <Content Include="css\css\Registration.css" />
+    <Content Include="css\css\Reviews.css" />
+    <Content Include="css\css\SlideshowStyle.css" />
     <Content Include="css\flaticon.css" />
     <Content Include="css\HomeStyle.css" />
     <Content Include="css\icomoon.css" />
@@ -197,10 +201,23 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\b.jpg" />
+    <Content Include="Images\bd.jpg" />
     <Content Include="Images\burger.jpg" />
     <Content Include="Images\contactBG.jpg" />
+    <Content Include="Images\contactEdited.png" />
+    <Content Include="Images\edit.png" />
+    <Content Include="Images\edit6.png" />
     <Content Include="Images\HomepageBD.png" />
+    <Content Include="Images\LoginPic.png" />
+    <Content Include="Images\LogoPlain.png" />
+    <Content Include="Images\LogoW.png" />
     <Content Include="Images\LogoW2.jpg" />
+    <Content Include="Images\Menu.png" />
+    <Content Include="Images\nando-s-perinaise-burger.jpg" />
+    <Content Include="Images\p.jpg" />
+    <Content Include="Images\Reg.png" />
+    <Content Include="Images\TurboVideo.mp4" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
     <Content Include="js\bootstrap.min.js" />
@@ -275,6 +292,9 @@
     <Content Include="Views\Home\Success.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\ThankYou.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Reviews.cshtml" />
+    <Content Include="Views\Home\Turbo_Deals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

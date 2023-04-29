@@ -9,22 +9,32 @@
 
 
 
-body p {
+body p 
+
+{
     width: 400px;
     text-align: justify;
     position: relative;
-    margin-left: 80px;
-    bottom: -170px;
+    margin-left: 100px;
+    bottom: -120px;
     line-height: 22px;
     color: white;
+
+}
+
+
+img {
+    margin-top: -42px;
+    margin-left: 1300px;
+    position:absolute;
 }
 
 body .main_btn {
     background-color: #ff6a00;
     position: relative;
-    left: 95px;
+    left: 85px;
     border-radius: 23px;
-    bottom: -200px;
+    bottom: -145px;
     width: 150px;
     cursor: pointer;
     padding: .6rem 1rem;
@@ -51,7 +61,7 @@ body .main_btn {
 body .main .men_text h1 {
     font-size: 50px;
     position: relative;
-    top: 150px;
+    top: 100px;
     margin-left: 100px;
     color: white;
 }

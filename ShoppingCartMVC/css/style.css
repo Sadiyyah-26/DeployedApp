@@ -4,6 +4,9 @@
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+
+
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -3714,7 +3717,7 @@ input[type="button"].btn-block {
     -ms-flex-preferred-size: auto;
     flex-basis: auto; }
   .navbar-expand .navbar-toggler {
-    display: none; }
+    display: none; }navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light sleep
 
 .navbar-light .navbar-brand {
   color: rgba(0, 0, 0, 0.9); }
