@@ -197,6 +197,7 @@
     <Content Include="css\open-iconic-bootstrap.min.css" />
     <Content Include="css\owl.carousel.min.css" />
     <Content Include="css\owl.theme.default.min.css" />
+    <Content Include="css\SlideshowStyle.css" />
     <Content Include="css\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -235,7 +236,6 @@
     <Content Include="js\popper.min.js" />
     <Content Include="js\range.js" />
     <Content Include="js\scrollax.min.js" />
-    <Content Include="mail.php" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
