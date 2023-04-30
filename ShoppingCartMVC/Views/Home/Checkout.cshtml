@@ -1,4 +1,8 @@
 ﻿@*showing cart item with conditions*@
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <div class="container">
     @if (TempData["total"] == null)
     {
@@ -32,7 +36,7 @@
 
 
                                 <tr class="text-center">
-                                    <td class="product-remove"><a href="@Url.Action("remove", "Home", new { id = item.proid })"><span class="ion-ios-close"></span></a></td>
+                                    <td class="product-remove"><a href="@Url.Action("remove", "Home", new { id = item.proid })"><span class="fa fa-remove fa-1x"></span></a></td>
                                     <td class="product-name">
                                         <h3>@item.proid</h3>
                                     </td>
@@ -42,13 +46,13 @@
 
                                     </td>
 
-                                    <td class="price">@item.price</td>
+                                    <td class="price">R @item.price</td>
 
                                     <td class="quantity">
                                         @item.qty
                                     </td>
 
-                                    <td class="total">Rs.@item.bill</td>
+                                    <td class="total">R @item.bill</td>
                                 </tr><!-- END TR-->
                             }
 
@@ -69,7 +73,7 @@
                     <hr>
                     <p class="d-flex total-price">
                         <span>Total</span>
-                        <span>Rs.@TempData["total"]</span>
+                        <span>R @TempData["total"]</span>
                     </p>
                 </div>
 
