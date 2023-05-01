@@ -149,6 +149,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
+    <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
     <Compile Include="Models\tblCategory.cs" />
     <Compile Include="Models\tblInvoice.cs" />

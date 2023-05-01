@@ -1,13 +1,14 @@
 ﻿@*showing cart item with conditions*@
 
 <head>
+    <title>Checkout</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <div class="container">
     @if (TempData["total"] == null)
     {
         <h1>cart is empty</h1>
-        <a href="@Url.Action("Index","Home")">go back</a>
+        <a href="@Url.Action("Index","Home")">Go Back</a>
     }
     else
     {
@@ -88,8 +89,8 @@
 
     @if (!User.Identity.IsAuthenticated)
     {
-        <a href="@Url.Action("Login","Account")" class="btn btn-primary py-3 px-4">Login</a>
-        <a href="@Url.Action("Register","Account")" class="btn btn-primary py-3 px-4">Register</a>
+        <a href="@Url.Action("Login","Account")" class="btn btn-primary py-3 px-4"><span class="fa fa-sign-in"></span> Login</a>
+        <a href="@Url.Action("Register","Account")" class="btn btn-primary py-3 px-4"><span class="fa fa-registered"></span> Register</a>
     }
 
     @if (User.Identity.IsAuthenticated)

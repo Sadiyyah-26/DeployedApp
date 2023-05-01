@@ -56,7 +56,7 @@ namespace ShoppingCartMVC.Controllers
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
             Cart c = new Cart();
             c.proid = id;
-            c.proname = p.Name;
+            c.proname = p.P_Name;
             c.price = Convert.ToInt32(p.Unit);
             c.qty = Convert.ToInt32(qty);
             c.bill = c.price * c.qty;
@@ -253,8 +253,57 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult Invoice(int id)
         {
-            var query = db.tblInvoices.Where(m => m.InvoiceId == id).ToList();
-            return View(query);
+            List<InvoiceVM> InvceVMList = new List<InvoiceVM>();
+
+            var invList = (from o in db.tblOrders
+                           join i in db.tblInvoices on o.InvoiceId equals i.InvoiceId
+                           join u in db.tblUsers on i.UserId equals u.UserId
+                           join pr in db.tblProducts on o.ProID equals pr.ProID
+                           select new
+                           {
+                               i.InvoiceId,
+                               i.InvoiceDate,
+                               u.Name,
+                               o.Address,
+                               o.Contact,
+                               pr.P_Name,
+                               o.Qty,
+                               o.Unit,
+                               o.Total
+
+
+                           }).ToList();
+
+
+
+
+            foreach (var pro in invList)
+            {
+
+                if (pro.InvoiceId == id)
+                {
+                   
+                    InvoiceVM objVM = new InvoiceVM();
+                    objVM.InvoiceID = pro.InvoiceId;
+                    objVM.InvoiceDate = pro.InvoiceDate;
+                    objVM.Name = pro.Name;
+                    objVM.Address = pro.Address;
+                    objVM.Contact = pro.Contact;
+                    objVM.Item = pro.P_Name;
+                    objVM.Qty = pro.Qty;
+                    objVM.Unit = pro.Unit;
+                    objVM.Amount = pro.Total;
+                    objVM.TotalAmount = pro.Total;
+                    InvceVMList.Add(objVM);
+                }
+            }
+
+
+            // ViewData["count"] = count;
+
+            return View(InvceVMList);
+
+            // return View(query);
         }
 
         #endregion

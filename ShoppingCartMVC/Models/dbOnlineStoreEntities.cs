@@ -17,7 +17,7 @@ namespace ShoppingCartMVC.Models
         public virtual DbSet<tblOrder> tblOrders { get; set; }
         public virtual DbSet<tblProduct> tblProducts { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
-      
+        public virtual DbSet<InvoiceVM> tblInvoiceVM { get; set; }
     }
 }
 

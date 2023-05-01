@@ -163,17 +163,17 @@
                     @if (!User.Identity.IsAuthenticated)
                     {
 
-                        <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link">Home</a></li>
-                        <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link">About us</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link">Turbo_Deals</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link">Login</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link">Register</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link">Reviews</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link">Contact Us</a></li>
+                        <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link"><span class="fa fa-home"></span>Home</a></li>
+                        <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fa fa-info-circle"></span>About us</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fa fa-tags"></span>Turbo_Deals</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fa fa-sign-in"></span>Login</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link"><span class="fa fa-registered"></span>Register</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fa fa-pencil"></span>Reviews</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Contact Us</a></li>
                         if (TempData["cart"] != null)
                         {
                             TempData.Keep();
-                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="fa fa-shopping-cart fa-2x"></span>[@TempData["item_count"]]</a></li>
+                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="fa fa-shopping-cart fa-1x"></span>[@TempData["item_count"]]</a></li>
                         }
 
                     } @if (User.Identity.IsAuthenticated)
@@ -197,23 +197,23 @@
                                     <a class="dropdown-item" href="@Url.Action("Index", "Products")">View Products</a>
                                 </div>
                             </li>
-                            <li class="nav-item"><a href="@Url.Action("GetAllUser", "Home")" class="nav-link">Users</a></li>
-                            <li class="nav-item"><a href="@Url.Action("GetAllOrderDetail", "Home")" class="nav-link">Orders</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("GetAllUser", "Home")" class="nav-link"><span class="fa fa-users"></span>Users</a></li>
+                            <li class="nav-item"><a href="@Url.Action("GetAllOrderDetail", "Home")" class="nav-link"><span class="fa fa-list"></span>Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
                         }
                         if (User.IsInRole("2"))
                         {
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link">Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>My Orders</a></li>
                             if (TempData["cart"] != null)
                             {
                                 TempData.Keep();
-                                <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="icon-shopping_cart"></span>[@TempData["item_count"]]</a></li>
+                                <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="fa fa-shopping-cart fa-1x"></span>[@TempData["item_count"]]</a></li>
 
                             }
 
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
                         }
                     }
 
