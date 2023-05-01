@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no" />
-
+    <title> Turbo Deals</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"></script>
@@ -12,43 +12,30 @@
 
     <link rel="stylesheet" href="~/css/SlideshowStyle.css" />
 
+    
     <style>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .text-uppercase {
+            color: white;
         }
 
-        .main {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .fw-bolder {
+            color: white;
         }
 
-        .head {
-            text-align: center;
-        }
+        .carousel-inner{overflow:visible;}
 
-        .h_1 {
-            font-size: 30px;
-            font-weight: bolder;
+        .carousel-inner>.td-item{
+            -webkit-transition:0s !important;
+            -o-transition:0s !important;
+            /*transition:0s !important;*/
         }
-
-        .h_2 {
-            font-weight: 600;
-            font-size: 17px;
-        }
-
-        .h_1 span {
-            color: #ff4732;
-        }
-    </style>
+        </style>
+    
 </head>
 
 <body>
+    
     <div id="deals-carousel" class="carousel slide" data-bs-ride="carousel">
 
         <div class="carousel-indicators">
@@ -77,8 +64,10 @@
                 <img src="~/Images/bd.jpg" class="d-block w-100 td-img" alt="Slide 2">
 
                 <div class="carousel-caption top-0 d-none d-md-block">
-                    <h2 class="fs-3 text-uppercase">Chicken Burger + Chips + Coke</h2>
-                    <h1 class="fw-bolder">R80.00</h1>
+                    
+                        <h2 class="fs-3 text-uppercase">Chicken Burger + Chips + Coke</h2>
+                        <h1 class="fw-bolder">R80.00</h1>
+                    
                     <button class="btn btn-primary"> <i class="fas fa-cart-plus"></i> Get Offer</button>
                 </div>
 
@@ -119,6 +108,6 @@
         </button>
 
     </div>
-
+    
 </body>
 </html>

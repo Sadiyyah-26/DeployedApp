@@ -48,7 +48,7 @@ namespace ShoppingCartMVC.Controllers
 
 
                 tblProduct pro = new tblProduct();
-                pro.Name = p.Name;
+                pro.P_Name = p.P_Name;
                 pro.Description = p.Description;
                 pro.Unit = p.Unit;
                 pro.Image = Image.FileName.ToString();
