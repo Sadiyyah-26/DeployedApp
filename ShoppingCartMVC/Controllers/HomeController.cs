@@ -18,7 +18,7 @@ namespace ShoppingCartMVC.Controllers
 
         #region home page in showing all products 
 
-        public ActionResult Index()
+        public ActionResult Menu()
         {
 
             if (TempData["cart"] != null)
@@ -90,7 +90,7 @@ namespace ShoppingCartMVC.Controllers
 
             TempData.Keep();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Menu");
         }
 
         #endregion
@@ -118,7 +118,7 @@ namespace ShoppingCartMVC.Controllers
 
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Menu");
         }
         #endregion
 
@@ -338,5 +338,12 @@ namespace ShoppingCartMVC.Controllers
         {
             return View();
         }
+
+        public ActionResult HomePage()
+        {
+            return View();
+        }
+
+
     }
 }
