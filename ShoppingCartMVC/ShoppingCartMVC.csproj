@@ -203,6 +203,17 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\1.png" />
+    <Content Include="Images\2.png" />
+    <Content Include="Images\3.png" />
+    <Content Include="Images\4.png" />
+    <Content Include="Images\48c2axrl.png" />
+    <Content Include="Images\5.png" />
+    <Content Include="Images\6.png" />
+    <Content Include="Images\7.png" />
+    <Content Include="Images\8.png" />
+    <Content Include="Images\9.png" />
+    <Content Include="Images\AboutBanner.jpg" />
     <Content Include="Images\b.jpg" />
     <Content Include="Images\bd.jpg" />
     <Content Include="Images\burger.jpg" />
@@ -217,9 +228,11 @@
     <Content Include="Images\LogoW2.jpg" />
     <Content Include="Images\Menu.png" />
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
+    <Content Include="Images\OIP %281%29.jpg" />
     <Content Include="Images\p.jpg" />
     <Content Include="Images\Reg.png" />
-    <Content Include="Images\TurboVideo.mp4" />
+    <Content Include="Images\Test_Banner.png" />
+    <Content Include="Images\TurboVideoShort.mp4" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
     <Content Include="js\bootstrap.min.js" />
@@ -273,7 +286,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
@@ -296,6 +309,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Reviews.cshtml" />
     <Content Include="Views\Home\Turbo_Deals.cshtml" />
+    <Content Include="Views\Home\HomePage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

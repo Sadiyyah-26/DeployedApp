@@ -5,6 +5,8 @@
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> @*new link for cart icon*@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+
 
     <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="~/css/animate.css">
@@ -123,15 +125,12 @@
                     background-color: #ffffff;
                 }
 
-        /responsive/
+
         @@media(max-width: 767px) {
-            .footer-col
-
-        {
-            width: 50%;
-            margin-bottom: 30px;
-        }
-
+            .footer-col {
+                width: 50%;
+                margin-bottom: 30px;
+            }
         }
 
         @@media(max-width: 574px) {
@@ -150,7 +149,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light sleep" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" href="@Url.Action("Index","Home")">Turbo Meals</a>
+            <a class="navbar-brand" href="@Url.Action("HomePage","Home")"><span class="fa fa-home"></span>Turbo Meals</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
@@ -163,12 +162,12 @@
                     @if (!User.Identity.IsAuthenticated)
                     {
 
-                        <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link"><span class="fa fa-home"></span>Home</a></li>
+                        <li class="nav-item active"><a href="@Url.Action("Menu","Home")" class="nav-link"><span class="fa fa-shopping-bag"></span>Menu</a></li>
                         <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fa fa-info-circle"></span>About us</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fa fa-tags"></span>Turbo_Deals</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fa fa-sign-in"></span>Login</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fa fa-tags"></span>Turbo Deals</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fa fa-users"></span>Login</a></li>
                         <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link"><span class="fa fa-registered"></span>Register</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fa fa-pencil"></span>Reviews</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fa fa-star"></span>Reviews</a></li>
                         <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Contact Us</a></li>
                         if (TempData["cart"] != null)
                         {
@@ -289,8 +288,8 @@
                 <div class="footer-col">
                     <h4>Restaurant</h4>
                     <ul>
-                        <li><a href="@Url.Action("Index","Home")">Home</a></li>
-                        <li><a href="@Url.Action("Index","Home")">Menu</a></li>
+                        <li><a href="@Url.Action("HomePage","Home")">Home</a></li>
+                        <li><a href="@Url.Action("Menu","Home")">Menu</a></li>
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Reviews</a></li>
                         <li><a href="@Url.Action("Login","Account")">Login</a></li>
@@ -322,7 +321,7 @@
                     <h4>Follow us</h4>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/turbo.meals/"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
