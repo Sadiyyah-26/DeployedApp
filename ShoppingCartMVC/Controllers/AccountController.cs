@@ -60,14 +60,14 @@ namespace ShoppingCartMVC.Controllers
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Menu", "Home");
                 }
                 else if (query.RoleType == 2)
                 {
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Menu", "Home");
                 }
 
             }
@@ -86,7 +86,7 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult Signout()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Menu", "Home");
         }
 
         #endregion
