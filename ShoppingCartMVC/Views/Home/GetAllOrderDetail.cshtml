@@ -17,19 +17,30 @@
 
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.TblUser.Name)
+                Order ID
+            </th>
+            <th>
+                Customer
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.Bill)
+                Total
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.Payment)
+                Pay Method
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.InvoiceDate)
+                Payment Status
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TblInvoice.DC_Method) 
             </th>
 
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+
+            <th>Order Status</th>
             <th>Action</th>
             <th></th>
         </tr>
@@ -37,6 +48,9 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.OrderId)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TblInvoice.TblUser.Name)
                     </td>
@@ -48,19 +62,74 @@
                         @Html.DisplayFor(modelItem => item.TblInvoice.Payment)
                     </td>
                     <td>
+                        @if (item.TblInvoice.Payment_Status == "Paid")
+                        {
+                            <span class="badge badge-success">Paid</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-warning">Pending</span>
+                        }
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TblInvoice.DC_Method)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.TblInvoice.InvoiceDate)
                     </td>
 
 
                     <td>
-                        @if (item.TblInvoice.Status == 1)
+                        @if (item.TblInvoice.Status == "Order Placed")
                         {
-                            <span class="btn btn-success">Approved</span>
+
+                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-dark">Order Placed</a>
+                        }
+                        else if (item.TblInvoice.Status == "Out for Delivery")
+                        {
+                            <span class="btn btn-warning">Out for Delivery</span>
+                        }
+                        else if (item.TblInvoice.Status == "Order Delivered")
+                        {
+                            <span class="btn btn-success">Delivered</span>
+                        }
+                        else if (item.TblInvoice.Status == "Ready for Collection")
+                        {
+                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-warning">Ready for Collection</a>
+                        }
+                        else if (item.TblInvoice.Status == "Order Collected")
+                        {
+                            <span class="btn btn-success">Collected</span>
+                        }
+
+                    </td>
+                   
+                    <td>
+                        @if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Order Placed"))
+                        {
+                            <a href="@Url.Action("AssignDriver","Home", new { OrderId = item.OrderId })" class="btn btn-info">Assign Driver</a>
+
+
+                        }
+                        else if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Out for Delivery"))
+                        {
+                            <span class="btn btn-warning">Driver Dispatched</span>
+                        }
+                        else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Order Placed"))
+                        {
+                            <span class="btn btn-info">Collection</span>
+
+                        }
+                        else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Ready for Collection"))
+                        {
+                            <span class="btn btn-warning">Collection</span>
                         }
                         else
                         {
-                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-info">Pending</a>
+                            <span class="btn btn-success">Complete</span>
                         }
+
                     </td>
 
                 </tr>

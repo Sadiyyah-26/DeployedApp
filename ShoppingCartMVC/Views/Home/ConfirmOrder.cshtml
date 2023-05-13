@@ -1,21 +1,34 @@
 ﻿@model ShoppingCartMVC.Models.tblOrder
+
 <head>
-    <title>Order Received</title>
+    <title>Update Customer Order Status</title>
 </head>
-
-
 
 @using (Html.BeginForm())
 {
     <div>
-        <p style="text-align:center;">Invoice ID: @Html.EditorFor(model => Model.TblInvoice.InvoiceId)</p>
+        <p style="text-align:center;">Order ID: @Html.DisplayFor(model => Model.OrderId)</p>
 
-        <p style="text-align:center;">UserID: @Html.EditorFor(model => Model.TblInvoice.UserId)</p>
-        <p style="text-align:center;">Payment Method: @Html.EditorFor(model => model.TblInvoice.Payment)</p>
+        <p style="text-align:center;">User: @Html.DisplayFor(model => Model.TblInvoice.TblUser.Name)</p>
+        <p style="text-align:center;">Payment Method: @Html.DisplayFor(model => model.TblInvoice.Payment)</p>
+        <p style="text-align:center;"> Order: @Html.DisplayFor(model => model.TblProduct.P_Name) x @Html.DisplayFor(model => model.Qty)</p>
+        <p style="text-align:center;">Bill: R @Html.DisplayFor(model => model.TblInvoice.Bill).00</p>
+        <p style="text-align:center;">Order Date: @Html.DisplayFor(model => model.OrderDate)</p>
 
-        <p style="text-align:center;">Bill: @Html.EditorFor(model => model.TblInvoice.Bill)</p>
-        <p style="text-align:center;">Date: @Html.EditorFor(model => model.TblInvoice.InvoiceDate)</p>
+        <div class="card col-lg-3 grid-margin mx-auto">
+            <div class="card-body">
+                <p style="text-align:center;">Update User Status:</p>
+                <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
 
+                <br />
+                <input style="text-align: center;" type="radio" name="Status" value="Ready for Collection" /><label>&ensp; Ready for Collection</label>
+                <br />
+                <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
+                <br />
+            </div>
+        </div>
+
+        <br />
         <p style="text-align:center;"><input type="submit" value="Confirm Order" class="btn btn-success" /></p>
     </div>
 

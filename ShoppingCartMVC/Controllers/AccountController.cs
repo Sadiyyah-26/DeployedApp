@@ -42,7 +42,7 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region user login
+        #region User Login
 
         public ActionResult Login()
         {
@@ -63,6 +63,13 @@ namespace ShoppingCartMVC.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 else if (query.RoleType == 2)
+                {
+                    Session["uid"] = query.UserId;
+                    FormsAuthentication.SetAuthCookie(query.Email, false);
+                    Session["User"] = query.Name;
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (query.RoleType == 3)
                 {
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);

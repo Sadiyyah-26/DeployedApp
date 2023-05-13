@@ -1,0 +1,22 @@
+﻿@model ShoppingCartMVC.Models.Drivers
+
+<head>
+    <title>Driver Delivery Assignment</title>
+</head>
+
+<h2>Assign Driver</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+
+        <p style="text-align:center;">Order ID: @TempData["OrderID"]</p>
+        <p style="text-align:center">Delivery Address: @TempData["Address"] </p>
+        <p style="text-align:center;">Order Date: @TempData["OrderDate"]</p>
+        <p style="text-align:center;">Select Driver :  @Html.DropDownListFor(m => m.UserId, @ViewData["UserId"] as IEnumerable<SelectListItem>, "--Choose Driver--") </p>
+        <p style="text-align:center;"><input type="submit" value="Dispatch Driver" class="btn btn-success" /></p>
+        <br />
+
+    </div>
+}
+

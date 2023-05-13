@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.Drivers>
+
+<head>
+    <title>Delivery Orders</title>
+</head>
+
+<table class="table">
+    <tr>
+
+        <th>  Order ID </th>
+        <th> Customer Name </th>
+        <th> Delivery Address </th>
+        <th> Order Date</th>
+        <th> Delivery Details</th>
+        <th>Delivery Status</th>
+
+    </tr>
+
+    @foreach (var order in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(m => order.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(m => order.TblOrder.TblInvoice.TblUser.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(m => order.DeliveryAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(m => order.OrderDate)
+            </td>
+
+            <td>
+                <a href="@Url.Action("DeliveryDetails","Home", new { OrderId = order.OrderId })" class="btn btn-info">View</a>
+            </td>
+            <td>
+                @if (order.TblOrder.TblInvoice.Status == "Out for Delivery")
+                {
+                    <span class="btn btn-warning">Delivery Pending</span>
+                }
+                else if (order.TblOrder.TblInvoice.Status == "Order Delivered")
+                {
+                    <span class="btn btn-success">Delivered</span>
+                }
+                else
+                {
+                    <span class="btn btn-dark">Unknown</span>
+                }
+            </td>
+
+        </tr>
+    }
+
+</table>
+

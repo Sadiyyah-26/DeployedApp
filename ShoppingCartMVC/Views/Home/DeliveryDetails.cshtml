@@ -1,0 +1,365 @@
+﻿
+@model ShoppingCartMVC.Models.Drivers
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detailed Customer Delivery Order</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.3.5/signature_pad.min.js" integrity="sha512-kw/nRM/BMR2XGArXnOoxKOO5VBHLdITAW00aG8qK4zBzcLVZ4nzg7/oYCaoiwc8U9zrnsO9UHqpyljJ8+iqYiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        .card {
+            border: 2px solid;
+        }
+
+        .flex-row {
+            display: flex;
+        }
+
+        .wrapper {
+            border: 1px solid #4b00ff;
+            border-right: 0;
+        }
+
+        canvas#signature-pad {
+            background: #fff;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .clear-btn .clear {
+            height: 100%;
+            background: #4b00ff;
+            border: 1px solid transparent;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .clear-btn .clear {
+            transform: rotate(0deg);
+            display: block;
+        }
+
+        button#btnDelivered {
+            cursor: pointer;
+        }
+
+        .popup .overlay {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.7);
+            z-index: 1;
+            display: none;
+        }
+
+        .popup .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%) scale(0);
+            background: #fff;
+            width: 550px;
+            height: 550px;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .popup .close-btn {
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            background: #222;
+            color: #fff;
+            font-size: 25px;
+            font-weight: 600;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+        }
+
+        .popup.active .overlay {
+            display: block;
+        }
+
+        .popup.active .content {
+            transition: all 300ms ease-in-out;
+            transform: translate(-50%,-50%) scale(1);
+        }
+
+
+        .popup .delContent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%) scale(0);
+            background: #fff;
+            width: 600px;
+            height: 400px;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .popup.active .delContent {
+            transition: all 300ms ease-in-out;
+            transform: translate(-50%,-50%) scale(1);
+        }
+    </style>
+</head>
+
+<script>
+    function signPopup() {
+        document.getElementById("sign-popup").classList.toggle("active");
+    }
+</script>
+
+<script>
+    function notificationPopup() {
+        document.getElementById("delNotify-popup").classList.toggle("active");
+    }
+</script>
+
+<body>
+    @using (Html.BeginForm())
+    {
+
+        <div class="page-content page-container" id="page-content">
+            <div class="padding">
+
+                <div class="row container d-flex">
+
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title" style="text-align:center">Delivery Details</h4>
+                                <p class="card-description">
+                                    Customer Order No : # @Html.DisplayFor(m => Model.OrderId)
+                                </p>
+                                <br />
+
+                                @*table for showing order details*@
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Unit Price</th>
+                                                <th>Qty</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(m => Model.TblOrder.TblProduct.P_Name)
+                                                </td>
+                                                <td>
+                                                    R  @Html.DisplayFor(m => Model.TblOrder.Unit).00
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(m => Model.TblOrder.Qty)
+                                                </td>
+                                                <td>
+                                                    R @Html.DisplayFor(m => Model.TblOrder.Total).00
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <p>Customer Name  : @Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name)</p>
+                                <p>Payment Method : @Html.DisplayFor(m => Model.TblOrder.TblInvoice.Payment)</p>
+
+                                <p>
+                                    Payment Status :
+                                    @if (Model.TblOrder.TblInvoice.Payment_Status == "Paid")
+                                    {
+                                        <span class="badge badge-success   text-black fw-bold">
+                                            Paid
+                                        </span>
+                                        <input type="checkbox" id="CashPaid" name="CashPaid" value="true" hidden checked/>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning   text-black fw-bold">
+                                            Pending
+                                        </span>
+                                        <br />
+                                    <p>  <input type="checkbox" id="CashPaid" name="CashPaid" value="true" /> Payment Received</p>
+                                    }
+                                </p>
+
+
+
+
+                                    @*pop-up for customer signature*@
+                                    <div class="popup" id="sign-popup">
+                                        <div class="overlay"></div>
+                                        <div class="content">
+                                            <div class="close-btn" onclick="signPopup()">&times;</div>
+                                            <h1>Confirm Delivery</h1>
+
+                                            <p>By signing I agree that I have received my Turbo Meals order.</p>
+
+                                            <p>
+                                                <div class="flex-row">
+                                                    <div class="wrapper">
+                                                        <canvas id="signature-pad" width="400" height="200"></canvas>
+                                                    </div>
+                                                    <div class="clear-btn">
+
+                                                        <input type="button" value="Clear" id="clear" class="clear" />
+                                                    </div>
+                                                </div>
+                                            </p>
+                                            <p> Signed by customer (@Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name))</p>
+                                            <br />
+                                            <p><input type="checkbox" id="driverCheck" checked /> Driver E-sign (@Html.DisplayFor(m => Model.DriverName)) </p>
+
+                                            <br />
+
+                                            <input type="button" value="Order Received" class="btn btn-success" onclick="signPopup()" />
+                                        </div>
+
+                                    </div>
+
+                                    @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
+                                    {
+                                        <span class="btn btn-success">Customer Signed</span><span class="btn btn-success">Customer Notified</span>
+                                    }
+                                    else
+                                    {
+                                        <input type="button" onclick="signPopup()" value=" Customer Signature " class="btn btn-info" /> <input type="button" onclick="notificationPopup()" value=" Send Delivery Notification" class="btn btn-info" />
+                                    }
+
+                                    <br />
+
+                                    @*pop-up for delivery notification*@
+                                    <div class="popup" id="delNotify-popup">
+                                        <div class="overlay"></div>
+                                        <div class="delContent">
+                                            <div class="close-btn" onclick="notificationPopup()">&times;</div>
+                                            <h1>Delivery Notification</h1>
+                                            <br />
+
+                                            <input type="button" value="Send" class="btn btn-success" onclick="" />
+                                        </div>
+
+                                    </div>
+
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+
+                                @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
+                                {
+                                    <a href="@Url.Action("DriverDeliveries","Home", new { id = Model.UserId })" class="btn btn-success">Delivery Completed</a>
+                                }
+                                else
+                                {
+                                    <input type="submit" value="Delivery Confirmation" class="btn btn-info" />
+                                }
+
+
+                            </div>
+                        </div> <!--card for delivery details-->
+                        <br />
+                        <br />
+
+                    </div>
+                    <br />
+
+
+
+
+                    <div class="container">
+                        <div class="row container">
+
+                            <div class="col-lg-7 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title" style="text-align:center">Delivery Address</h4>
+                                        <p class="card-description">
+                                            Delivery Address :  @Html.DisplayFor(m => Model.DeliveryAddress)
+                                        </p>
+                                        <br />
+
+                                        <div class="col-lg-9">
+                                            <div id="map" class="z-depth-1-half map-container" style="height: 400px"></div>
+
+                                            <script>
+
+                                            function initMap() {
+                                                var sss = { lat: -29.760733, lng: 31.062718 };
+                                                var map = new google.maps.Map(
+                                                    document.getElementById('map'), { zoom: 17, center: sss });
+                                                var marker = new google.maps.Marker({ position: sss, map: map });
+                                            }
+                                            </script>
+
+                                            <script async defer
+                                                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5kWpfAZSDb92WM9UUSmN_psKjmDiey4w&callback=initMap"></script>
+
+                                        </div>
+
+                                    </div> <!--del address card-->
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> <!--container for delivery address-->
+
+                </div>
+
+            </div><!--page container-->
+
+
+
+        }
+
+    <br />
+    <br />
+
+    @*script for customer signature*@
+    <script>
+        var canvas = document.getElementById("signature-pad");
+
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+        }
+        window.onresize = resizeCanvas;
+        resizeCanvas();
+
+        var signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(250,250,250)'
+        });
+
+        document.getElementById("clear").addEventListener('click', function () {
+            signaturePad.clear();
+        })
+
+    </script>
+
+
+
+</body>
+
+

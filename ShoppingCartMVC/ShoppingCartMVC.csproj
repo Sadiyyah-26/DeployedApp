@@ -149,6 +149,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
+    <Compile Include="Models\Drivers.cs" />
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
     <Compile Include="Models\tblCategory.cs" />
@@ -296,6 +297,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Reviews.cshtml" />
     <Content Include="Views\Home\Turbo_Deals.cshtml" />
+    <Content Include="Views\Home\AssignDriver.cshtml" />
+    <Content Include="Views\Home\DeliveryDetails.cshtml" />
+    <Content Include="Views\Home\DriverDeliveries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

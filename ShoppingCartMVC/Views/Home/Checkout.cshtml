@@ -104,8 +104,41 @@
                 {
 
                     <span>Contact :</span> <input type="text" name="contact" class="form-control col-lg-6" />
+                    <br />
                     <span>Address :</span><textarea name="address" class="form-control col-lg-6"></textarea>
+    <br />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Delivery Method :</h5>
+
+
+                                    <input type="radio" name="Method" value="Delivery" /><label>&ensp;Delivery</label>
+                                    <br />
+                                    <input type="radio" name="Method" value="Collection" /><label>&ensp;Collection</label>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Payment Method:</h5>
+
+                                    <input type="radio" name="PayMethod" value="PayPal" /><label>&ensp;PayPal</label>
+                                    <br />
+                                    <input type="radio" name="PayMethod" value="Cash" /><label>&ensp;Cash On Delivery/Collection</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <br />
                     <input type="submit" value="Checkout" class="btn btn-primary py-3 px-4" />
+                    <br />
+                    
                 }
             }
 
@@ -115,5 +148,5 @@
 
 
 </div>
-
+<br />
 
