@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -24,9 +25,14 @@ namespace ShoppingCartMVC.Models
 
         public string Payment { get; set; }
 
+        [DisplayName("Method")] /*My chnages for delivery*/
+        public string DC_Method { get; set; } = "Delivery";
+
         public DateTime? InvoiceDate { get; set; }
 
-        public byte? Status { get; set; }
+        public string Status { get; set; } = "Order Placed";
+
+        public string Payment_Status { get; set; } = "Paid";
 
         public virtual tblUser TblUser { get; set; }
 

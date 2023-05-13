@@ -67,9 +67,19 @@
                                     <i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">Creation Date: </span>@Html.DisplayFor(modelItem => item.InvoiceDate)
                                 </li>
                                 <li class="text-muted">
-                                    <i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="me-1 fw-bold">Status:</span><span class="badge badge-success text-black fw-bold">
-                                        Paid
-                                    </span>
+                                    <i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="me-1 fw-bold">Status:</span>
+                                    @if (item.Payment_Status == "Paid")
+                                    {
+                                        <span class="badge badge-success   text-black fw-bold">
+                                            Paid
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning   text-black fw-bold">
+                                            Pending
+                                        </span>
+                                    }
                                 </li>
                             </ul>
                         </div>

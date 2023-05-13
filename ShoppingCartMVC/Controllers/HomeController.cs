@@ -16,7 +16,7 @@ namespace ShoppingCartMVC.Controllers
         /* Add to Cart List use */
         List<Cart> li = new List<Cart>();
 
-        #region home page in showing all products 
+        #region Home Page in Showing All Products 
 
         public ActionResult Index()
         {
@@ -42,7 +42,7 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region add to cart
+        #region Add To Cart
 
         public ActionResult AddtoCart(int id)
         {
@@ -95,7 +95,7 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region remove cart item
+        #region Remove Cart Item
 
         public ActionResult remove(int? id)
         {
@@ -122,7 +122,7 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
-        #region checkout code
+        #region Checkout Code
 
         public ActionResult Checkout()
         {
@@ -131,7 +131,7 @@ namespace ShoppingCartMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Checkout(string contact, string address)
+        public ActionResult Checkout(string contact, string address, string Method, string PayMethod) /*My chnages for delivery*/
         {
             if (ModelState.IsValid)
             {
@@ -140,9 +140,21 @@ namespace ShoppingCartMVC.Controllers
                 iv.UserId = Convert.ToInt32(Session["uid"].ToString());
                 iv.InvoiceDate = System.DateTime.Now;
                 iv.Bill = (int)TempData["total"];
-                iv.Payment = "PayPal";
+                iv.Payment = PayMethod;
+                iv.DC_Method = Method; /*My chnages for delivery*/
+                if (PayMethod == "PayPal")
+                {
+                    iv.Payment_Status = "Paid";
+                }
+                else
+                {
+                    iv.Payment_Status = "Pending";
+                }
+
                 db.tblInvoices.Add(iv);
                 db.SaveChanges();
+
+
                 //order book
                 foreach (var item in li2)
                 {
@@ -150,6 +162,7 @@ namespace ShoppingCartMVC.Controllers
                     od.ProID = item.proid;
                     od.Contact = contact;
                     od.Address = address;
+                    od.Method = Method; /*My chnages for delivery*/
                     od.OrderDate = System.DateTime.Now;
                     od.InvoiceId = iv.InvoiceId;
                     od.Qty = item.qty;
@@ -164,13 +177,21 @@ namespace ShoppingCartMVC.Controllers
                 TempData.Remove("cart");
                 // TempData["msg"] = "Order Book Successfully!!";
 
-                return Content("<script>" +
+                if (PayMethod == "PayPal")
+                {
+                    return Content("<script>" +
             "function callPayPal() {" +
             "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023group01.azurewebsites.net/Home/Success';" +
             "}" +
             "callPayPal();" +
          "</script>");
+                }
+                else
+                {
+                    return RedirectToAction("Success", "Home"/*, new { id = @Session["uid"] }*/);
+                }
             }
+
 
             TempData.Keep();
             return View();
@@ -179,7 +200,7 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
 
-        #region all orders for admin 
+        #region All Orders for Admin 
 
         public ActionResult GetAllOrderDetail()
         {
@@ -189,7 +210,7 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region  confirm order by admin
+        #region  Confirm Order by Admin
 
         public ActionResult ConfirmOrder(int OrderId)
         {
@@ -198,35 +219,31 @@ namespace ShoppingCartMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConfirmOrder(tblOrder o)
+        public ActionResult ConfirmOrder(tblOrder o, string Status)
         {
             tblOrder tblOrder = db.tblOrders.Find(o.OrderId);
-            tblOrder.TblInvoice.Status = 1;
-            //tblInvoice inv = new tblInvoice()
-            //{
-            //    InvoiceId = o.TblInvoice.InvoiceId,
-            //    UserId = o.TblInvoice.UserId,
-            //    Bill = o.TblInvoice.Bill,
-            //    Payment = o.TblInvoice.Payment,
-            //    InvoiceDate = o.TblInvoice.InvoiceDate,
-            //    Status = 1,
-            //};
+            tblOrder.TblInvoice.Status = Status;
 
-            //o.TblInvoice.Status = 1;
+            tblInvoice tblInvoice = db.tblInvoices.Find(o.OrderId);
+            if (Status == "Order Collected")
+            {
 
+                tblInvoice.Payment_Status = "Paid";
 
-
+            }
 
             db.Entry(tblOrder).State = EntityState.Modified;
             db.SaveChanges();
+            db.Entry(tblInvoice).State = EntityState.Modified;
+            db.SaveChanges();
 
-            return RedirectToAction("GetAllOrderDetail");
+            return RedirectToAction("GetAllOrderDetail");          
 
         }
 
         #endregion
 
-        #region orders for only user
+        #region Orders for Only User
 
         public ActionResult OrderDetail(int id)
         {
@@ -236,8 +253,17 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
+        #region Deliveries for Driver
+        public ActionResult DriverDeliveries(int id)
+        {
+            var query = db.tblDrivers.Where(m => m.UserId == id).ToList();
+            return View(query);
 
-        #region  get all users 
+        }
+
+        #endregion
+
+        #region  Get All Users 
 
         public ActionResult GetAllUser()
         {
@@ -247,9 +273,162 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
+        #region Admin Assigns Driver
+       
+        public ActionResult AssignDriver(int OrderId, tblOrder o)
+        {
+
+            using (var db = new dbOnlineStoreEntities())
+            {
+                var dr = db.tblUsers.Where(u => u.RoleType == 3).ToList();
+
+                var driverSelectList = dr.Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.UserId.ToString()
+                });
+
+                ViewData["UserId"] = driverSelectList;
+            }
+
+            if (o.OrderId == OrderId)
+            {
+                TempData["OrderID"] = o.OrderId;
+            }
+
+            using (var db = new dbOnlineStoreEntities())
+            {
+                var match1 = db.tblOrders.Any(n => n.OrderId == OrderId);
+                var match2 = db.tblOrders.Any(m => m.OrderId == OrderId);
+
+                if (match1)
+                {
+
+                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.OrderDate).FirstOrDefault();
+                    if (value != null)
+                    {
+                        TempData["OrderDate"] = value;
+                    }
+                    else
+                    {
+                        TempData["OrderDate"] = "";
+                    }
+
+                }
+
+                if (match2)
+                {
+                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.Address).FirstOrDefault();
+                    if (value != null)
+                    {
+                        TempData["Address"] = value;
+                    }
+                    else
+                    {
+                        TempData["Address"] = "";
+                    }
+                }
+
+            }
+
+            return View();
 
 
-        #region invoice for  user
+
+
+
+        }
+
+        [HttpPost]
+        public ActionResult AssignDriver(Drivers d, tblUser u, int OrderId, tblOrder o)
+        {
+
+            using (var db = new dbOnlineStoreEntities())
+            {
+                var dri = db.tblUsers.Where(ut => ut.RoleType == 3).ToList();
+
+                var driverSelectList = dri.Select(ut => new SelectListItem
+                {
+                    Text = ut.Name,
+                    Value = ut.UserId.ToString()
+                });
+
+                ViewData["UserId"] = driverSelectList;
+            }
+
+            Drivers dr = new Drivers();
+
+            using (var db = new dbOnlineStoreEntities())
+            {
+                var match = db.tblUsers.Any(n => n.UserId == d.UserId);
+
+                if (match)
+                {
+
+                    var value = db.tblUsers.Where(t => t.UserId == d.UserId).Select(t => t.Name).FirstOrDefault();
+                    if (value != null)
+                    {
+                        dr.DriverName = value;
+                    }
+                    else
+                    {
+                        dr.DriverName = "";
+                    }
+
+                }
+            }
+
+
+
+            dr.OrderId = OrderId;
+            dr.UserId = d.UserId;
+
+            using (var db = new dbOnlineStoreEntities())
+            {
+                var match1 = db.tblOrders.Any(n => n.OrderId == OrderId);
+                var match2 = db.tblOrders.Any(m => m.OrderId == OrderId);
+
+                if (match1)
+                {
+
+                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.OrderDate).FirstOrDefault();
+                    if (value != null)
+                    {
+                        dr.OrderDate = (DateTime)value;
+                    }
+
+                }
+
+                if (match2)
+                {
+                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.Address).FirstOrDefault();
+                    if (value != null)
+                    {
+                        dr.DeliveryAddress = value;
+                    }
+                    else
+                    {
+                        dr.DeliveryAddress = "";
+                    }
+                }
+
+            }
+
+
+            db.tblDrivers.Add(dr);
+            db.SaveChanges();
+
+            tblOrder tblOrder = db.tblOrders.Find(OrderId);
+            tblOrder.TblInvoice.Status = "Out for Delivery";
+
+            db.Entry(tblOrder).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("GetAllOrderDetail");
+        }
+        #endregion
+
+        #region Invoice for  User
 
         public ActionResult Invoice(int id)
         {
@@ -269,6 +448,7 @@ namespace ShoppingCartMVC.Controllers
                                pr.P_Name,
                                o.Qty,
                                o.Unit,
+                               i.Payment_Status,
                                o.Total
 
 
@@ -282,7 +462,7 @@ namespace ShoppingCartMVC.Controllers
 
                 if (pro.InvoiceId == id)
                 {
-                   
+                    //count += 1;
                     InvoiceVM objVM = new InvoiceVM();
                     objVM.InvoiceID = pro.InvoiceId;
                     objVM.InvoiceDate = pro.InvoiceDate;
@@ -293,17 +473,55 @@ namespace ShoppingCartMVC.Controllers
                     objVM.Qty = pro.Qty;
                     objVM.Unit = pro.Unit;
                     objVM.Amount = pro.Total;
+                    objVM.Payment_Status = pro.Payment_Status;
                     objVM.TotalAmount = pro.Total;
                     InvceVMList.Add(objVM);
                 }
             }
 
-
-            // ViewData["count"] = count;
-
             return View(InvceVMList);
 
-            // return View(query);
+        }
+
+
+        #endregion
+
+        #region Driver Views Detailed Individual Delivery Details
+        public ActionResult DeliveryDetails(int OrderId)
+        {
+            TempData["oId"] = OrderId;
+            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult DeliveryDetails(Drivers drivers, bool CashPaid)
+        {
+
+            int orderId = (int)TempData["oId"];
+            tblOrder tblOrder = db.tblOrders.Find(orderId);
+            tblOrder.TblInvoice.Status = "Order Delivered";
+
+            tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
+            if (tblInvoice.Payment_Status == "Pending")
+            {
+                if (CashPaid)
+                {
+                    tblInvoice.Payment_Status = "Paid";
+                }
+                else
+                {
+                    tblInvoice.Payment_Status = "NPaid";
+                }
+            }
+
+
+            db.Entry(tblOrder).State = EntityState.Modified;
+            db.SaveChanges();
+            db.Entry(tblInvoice).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("DriverDeliveries", new { id = @Session["uid"] });
+
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,12 +20,15 @@ namespace ShoppingCartMVC.Models
 
         public string Address { get; set; }
 
+        public string Method { get; set; }
+
         public int? Unit { get; set; }
 
         public int? Qty { get; set; }
 
         public int? Total { get; set; }
 
+        [DisplayName("Order Date")]
         public DateTime? OrderDate { get; set; }
 
         public int? InvoiceId { get; set; }

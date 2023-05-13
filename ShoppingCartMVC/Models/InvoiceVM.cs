@@ -23,7 +23,7 @@ namespace ShoppingCartMVC.Models
         public int? Qty { get; set; }
         public int? Unit { get; set; }
         public int? Amount { get; set; }
-
+        public string Payment_Status { get; set; }
         public int? TotalAmount { get; set; }
     }
 }
