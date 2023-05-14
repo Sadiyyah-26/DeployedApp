@@ -1,12 +1,28 @@
 ﻿<head>
     <title>Order Complete</title>
+    <style>
+        .card {
+            border: 3px solid #04d47a;
+        }
+    </style>
 </head>
 
-<h1> Order Placed Successfully! </h1>
-
-<p>Please view your Orders History to view your Invoice and track Order Status.</p>
 <br />
-<p>Kindly note you will be notified when your Order is ready.</p>
-<p>Thank You for choosing Turbo Meals</p>
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="card-title">Order Placed Successfully!</h1>
+                <h3 class="card-text"> Please view your Order History to access your Invoice and track Order Status.</h3>
+                <p class="card-text">Please <b> @Html.ActionLink("Click Here", "Index", "Home")</b>  to return back to Turbo Meals Home.  </p>
 
-@Html.ActionLink("Return to Home", "Index", "Home")
+            </div>
+        </div>
+        <div class="col-md-5">
+
+            <img src="~/Images/mail-sent.jpg" class="card-img" alt="..." />
+        </div>
+    </div>
+</div>
+
+<br />
