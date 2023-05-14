@@ -216,11 +216,11 @@
     <Content Include="Images\LogoPlain.png" />
     <Content Include="Images\LogoW.png" />
     <Content Include="Images\LogoW2.jpg" />
+    <Content Include="Images\mail-sent.jpg" />
     <Content Include="Images\Menu.png" />
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
     <Content Include="Images\p.jpg" />
     <Content Include="Images\Reg.png" />
-    <Content Include="Images\TurboVideo.mp4" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
     <Content Include="js\bootstrap.min.js" />

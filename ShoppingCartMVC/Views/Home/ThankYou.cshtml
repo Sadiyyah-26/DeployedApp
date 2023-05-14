@@ -4,8 +4,30 @@
 }
 <head>
     <title>Successful Contact Made</title>
+    <style>
+        .card {
+            border: 3px solid #04d47a;
+        }
+    </style>
 </head>
-<h1>Message Sent ....Thank You For Contacting Turbo Meals!</h1>
 
-@Html.ActionLink("Return to Home", "Index", "Home")
+<br />
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="card-title">Message Sent Successfully...</h1>
+                <h2 class="card-text"> Thank You For Contacting Turbo Meals! We will get back to you shortly.</h2>
+                <p class="card-text">Please<b> @Html.ActionLink("Click Here", "Index", "Home")</b>  to return back to Turbo Meals Home.  </p>
+
+            </div>
+        </div>
+        <div class="col-md-5">
+
+            <img src="~/Images/mail-sent.jpg" class="card-img" alt="..." />
+        </div>
+    </div>
+</div>
+
+<br />
 

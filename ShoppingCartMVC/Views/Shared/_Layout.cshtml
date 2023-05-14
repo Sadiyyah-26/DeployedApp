@@ -165,7 +165,7 @@
 
                         <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link"><span class="fa fa-home"></span>Home</a></li>
                         <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fa fa-info-circle"></span>About us</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fa fa-tags"></span>Turbo_Deals</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fa fa-tags"></span>Turbo Deals</a></li>
                         <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fa fa-sign-in"></span>Login</a></li>
                         <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link"><span class="fa fa-registered"></span>Register</a></li>
                         <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fa fa-pencil"></span>Reviews</a></li>
@@ -205,7 +205,7 @@
                         {
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>My Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>Order History</a></li>
                             if (TempData["cart"] != null)
                             {
                                 TempData.Keep();
