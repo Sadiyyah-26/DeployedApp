@@ -1,4 +1,6 @@
-﻿
+﻿@*@{
+    Layout = null;
+}*@
 @model ShoppingCartMVC.Models.Drivers
 
 
@@ -124,41 +126,12 @@
     }
 </script>
 
-<script>
-    function notificationPopup() {
-        document.getElementById("delNotify-popup").classList.toggle("active");
-    }
-</script>
-
 <body>
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("DeliveryDetails", "Home", FormMethod.Post))
     {
 
         <div class="page-content page-container" id="page-content">
             <div class="padding">
-
-                <div class="container">
-                    <div class="row container">
-
-                        <div class="col-lg-7 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title" style="text-align:center">Delivery Address</h4>
-                                    <p class="card-description">
-                                        Delivery Address :  @Html.DisplayFor(m => Model.DeliveryAddress)
-                                    </p>
-                                    <br />
-
-                                   
-
-                                </div> <!--del address card-->
-                            </div>
-                        </div>
-
-                    </div>
-                </div> <!--container for delivery address-->
-
-                <br />
 
                 <div class="row container d-flex">
 
@@ -167,7 +140,9 @@
                             <div class="card-body">
                                 <h4 class="card-title" style="text-align:center">Delivery Details</h4>
                                 <p class="card-description">
-                                    Customer Order No : # @Html.DisplayFor(m => Model.OrderId)
+                                    Customer Order No : <b>#@Html.DisplayFor(m => Model.OrderId) </b>
+                                    <br />
+                                    Delivery Address : @Html.DisplayFor(m=>Model.DeliveryAddress)
                                 </p>
                                 <br />
 
@@ -206,6 +181,7 @@
 
                                 <p>Customer Name  : @Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name)</p>
                                 <p>Payment Method : @Html.DisplayFor(m => Model.TblOrder.TblInvoice.Payment)</p>
+
                                 <p>
                                     Payment Status :
                                     @if (Model.TblOrder.TblInvoice.Payment_Status == "Paid")
@@ -213,6 +189,7 @@
                                         <span class="badge badge-success   text-black fw-bold">
                                             Paid
                                         </span>
+                                        <input type="checkbox" id="CashPaid" name="CashPaid" value="true" checked hidden />
                                     }
                                     else
                                     {
@@ -220,72 +197,62 @@
                                             Pending
                                         </span>
                                         <br />
-                                    <p>  <input type="checkbox" id="CashPaid" name="CashPaid" value="true" /> Payment Received</p>
+                                    <p>  <input type="checkbox" id="CashPaid" name="CashPaid" value="true" required/> Payment Received</p>
+                                }
+                                    </p>
+
+
+
+
+                                    @*pop-up for customer signature*@
+                                    <div class="popup" id="sign-popup">
+                                        <div class="overlay"></div>
+                                        <div class="content">
+                                            <div class="close-btn" onclick="signPopup()">&times;</div>
+                                            <h1>Confirm Delivery</h1>
+
+                                            <p>By signing I agree that I have received my Turbo Meals order.</p>
+
+                                            <p>
+                                                <div class="flex-row">
+                                                    <div class="wrapper">
+                                                        <canvas id="signature-pad" width="400" height="200"></canvas>
+                                                    </div>
+                                                    <div class="clear-btn">
+
+                                                        <input type="button" value="Clear" id="clear" class="clear" />
+                                                    </div>
+                                                </div>
+                                            </p>
+                                            <p> Signed by customer (@Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name))</p>
+                                            <br />
+                                            <p><input type="checkbox" id="driverCheck" checked /> Driver E-sign (@Html.DisplayFor(m => Model.DriverName)) </p>
+
+                                            <br />
+
+                                            <input type="button" value="Order Received" class="btn btn-info" onclick="signPopup()" />
+                                        </div>
+
+                                    </div>
+
+                                    @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
+                                    {
+                                        <span class="btn btn-success">Customer Signed</span>
                                     }
-                                </p>
+                                    else
+                                    {
+                                        <input type="button" onclick="signPopup()" value=" Customer Signature " class="btn btn-info" /> 
+                                    }
+
+                                    <br />
 
 
 
 
-                                @*pop-up for customer signature*@
-                                <div class="popup" id="sign-popup">
-                                    <div class="overlay"></div>
-                                    <div class="content">
-                                        <div class="close-btn" onclick="signPopup()">&times;</div>
-                                        <h1>Confirm Delivery</h1>
-
-                                        <p>By signing I agree that I have received my Turbo Meals order.</p>
-
-                                        <p>
-                                            <div class="flex-row">
-                                                <div class="wrapper">
-                                                    <canvas id="signature-pad" width="400" height="200"></canvas>
-                                                </div>
-                                                <div class="clear-btn">
-
-                                                    <input type="button" value="Clear" id="clear" class="clear" />
-                                                </div>
-                                            </div>
-                                        </p>
-                                        <p> Signed by customer (@Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name))</p>
-                                        <br />
-                                        <p><input type="checkbox" id="driverCheck" checked /> Driver E-sign (@Html.DisplayFor(m => Model.DriverName)) </p>
-
-                                        <br />
-
-                                        <input type="button" value="Order Received" class="btn btn-success" onclick="signPopup()" />
-                                    </div>
-
+                                    <br />
+                                    <br />
+                                    <br />
                                 </div>
-
-                                @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
-                                {
-                                    <span class="btn btn-success">Customer Signed</span><span class="btn btn-success">Customer Notified</span>
-                                }
-                                else
-                                {
-                                    <input type="button" onclick="signPopup()" value=" Customer Signature " class="btn btn-info" /> <input type="button" onclick="notificationPopup()" value=" Send Delivery Notification" class="btn btn-info" />
-                                }
-
-                                <br />
-
-                                @*pop-up for delivery notification*@
-                                <div class="popup" id="delNotify-popup">
-                                    <div class="overlay"></div>
-                                    <div class="delContent">
-                                        <div class="close-btn" onclick="notificationPopup()">&times;</div>
-                                        <h1>Delivery Notification</h1>
-                                        <br />
-
-                                        <input type="button" value="Send" class="btn btn-success" onclick="" />
-                                    </div>
-
-                                </div>
-
-                                <br />
-                                <br />
-                                <br />
-                            </div>
 
                                 @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
                                 {
@@ -315,6 +282,7 @@
 
         }
 
+    
     <br />
     <br />
 

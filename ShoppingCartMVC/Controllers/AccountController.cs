@@ -60,7 +60,7 @@ namespace ShoppingCartMVC.Controllers
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("GetAllOrderDetail", "Home");
                 }
                 else if (query.RoleType == 2)
                 {
@@ -74,7 +74,7 @@ namespace ShoppingCartMVC.Controllers
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("DriverDeliveries", "Home", new { id = @Session["uid"] });
                 }
 
             }

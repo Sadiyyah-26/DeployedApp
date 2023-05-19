@@ -6,10 +6,7 @@
 <br />
 <br />
 <br />
-<br />
-<br />
-<br />
-<br />
+
 <div class="container">
 
 
@@ -118,7 +115,8 @@
                         }
                         else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Order Placed"))
                         {
-                            <span class="btn btn-info">Collection</span>
+                            <a href="@Url.Action("NotifyCustomer","Home", new { OrderId = item.OrderId })" class="btn btn-info"> Notify Customer</a>
+
 
                         }
                         else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Ready for Collection"))
@@ -139,9 +137,6 @@
 
 </div>
 
-<br />
-<br />
-<br />
 <br />
 <br />
 <br />

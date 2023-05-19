@@ -1,0 +1,50 @@
+﻿@model ShoppingCartMVC.Models.Drivers
+
+<head>
+    <title>Notify Customer</title>
+    <style>
+        .card {
+            border: 2px solid;
+        }
+    </style>
+</head>
+
+@using (Html.BeginForm("SendMail", "Home", FormMethod.Post))
+{
+    @*pop-up for delivery notification*@
+    <div class="col-lg-5 grid-margin stretch-card mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title" style="text-align:center"><u>Delivery Notification</u></h4>
+                <br />
+
+                <form method="post" action="~/Controllers/Home/SendMail">
+                    <div class="inputbox">
+                        <p style="text-align:center;">Send Email To :  &ensp; &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; @Html.EditorFor(m => Model.TblOrder.TblInvoice.TblUser.Email)</p>
+                    </div>
+                    <br />
+                    <div class="inputbox">
+                        <p style="text-align:center;">Estimated delivery time : <input type="text" id="delTime" name="delTime" required="required" value="" /></p><br />
+
+                    </div>
+                    <br />
+                    <div class="inputbox">
+                        <p style="text-align:center;"> License Number :    &ensp; &ensp;&ensp;&ensp;&ensp;&ensp;    <input type="text" id="licenseNum" name="licenseNum" required="required" /></p>
+                    </div>
+                    <br />
+                    <p style="text-align:center;"> <input type="submit" value="Send" class="btn btn-success" /></p>
+                </form>
+
+
+                <br />
+                <br />
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<br />
+<br />
+
