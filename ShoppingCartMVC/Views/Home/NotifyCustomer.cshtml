@@ -1,0 +1,48 @@
+﻿
+@model ShoppingCartMVC.Models.tblOrder
+<head>
+    <title>Notify for Collection</title>
+    <style>
+        .card{
+            border: 2px solid green;
+        }
+        
+    </style>
+</head>
+
+@using (Html.BeginForm("NotifyCustomer", "Home", FormMethod.Post))
+{
+    <div class="col-lg-5 grid-margin stretch-card mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title" style="text-align:center"><u>Notify Customer for Collection</u></h4>
+                <br />
+                <form method="post" action="~/Controllers/Home/NotifyCustomer">
+                    <p style="text-align:center;"><b>Order No. : #@Html.DisplayFor(model => Model.OrderId)</b></p>
+                    
+                    <p style="text-align:center;">Customer : @Html.DisplayFor(model => Model.TblInvoice.TblUser.Name)</p>
+                   
+                    <p style="text-align:center;"> Order : @Html.DisplayFor(model => model.TblProduct.P_Name) x @Html.DisplayFor(model => model.Qty)</p>
+                    <div class="inputbox">
+                    <p style="text-align:center;">Send Email To :   @Html.EditorFor(m => Model.TblInvoice.TblUser.Email) </p>
+
+                    </div>
+                    <br />
+                    <div class="inputbox">
+                        <p style="text-align:center;">Order Ready for collection : <input type="checkbox" id="orderReady" name="orderReady" value="true" checked />Order #@Html.DisplayFor(m => Model.OrderId) Ready</p><br />
+
+                    </div>
+                   
+
+                    <br />
+                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> </p>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+<br />
+<br />

@@ -219,6 +219,7 @@
     <Content Include="Images\mail-sent.jpg" />
     <Content Include="Images\Menu.png" />
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
+    <Content Include="Images\order-success.jpg" />
     <Content Include="Images\p.jpg" />
     <Content Include="Images\Reg.png" />
     <Content Include="js\aos.js" />
@@ -300,6 +301,10 @@
     <Content Include="Views\Home\AssignDriver.cshtml" />
     <Content Include="Views\Home\DeliveryDetails.cshtml" />
     <Content Include="Views\Home\DriverDeliveries.cshtml" />
+    <Content Include="Views\Home\NotifyCustomer.cshtml" />
+    <Content Include="Views\Home\Map.cshtml" />
+    <Content Include="Views\Home\SendMail.cshtml" />
+    <Content Include="Views\Home\DriverGetOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

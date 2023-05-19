@@ -1,0 +1,196 @@
+﻿
+@{
+    Layout = null;
+}
+@model ShoppingCartMVC.Models.Drivers
+<head>
+    <title> Delivery Address</title>
+    <style>
+        table {
+            border-collapse: separate;
+            border-spacing: 50px 0;
+        }
+
+        .delMap {
+            border: 2px solid;
+        }
+
+
+        .card {
+            border: 3px solid #0094ff;
+        }
+
+        .nextPage {
+            border-width: 3px;
+            border-style: solid;
+            border-color: #50bfff;
+            padding: 0.3em;
+            background-color: #50bfff;
+            color: white;
+        }
+
+        input[type=button] {
+            background-color: #50bfff;
+            color: white;
+            padding: 0.3em;
+            border: none;
+        }
+    </style>
+</head>
+
+<br />
+<body>
+    <div class="card">
+        <h1 class="card-title" style="text-align:center">Delivery Address</h1>
+        <p class="card-description" style="text-align:center">
+            Order No : <b>#@Html.DisplayFor(m => Model.OrderId)  </b> <br />
+            Delivery Address :  @Html.DisplayFor(m => Model.DeliveryAddress)
+        </p>
+
+        <br />
+        <br />
+        <table border="0" cellpadding="0" cellspacing="3">
+            <tr>
+                <td colspan="2">
+                    Source:
+                    <input type="text" id="txtSource" placeholder="Enter Source...." size="35" />
+                    &nbsp; Destination:
+
+                    <input type="text" id="txtDestination" placeholder="Enter Destination...." size="35" />
+                    <br />
+                    <br />
+                    <input type="button" value="Get Route" onclick="GetRoute()" />
+                    <br />
+                    <br />
+
+
+
+
+                    <hr />
+                    <br />
+                    <a href="@Url.Action("DeliveryDetails","Home", new { OrderId = Model.OrderId })" class="nextPage">Complete Delivery</a> &ensp;  <a href="@Url.Action("SendMail","Home", new { OrderId = Model.OrderId })" class="nextPage"> Notify Customer</a>
+                    <br /><br />
+
+
+                    <br />
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="dvDistance">
+                    </div>
+                    <br />
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="dvMap" style="width: 500px; height: 500px" class="delMap">
+                    </div>
+                </td>
+                &ensp;&ensp;&ensp;
+                <td>
+                    <div id="dvPanel" style="width: 500px; height: 500px" class="delDirections">
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+    </div>
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyB773I-Y0cPyWYQTj7U07KYxm8Kj954vCY"></script>
+    @*<script src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyB773I-Y0cPyWYQTj7U07KYxm8Kj954vCY"></script>*@
+
+    @*@section Scripts
+        {
+            <script>
+                $(document).ready(function () {*@
+
+    @*});
+        </script>*@
+    <script type="text/javascript">var source, destination;
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+        google.maps.event.addDomListener(window, 'load', function () {
+            new google.maps.places.SearchBox(document.getElementById('txtSource'));
+            new google.maps.places.SearchBox(document.getElementById('txtDestination'));
+            directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
+        });
+
+        function GetRoute() {
+            var durban = new google.maps.LatLng(-29.760725, 31.062702);
+            var mapOptions = {
+                zoom: 15,
+                center: durban
+            };
+            map = new google.maps.Map(document.getElementById('dvMap'), mapOptions);
+            directionsDisplay.setMap(map);
+            directionsDisplay.setPanel(document.getElementById('dvPanel'));
+
+            //*********DIRECTIONS AND ROUTE**********************//
+            source = document.getElementById("txtSource").value;
+            destination = document.getElementById("txtDestination").value;
+
+            var request = {
+                origin: source,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                }
+            });
+
+            //*********DISTANCE AND DURATION**********************//
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [source],
+                destinations: [destination],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC,
+                avoidHighways: false,
+                avoidTolls: false
+            }, function (response, status) {
+                if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+                    var distance = response.rows[0].elements[0].distance.text;
+                    var duration = response.rows[0].elements[0].duration.text;
+                    var dvDistance = document.getElementById("dvDistance");
+                    dvDistance.innerHTML = "";
+                    dvDistance.innerHTML += "Distance: " + distance + "<br />";
+                    dvDistance.innerHTML += "Duration:" + duration;
+
+                }
+                else {
+                    alert("Unable to find the distance via road.");
+                }
+            });
+        }</script>
+
+
+
+</body>

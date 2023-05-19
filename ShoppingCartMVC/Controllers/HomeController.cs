@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ShoppingCartMVC.Models;
@@ -181,7 +182,7 @@ namespace ShoppingCartMVC.Controllers
                 {
                     return Content("<script>" +
             "function callPayPal() {" +
-            "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023group01.azurewebsites.net/Home/Success';" +
+            "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023grp01a.azurewebsites.net/Home/Success';" +
             "}" +
             "callPayPal();" +
          "</script>");
@@ -254,12 +255,48 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Deliveries for Driver
-        public ActionResult DriverDeliveries(int id)
+        public ActionResult DriverDeliveries(int id, tblOrder o)
         {
             var query = db.tblDrivers.Where(m => m.UserId == id).ToList();
-            return View(query);
+            //var orders = db.tblOrders.ToList();
+            //var count = 0;
 
+            //using (var db = new dbOnlineStoreEntities())
+            //{
+            //    var match1 = db.tblDrivers.Any(n => n.UserId == id);
+
+            //    if (match1)
+            //    {
+            //        foreach (var order in orders)
+            //        {
+            //            var value = db.tblDrivers
+            //                .Where(t => t.OrderId == order.OrderId)
+            //                .Select(t => t.TblOrder.TblInvoice.Status)
+            //                .FirstOrDefault();
+
+            //            if (value != null && value == "Out for Delivery")
+            //            {
+            //                count++;
+            //            }
+            //        }
+            //    }
+
+            //    // Reset the orderCount to 0 when a different user logs in
+            //    if (TempData["CurrentUserId"] != null && (int)TempData["CurrentUserId"] != id)
+            //    {
+            //        count = 0;
+            //    }
+
+            //    // Store the current user's ID in TempData
+            //    TempData["CurrentUserId"] = id;
+
+            //    ViewBag.Orders = orders;
+            //    ViewBag.OrderCount = count;
+
+                return View(query);
+            
         }
+
 
         #endregion
 
@@ -486,7 +523,7 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region Driver Views Detailed Individual Delivery Details
+        #region Driver Views Individual Delivery Details
         public ActionResult DeliveryDetails(int OrderId)
         {
             TempData["oId"] = OrderId;
@@ -520,8 +557,163 @@ namespace ShoppingCartMVC.Controllers
             db.SaveChanges();
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("DriverDeliveries", new { id = @Session["uid"] });
+            return RedirectToAction("DeliveryDetails", new { OrderId = orderId });
 
+        }      
+
+        #endregion
+
+        #region Admin Notify Customer for Collection
+
+        public ActionResult NotifyCustomer(int OrderId)
+        {
+            TempData["order"] = OrderId;
+            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult NotifyCustomer(tblOrder o, bool orderReady)
+        {
+            int orderId = (int)TempData["order"];
+            tblOrder tblOrder = db.tblOrders.Find(orderId);
+            tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
+            tblOrder.TblInvoice.Status = "Ready for Collection";
+
+            if (orderReady)
+            {
+                string oId = orderId.ToString();
+                string toEmail = tblOrder.TblInvoice.TblUser.Email;
+                string name = tblOrder.TblInvoice.TblUser.Name;
+
+                var body = "Dear " + name + ",<br><br>" +
+               "I'm contacting you on behalf of Turbo Meals, and I'm glad to inform you that your Order #" + orderId +
+               " is now ready for collection.<br><br>" + "Please note, any outstanding payments may be made upon collection.<br><br>" +
+                "Once your order is collected your Order Status will automatically be updated.<br><br>" +
+               "Thank you for choosing Turbo Meals!";
+
+
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(toEmail));
+                message.From = new MailAddress("turbomeals123@gmail.com");
+                message.Subject = "Your Turbo Meals Order Ready for Collection";
+                message.Body = string.Format(body);
+                message.IsBodyHtml = true;
+
+                using (var smtp = new SmtpClient())
+                {
+                    smtp.Send(message);
+                }
+            }
+
+            db.Entry(tblInvoice).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("GetAllOrderDetail");
+        }
+
+
+        #endregion
+
+        #region Directions for Driver
+        public ActionResult Map(int OrderId)
+        {
+            TempData["oId2"] = OrderId;
+            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
+            return View(query);
+        }
+        #endregion
+
+        #region Sending Delivery Notification
+        public ActionResult SendMail(int OrderId)
+        {
+            TempData["oId2"] = OrderId;
+            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult SendMail(Drivers dri, string delTime, string licenseNum)
+        {
+            int orderId = (int)TempData["oId2"];
+            tblOrder tblOrder = db.tblOrders.Find(orderId);
+            //TempData["id"] = new { id = @Session["uid"] };
+            int id;
+
+
+            if (Session["uid"] != null && int.TryParse(Session["uid"].ToString(), out id))
+            {
+                using (var db = new dbOnlineStoreEntities())
+                {
+                    var matchDr = db.tblUsers.Any(n => n.UserId == id);
+                    if (matchDr)
+                    {
+                        var value = db.tblUsers.Where(t => t.UserId == id).Select(t => t.Name).FirstOrDefault();
+                        if (value != null)
+                        {
+                            TempData["drName"] = value;
+                        }
+                        else
+                        {
+                            TempData["drName"] = "";
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                TempData["drName"] = "A";
+            }
+
+
+            string toEmail = tblOrder.TblInvoice.TblUser.Email;
+            string name = tblOrder.TblInvoice.TblUser.Name;
+            string driverName = TempData["drName"].ToString();
+
+            var body = "Dear " + name + ",<br><br>" +
+                "I'm contacting you on behalf of Turbo Meals, my name is " + driverName +
+                ", and I will be delivering your order placed with us at Turbo Meals.<br><br>" +
+                "Your order delivery should arrive in " + delTime + ".<br><br>" +
+                "Since we at Turbo Meals deeply value our customers and their safety we have taken an extra precaution.<br><br>" +
+                "Please note my license number which will be used to deliver your order to you is as follows : " + licenseNum +
+                "<br><br>See you soon! ";
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(toEmail));
+            message.From = new MailAddress("turbomeals123@gmail.com");
+            message.Subject = "Your Turbo Meals Order Delivery";
+            message.Body = string.Format(body);
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(message);
+            }
+
+
+            return RedirectToAction("Map", new { OrderId = orderId });
+        }
+        #endregion
+
+        #region Driver Collects Order
+        public ActionResult DriverGetOrder(int OrderId)
+        {
+            TempData["oId"] = OrderId;
+            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult DriverGetOrder(bool OrderCollected)
+        {
+            int orderId = (int)TempData["oId"];
+
+            if (OrderCollected)
+            {
+
+                return RedirectToAction("Map", new { OrderId = orderId });
+            }
+            return View();
         }
 
         #endregion
