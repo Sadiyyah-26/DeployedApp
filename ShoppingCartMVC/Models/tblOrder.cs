@@ -30,11 +30,22 @@ namespace ShoppingCartMVC.Models
 
         [DisplayName("Order Date")]
         public DateTime? OrderDate { get; set; }
+        public string RefundStatus { get; set; }
 
         public int? InvoiceId { get; set; }
 
         public virtual tblProduct TblProduct { get; set; }
 
         public virtual tblInvoice TblInvoice { get; set; }
+
+        public string getRefundStatus()
+        {
+            dbOnlineStoreEntities db = new dbOnlineStoreEntities();
+            var status = (from s in db.tblRefunds
+                          where s.OrderId == OrderId
+                          select s.RefundStatus).Single();
+            return status;
+        }
+
     }
 }

@@ -556,5 +556,12 @@ namespace ShoppingCartMVC.Controllers
         {
             return View();
         }
+
+        public ActionResult Refund(int id)
+        {
+            var query = db.tblOrders.Where(m => m.TblInvoice.UserId == id).ToList();
+            return View(query);
+        }
+
     }
 }

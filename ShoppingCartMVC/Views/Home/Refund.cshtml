@@ -1,0 +1,82 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblOrder>
+<head>
+    <title>Order History</title>
+</head>
+<div class="container">
+
+    <table class="table">
+        <tr>
+
+            <th>
+                Order ID
+            </th>
+
+            <th>
+                Total
+            </th>
+
+            <th>
+                @Html.DisplayName("Order Date")
+            </th>
+
+            <th>Refund Status</th>
+
+            <th>Invoice</th>
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.TblInvoice.Status == "Order Delivered" || item.TblInvoice.Status == "Order Collected")
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderId)
+                    </td>
+
+                    <td>
+                        R @Html.DisplayFor(modelItem => item.TblInvoice.Bill).00
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderDate)
+                    </td>
+
+                    <td>
+                        @(item.RefundStatus != null ? item.RefundStatus : "No Refund Requested")
+                    </td>
+
+                    <td>
+                        <a href="@Url.Action("Invoice", "Home", new { id = item.InvoiceId })" class="btn btn-primary">Print</a>
+                    </td>
+
+                    <td>
+                        @if (item.RefundStatus == null)
+                        {
+                            <a href="@Url.Action("Create", "tblRefunds", new { orderId = item.OrderId })" class="btn btn-dark">Request Refund</a>
+
+                        }
+                        else if (item.RefundStatus == "Successful")
+                        {
+                            <span class="btn btn-success">Refund Received</span>
+                        }
+                        else if (item.RefundStatus == "Unsuccessful")
+                        {
+                            <span class="btn btn-danger">Request Denied</span>
+                        }
+                        else if (item.RefundStatus == "Refund Requested")
+                        {
+                            <span class="btn btn-success">Requested</span>
+                        }
+                        else
+                        {
+                            <span class="btn btn-dark">No Action</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+
+    </table>
+
+</div>

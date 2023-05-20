@@ -33,7 +33,7 @@
                 Payment Status
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.DC_Method) 
+                @Html.DisplayNameFor(model => model.TblInvoice.DC_Method)
             </th>
 
             <th>
@@ -41,6 +41,7 @@
             </th>
 
             <th>Order Status</th>
+
             <th>Action</th>
             <th></th>
         </tr>
@@ -49,7 +50,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem=>item.OrderId)
+                        @Html.DisplayFor(modelItem => item.OrderId)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TblInvoice.TblUser.Name)
@@ -104,7 +105,7 @@
                         }
 
                     </td>
-                   
+
                     <td>
                         @if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Order Placed"))
                         {

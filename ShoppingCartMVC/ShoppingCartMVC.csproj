@@ -139,6 +139,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\tblRefundsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -156,6 +157,7 @@
     <Compile Include="Models\tblInvoice.cs" />
     <Compile Include="Models\tblOrder.cs" />
     <Compile Include="Models\tblProduct.cs" />
+    <Compile Include="Models\tblRefund.cs" />
     <Compile Include="Models\tblUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -300,6 +302,12 @@
     <Content Include="Views\Home\AssignDriver.cshtml" />
     <Content Include="Views\Home\DeliveryDetails.cshtml" />
     <Content Include="Views\Home\DriverDeliveries.cshtml" />
+    <Content Include="Views\tblRefunds\Create.cshtml" />
+    <Content Include="Views\tblRefunds\Delete.cshtml" />
+    <Content Include="Views\tblRefunds\Details.cshtml" />
+    <Content Include="Views\tblRefunds\Edit.cshtml" />
+    <Content Include="Views\tblRefunds\Index.cshtml" />
+    <Content Include="Views\Home\Refund.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

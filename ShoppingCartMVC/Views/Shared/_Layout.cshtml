@@ -199,6 +199,7 @@
                             </li>
                             <li class="nav-item"><a href="@Url.Action("GetAllUser", "Home")" class="nav-link"><span class="fa fa-users"></span>Users</a></li>
                             <li class="nav-item"><a href="@Url.Action("GetAllOrderDetail", "Home")" class="nav-link"><span class="fa fa-list"></span>Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Index", "tblRefunds")" class="nav-link"><span class="fa fa-list"></span>Refund Requests</a></li>
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
                         }
                         if (User.IsInRole("2"))
@@ -206,6 +207,7 @@
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
                             <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>Order History</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Refund", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>Refunds</a></li>
                             if (TempData["cart"] != null)
                             {
                                 TempData.Keep();

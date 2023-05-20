@@ -8,10 +8,10 @@
         <tr>
 
             <th>
-               Total
+                Total
             </th>
             <th>
-               Payment Method
+                Payment Method
             </th>
             <th>
                 Payment Status
@@ -26,6 +26,8 @@
             <th>Order Status</th>
 
             <th>Invoice</th>
+
+
         </tr>
 
         @foreach (var item in Model)
@@ -56,8 +58,8 @@
                     @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
                 @*<th>
-                    @Html.DisplayFor(model => item.TblInvoice.Status)
-                </th>*@
+            @Html.DisplayFor(model => item.TblInvoice.Status)
+        </th>*@
 
                 <td>
                     @if (item.TblInvoice.Status == "Out for Delivery")
@@ -78,9 +80,12 @@
                     }
 
                 </td>
+                
                 <td>
                     <a href="@Url.Action("Invoice", "Home", new { id = item.InvoiceId })" class="btn btn-primary">Print</a>
                 </td>
+
+               
 
             </tr>
         }
