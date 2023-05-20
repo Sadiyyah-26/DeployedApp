@@ -10,7 +10,6 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "ShoppingCartMVC.Models.dbOnlineStoreEntities";
         }
 
         protected override void Seed(ShoppingCartMVC.Models.dbOnlineStoreEntities context)

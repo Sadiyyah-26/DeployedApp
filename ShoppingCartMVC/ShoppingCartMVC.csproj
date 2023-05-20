@@ -142,10 +142,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202304212007117_InitialCreate.cs" />
-    <Compile Include="Migrations\202304212007117_InitialCreate.designer.cs">
-      <DependentUpon>202304212007117_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
@@ -156,6 +152,7 @@
     <Compile Include="Models\tblInvoice.cs" />
     <Compile Include="Models\tblOrder.cs" />
     <Compile Include="Models\tblProduct.cs" />
+    <Compile Include="Models\tblReservation.cs" />
     <Compile Include="Models\tblUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -335,11 +332,6 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202304212007117_InitialCreate.resx">
-      <DependentUpon>202304212007117_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
