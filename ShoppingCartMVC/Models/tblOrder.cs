@@ -30,6 +30,7 @@ namespace ShoppingCartMVC.Models
 
         [DisplayName("Order Date")]
         public DateTime? OrderDate { get; set; }
+        public string RefundStatus { get; set; }
 
         public int? InvoiceId { get; set; }
 

@@ -20,6 +20,7 @@ namespace ShoppingCartMVC.Models
         public virtual DbSet<InvoiceVM> tblInvoiceVM { get; set; }
         public virtual DbSet<Drivers> tblDrivers { get; set; }
         public virtual DbSet<tblReservation> tblReservations { get; set; }
+        public virtual DbSet<tblRefund> tblRefunds { get; set; }
     }
 }
 

@@ -1,0 +1,66 @@
+﻿@model ShoppingCartMVC.Models.tblRefund
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tblRefund</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RefundRequestDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RefundRequestDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RefundReason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RefundReason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+
+        <dd>
+            <img src="@Url.Content("~/Uploads/" + Model.Image)" alt="Image" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RefundStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RefundStatus)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RefundId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
