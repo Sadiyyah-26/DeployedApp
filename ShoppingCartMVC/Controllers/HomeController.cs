@@ -238,7 +238,7 @@ namespace ShoppingCartMVC.Controllers
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
 
-            return RedirectToAction("GetAllOrderDetail");          
+            return RedirectToAction("GetAllOrderDetail");
 
         }
 
@@ -293,8 +293,8 @@ namespace ShoppingCartMVC.Controllers
             //    ViewBag.Orders = orders;
             //    ViewBag.OrderCount = count;
 
-                return View(query);
-            
+            return View(query);
+
         }
 
 
@@ -311,7 +311,7 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Admin Assigns Driver
-       
+
         public ActionResult AssignDriver(int OrderId, tblOrder o)
         {
 
@@ -559,7 +559,7 @@ namespace ShoppingCartMVC.Controllers
             db.SaveChanges();
             return RedirectToAction("DeliveryDetails", new { OrderId = orderId });
 
-        }      
+        }
 
         #endregion
 
@@ -747,6 +747,19 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult Turbo_Deals()
         {
             return View();
+        }
+
+        private IEnumerable<SelectListItem> GetSeatOptions()  // v changes
+
+        {
+            return new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1-2", Text = "1-2 seats" },
+        new SelectListItem { Value = "3-4", Text = "3-4 seats" },
+        new SelectListItem { Value = "5-6", Text = "5-6 seats" },
+        new SelectListItem { Value = "6-8", Text = "6-8 seats" }
+
+    };
         }
     }
 }
