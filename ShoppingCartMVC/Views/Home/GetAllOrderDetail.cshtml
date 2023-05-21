@@ -2,6 +2,10 @@
 <head>
     <title>All Orders</title>
 </head>
+@{
+    // Order the data by OrderID in descending order
+    var sortedOrders = Model.OrderByDescending(o => o.OrderId).ToList();
+}
 <br />
 <br />
 <br />
@@ -30,7 +34,7 @@
                 Payment Status
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.DC_Method) 
+                @Html.DisplayNameFor(model => model.TblInvoice.DC_Method)
             </th>
 
             <th>
@@ -42,11 +46,11 @@
             <th></th>
         </tr>
         <tbody id="myTable">
-            @foreach (var item in Model)
+            @foreach (var item in sortedOrders)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem=>item.OrderId)
+                        #@Html.DisplayFor(modelItem => item.OrderId)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TblInvoice.TblUser.Name)
@@ -99,9 +103,14 @@
                         {
                             <span class="btn btn-success">Collected</span>
                         }
+                        else
+                        if (item.TblInvoice.Status == "Cancelled")
+                        {
+                            <span class="btn btn-danger">Cancelled</span>
+                        }
 
                     </td>
-                   
+
                     <td>
                         @if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Order Placed"))
                         {

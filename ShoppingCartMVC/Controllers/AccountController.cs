@@ -76,6 +76,13 @@ namespace ShoppingCartMVC.Controllers
                     Session["User"] = query.Name;
                     return RedirectToAction("DriverDeliveries", "Home", new { id = @Session["uid"] });
                 }
+                else if (query.RoleType == 4)
+                {
+                    Session["uid"] = query.UserId;
+                    FormsAuthentication.SetAuthCookie(query.Email, false);
+                    Session["User"] = query.Name;
+                    return RedirectToAction("PrepStaff", "Home", new { id = @Session["uid"] });
+                }
 
             }
             else

@@ -169,6 +169,7 @@ namespace ShoppingCartMVC.Controllers
                     od.Qty = item.qty;
                     od.Unit = item.price;
                     od.Total = item.bill;
+                    od.OrderReady = "Being Prepared";
 
                     db.tblOrders.Add(od);
                     db.SaveChanges();
@@ -205,7 +206,7 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult GetAllOrderDetail()
         {
-            var query = db.tblOrders.ToList();
+            var query = db.tblOrders.Where(m => m.OrderReady == "Ready").ToList();
             return View(query);
         }
 
@@ -215,6 +216,7 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult ConfirmOrder(int OrderId)
         {
+            TempData["orderNum"] = OrderId;
             var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
             return View(query);
         }
@@ -222,19 +224,15 @@ namespace ShoppingCartMVC.Controllers
         [HttpPost]
         public ActionResult ConfirmOrder(tblOrder o, string Status)
         {
-            tblOrder tblOrder = db.tblOrders.Find(o.OrderId);
-            tblOrder.TblInvoice.Status = Status;
-
-            tblInvoice tblInvoice = db.tblInvoices.Find(o.OrderId);
-            if (Status == "Order Collected")
+            int id = (int)TempData["orderNum"];
+            tblInvoice tblInvoice = db.tblInvoices.Find(id);
+            tblInvoice.Status = Status;
+            if (Status== "Order Collected")
             {
-
+                
                 tblInvoice.Payment_Status = "Paid";
-
+               
             }
-
-            db.Entry(tblOrder).State = EntityState.Modified;
-            db.SaveChanges();
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
 
@@ -718,6 +716,39 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
+        #region New Orders Go to Staff for Prep
+        public ActionResult PrepStaff(int id)
+        {
+            var query = db.tblOrders.Where(m => m.OrderReady == "Being Prepared").ToList();
+            return View(query);
+
+        }
+
+        #endregion
+
+        #region Staff Makes Order Ready
+        public ActionResult PrepOrder(int OrderId)
+        {
+            TempData["cusOrder"] = OrderId;
+            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult PrepOrder(bool Ready)
+        {
+            int order = (int)TempData["cusOrder"];
+            tblOrder tblOrder = db.tblOrders.Find(order);
+            if (Ready)
+            {
+                tblOrder.OrderReady = "Ready";
+            }
+
+            db.Entry(tblOrder).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("PrepStaff", "Home", new { id = @Session["uid"] });
+        }
+        #endregion
 
         public ActionResult Success()
         {
