@@ -1,0 +1,115 @@
+﻿@model List<ShoppingCartMVC.Models.tblReservation>
+
+<head>
+    <title>All Reservations</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .delete-btn {
+            background-color: red;
+            color: white;
+        }
+
+        .reserved-btn {
+            background-color: green;
+            color: white;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("tbody tr").filter(function () {
+                    $(this).toggle(
+                        $(this).find("td:eq(0)").text().toLowerCase().indexOf(value) > -1
+                    );
+                });
+            });
+
+            $(".delete-btn").on("click", function () {
+                $(this).closest("tr").remove();
+            });
+
+            $("tbody").on("click", ".reserved-btn", function () {
+                var button = $(this);
+
+                if (button.text() === "Reserved") {
+                    button.text("Complete");
+
+                    // Store the button state in localStorage
+                    var bookingId = button.closest("tr").find("td:eq(0)").text();
+                    localStorage.setItem(bookingId, "complete");
+                } else {
+                    button.text("Reserved");
+
+                    // Remove the button state from localStorage
+                    var bookingId = button.closest("tr").find("td:eq(0)").text();
+                    localStorage.removeItem(bookingId);
+                }
+
+                button.toggleClass("complete-btn");
+            });
+
+            // Set the initial state of the buttons based on localStorage
+            $("tbody tr").each(function () {
+                var bookingId = $(this).find("td:eq(0)").text();
+                var buttonState = localStorage.getItem(bookingId);
+
+                if (buttonState === "complete") {
+                    $(this)
+                        .find(".reserved-btn")
+                        .text("Complete")
+                        .addClass("complete-btn");
+                }
+            });
+        });
+
+    </script>
+</head>
+
+<div class="container">
+    <input type="text" id="searchInput" placeholder="Search by Booking ID">
+    <br />
+    <br />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Name</th>
+                <th>Mail</th>
+                <th>Number</th>
+                <th>Seating</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.BookingId</td>
+                    <td>@item.Customer_Name</td>
+                    <td>@item.Mail</td>
+                    <td>@item.Number</td>
+                    <td>@item.Seating</td>
+                    <td>@(item.Date.HasValue ? item.Date.Value.ToShortDateString() : string.Empty)</td>
+                    <td>@(item.Time.HasValue ? item.Time.Value.ToString("hh:mm tt") : "")</td>
+                    <td>
+                        <button class="delete-btn">Delete</button>
+                        <button class="reserved-btn">Reserved</button>
+                        <!-- Add other action buttons or links -->
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+

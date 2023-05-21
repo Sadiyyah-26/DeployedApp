@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -31,7 +32,21 @@ namespace ShoppingCartMVC.Controllers
                 db.tblUsers.Add(u);
                 db.SaveChanges();
 
+                var body = $"Dear {t.Name},<br /><br />Thank you for registering at Turbo Meals. Your registration was successful. You can now login with your credentials to access the Turbo Meals Site.<br /><br />";
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(t.Email));
+                message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                message.Subject = "Registration Confirmation";
+                message.Body = string.Format(body);
+                message.IsBodyHtml = true;
+
+
+                using (var smtp = new SmtpClient())
+                {
+                    smtp.Send(message);
+                }
                 return RedirectToAction("Login", "Account");
+
             }
             else
             {
@@ -39,6 +54,7 @@ namespace ShoppingCartMVC.Controllers
             }
             return View();
         }
+
 
         #endregion
 

@@ -1,0 +1,48 @@
+﻿@model ShoppingCartMVC.Models.tblReservation
+
+<style>
+    .customer-details-box {
+        position: absolute;
+        top: 130px;
+        right: 850px;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+</style>
+
+@*<h2>Check In Customer</h2>*@
+
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.QRCode))
+{
+    <img src="@ViewBag.QRCode" alt="QR Code" />
+}
+
+@if (ViewBag.Reservation != null)
+{
+    <div class="customer-details-box">
+        <h3>Customer Details:</h3>
+        <p>Customer Name: @ViewBag.Reservation.Customer_Name</p>
+        <p>Booking ID: @ViewBag.Reservation.BookingId</p>
+        <p>Email: @ViewBag.Reservation.Mail</p>
+        <p>Phone: @ViewBag.Reservation.Number</p>
+        <!-- Add more customer details as needed -->
+    </div>
+}
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
