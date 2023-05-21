@@ -56,6 +56,11 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.3.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.3\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -129,6 +134,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -206,6 +212,7 @@
     <Content Include="Images\b.jpg" />
     <Content Include="Images\bd.jpg" />
     <Content Include="Images\burger.jpg" />
+    <Content Include="Images\check-in.png" />
     <Content Include="Images\contactBG.jpg" />
     <Content Include="Images\contactEdited.png" />
     <Content Include="Images\edit.png" />
@@ -216,11 +223,13 @@
     <Content Include="Images\LogoW.png" />
     <Content Include="Images\LogoW2.jpg" />
     <Content Include="Images\mail-sent.jpg" />
+    <Content Include="Images\Make_Reservation.png" />
     <Content Include="Images\Menu.png" />
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
     <Content Include="Images\order-success.jpg" />
     <Content Include="Images\p.jpg" />
     <Content Include="Images\Reg.png" />
+    <Content Include="Images\Reserved2.png" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
     <Content Include="js\bootstrap.min.js" />
@@ -294,7 +303,6 @@
     <Content Include="Views\Home\Success.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\ThankYou.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Reviews.cshtml" />
     <Content Include="Views\Home\Turbo_Deals.cshtml" />
     <Content Include="Views\Home\AssignDriver.cshtml" />
@@ -312,6 +320,14 @@
     <Content Include="Views\tblRefunds\Index.cshtml" />
     <Content Include="Views\Home\PrepStaff.cshtml" />
     <Content Include="Views\Home\PrepOrder.cshtml" />
+    <Content Include="Views\Home\CheckIn.cshtml" />
+    <Content Include="Views\Home\CheckInCustomers.cshtml" />
+    <Content Include="Views\Home\CheckoutReservation.cshtml" />
+    <Content Include="Views\Home\Reservations.cshtml" />
+    <Content Include="Views\Home\MakeReservation.cshtml" />
+    <Content Include="Views\Home\Reserve_SuccessCard.cshtml" />
+    <Content Include="Views\Home\ReserveSuccess_Cash.cshtml" />
+    <Content Include="Views\Home\GetAllReservations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

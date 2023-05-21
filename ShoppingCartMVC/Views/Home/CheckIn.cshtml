@@ -1,0 +1,51 @@
+﻿@*@{
+        ViewBag.Title = "Check In";
+    }*@
+
+<style>
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin-left: -800px;
+        margin-top: -200px;
+    }
+
+    .form-control-sm {
+        width: 200px;
+    }
+</style>
+
+@*<h2>Check-in with yoour booking ID</h2>*@
+
+<div class="center">
+    @using (Html.BeginForm("VerifyBooking", "Home", FormMethod.Post))
+    {
+        <div class="form-group">
+            @Html.Label("Booking ID:")
+            @Html.TextBox("bookingId", null, new { @class = "form-control form-control-sm" })
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Check In" class="btn btn-primary" />
+        </div>
+    }
+</div>
+
+
+
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.QRCode))
+{
+    <img src="@ViewBag.QRCode" alt="QR Code" />
+}

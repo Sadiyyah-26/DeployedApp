@@ -1,0 +1,100 @@
+﻿@model ShoppingCartMVC.Models.tblReservation
+
+@{
+    ViewBag.Title = "Reservation Details";
+}
+
+<style>
+    .card {
+        border: 2px solid green;
+    }
+
+    /*  .btn-danger{
+        position:absolute;
+        margin-left:-200px;
+    }*/
+</style>
+
+@if (TempData["Submitted"] != null && (bool)TempData["Submitted"])
+{
+    <div class="alert alert-success">Booking is processed. Complete the payment step to reserve your seats!</div>
+}
+
+@*<h2>Reservation Details</h2>*@
+
+<br />
+<br />
+<br />
+
+
+@if (Model != null)
+{
+    <div class="col-lg-7 grid-margin stretch-card mx-auto">
+        <div class="card">
+            <div class="card-body" style="text-align: center;">
+                <h4 class="card-title"><u>Reservation Details</u></h4>
+                <br />
+                <table style="display: inline-block;">
+                    <tr>
+                        <th style="padding: 10px;">Field</th>
+                        <th style="padding: 10px;">Value</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">ReservationID</td>
+                        <td style="padding: 10px;">@Model.BookingId</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">Email</td>
+                        <td style="padding: 10px;">@Model.Mail</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">Contact Number</td>
+                        <td style="padding: 10px;">@Model.Number</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">Date</td>
+                        <td style="padding: 10px;">@Model.Date.Value.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">Time</td>
+                        <td style="padding: 10px;">@Model.Time.Value.ToString("hh:mm tt")</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">Seating</td>
+                        <td style="padding: 10px;">@Model.Seating</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">Price</td>
+                        <td style="padding: 10px;">R50.00</td>
+                    </tr>
+                    <!-- Add other relevant fields here -->
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<br />
+<br />
+
+
+
+<form action="@Url.Action("CancelReservation", "Home", new { bookingId = Model.BookingId })" method="post">
+    @Html.HiddenFor(m => m.BookingId)
+    <button type="button" onclick="callPayPal()" class="btn btn-primary" style="text-align: center; display: inline-block; margin-left: 500px;">Pay with card</button>
+    <button type="button" onclick="window.location.href='@Url.Action("ReserveSuccess_Cash", "Home", new { bookingId = Model.BookingId })'" class="btn btn-secondary" style="text-align: center; display: inline-block; margin-left: 10px;">Pay with Cash</button>
+</form>
+
+<script>
+    function callPayPal() {
+        var amount = '50'; // Specify the amount here, in this case, R50
+        var bookingId = '@Model.BookingId'; // Get the booking ID from the model
+        var paypalLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=' + amount + '&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377/Home/Reserve_SuccessCard?bookingId=' + bookingId;
+        window.location.href = paypalLink;
+    }
+</script>
+<br />
+<br />
+<br />
+<br />
+<br />

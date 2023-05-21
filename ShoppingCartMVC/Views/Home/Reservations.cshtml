@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">-->
+
+    <style>
+        .dashboard-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .dashboard-box {
+            width: 400px;
+            height: 600px;
+            background-color: #f2f2f2;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+            .dashboard-box:hover {
+                background-color: #8bd3e1;
+            }
+
+        .dashboard-icon img {
+            width: 400px;
+            height: 300px;
+            margin-bottom: 10px;
+        }
+
+
+        .dashboard-icon2 img {
+            width: 300px;
+            height: 250px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-text {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <a href="MakeReservation" class="dashboard-box">
+            <div class="dashboard-icon">
+                <img src="~/Images/Make_Reservation.png" alt="Icon 1">
+            </div>
+            <div class="dashboard-text">
+                @*Dashboard Box 1*@
+            </div>
+        </a>
+        <a href="CheckIn" class="dashboard-box">
+            <div class="dashboard-icon2">
+                <img src="~/Images/Checkin.png" alt="Icon 2">
+            </div>
+            <div class="dashboard-text">
+                @*Dashboard Box 2*@
+            </div>
+        </a>
+    </div>
+</body>
+</html>

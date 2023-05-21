@@ -1,0 +1,36 @@
+﻿@model ShoppingCartMVC.Models.tblReservation
+<style>
+    .card {
+        border: 3px solid #04d47a;
+    }
+</style>
+@{
+    ViewBag.Title = "Reserve Success";
+}
+<br />
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="card-title">Reservation made successfully!</h1>
+                <h3 class="card-text"> The process of checking in:</h3>
+                <p class="card-text">
+                    Please <b> @Html.ActionLink("Click Here", "Reservations", "Home")</b>  to be directed back to the main page where you can check in with your Booking ID.
+                    Please take note that you can only check-in within 20 minutes of reservation and you have to be present at the restaurant. Make sure you notify the waiter at the restaurant before checking in. If you forget your reservation
+                    details, no need to worry as you will recieve an email with all information regarding your booking details that will be checked by the waiter. A qr code will be scanned once checked-in
+                    confirming your reservation
+                </p>
+
+                @if (!string.IsNullOrEmpty(Request.QueryString["bookingId"]))
+                {
+                    <p>Your Booking ID:&ensp; @Request.QueryString["bookingId"]</p>
+                }
+            </div>
+        </div>
+        <div class="col-md-5">
+            <img src="~/Images/Reserved2.png" class="card-img" alt="..." />
+        </div>
+    </div>
+</div>
+
+<br />

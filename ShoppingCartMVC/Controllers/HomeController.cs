@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ShoppingCartMVC.Models;
+using QRCoder;
+
 namespace ShoppingCartMVC.Controllers
 {
     public class HomeController : Controller
@@ -765,10 +770,6 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
-        public ActionResult About()
-        {
-            return View();
-        }
 
         public ActionResult Reviews()
         {
@@ -786,6 +787,203 @@ namespace ShoppingCartMVC.Controllers
             return View(query);
         }
 
+        public ActionResult Reservations()
+        {
+            return View();
+        }
+
+        public ActionResult Reserve_SuccessCard()
+        {
+            return View();
+        }
+
+        public ActionResult Reserve_SuccessCash()
+        {
+            return View();
+        }
+        public ActionResult CheckoutReservation(int reservationId)
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                var reservation = context.tblReservations.FirstOrDefault(r => r.BookingId == reservationId);
+                if (reservation != null)
+                {
+                    return View(reservation);
+                }
+            }
+
+            return RedirectToAction("MakeReservation", "Home");
+        }
+
+        public ActionResult GetAllReservations()  //v changes
+        {
+            List<tblReservation> reservations;
+
+            using (var context = new dbOnlineStoreEntities())
+            {
+                reservations = context.tblReservations.ToList();
+            }
+
+            return View(reservations);
+        }
+
+
+        public ActionResult MakeReservation()  //V changes
+        {
+            var model = new tblReservation();
+            model.SeatNumberList = GetSeatOptions();
+            ViewBag.Submitted = false;
+
+            return View(model);
+        }
+
+
+        public ActionResult CheckInCustomer()
+        {
+            return View();
+        }
+        public ActionResult CheckIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult VerifyBooking(string bookingId)
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int convertedBookingId = int.Parse(bookingId);
+                var reservation = context.tblReservations.FirstOrDefault(r => r.BookingId == convertedBookingId);
+                if (reservation != null)
+                {
+                    ViewBag.SuccessMessage = "Checked in successfully!";
+                    ViewBag.QRCode = GenerateQRCode(convertedBookingId.ToString());
+
+
+                    // Pass the reservation to the view
+                    ViewBag.Reservation = reservation;
+
+                    return View("CheckinCustomers"); // Assuming your view name is "CheckInCustomer"
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Invalid booking ID. Please try again.";
+                }
+            }
+
+            return View("CheckIn");
+        }
+        private string GenerateQRCode(string bookingId)
+        {
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(bookingId, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(10); // Adjust the size of the QR code as needed
+
+            // Resize the QR code image
+            Bitmap resizedImage = new Bitmap(qrCodeImage, new Size(200, 200)); // Adjust the size as needed
+
+            // Convert the resized image to a base64 string
+            using (MemoryStream stream = new MemoryStream())
+            {
+                resizedImage.Save(stream, ImageFormat.Png);
+                byte[] qrCodeBytes = stream.ToArray();
+                string base64Image = Convert.ToBase64String(qrCodeBytes);
+                return "data:image/png;base64," + base64Image;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult MakeReservation(tblReservation reservation)  //v changes 
+        {
+
+            tblReservation g = new tblReservation();
+            // Check if the input fields are not blank
+            if (string.IsNullOrWhiteSpace(reservation.Mail) ||
+                string.IsNullOrWhiteSpace(reservation.Number) ||
+                string.IsNullOrWhiteSpace(reservation.Seating))
+            {
+                ModelState.AddModelError("", "Please fill in all the required fields.");
+            }
+            else if (ModelState.IsValid)
+            {
+                // Check if the date is from Monday to Friday
+                if (reservation.Date.HasValue && reservation.Date.Value.DayOfWeek >= DayOfWeek.Monday && reservation.Date.Value.DayOfWeek <= DayOfWeek.Friday)
+                {
+                    // Check if the time is between 9am and 3pm
+                    if (reservation.Time.HasValue && reservation.Time.Value.TimeOfDay >= new TimeSpan(8, 0, 0) && reservation.Time.Value.TimeOfDay <= new TimeSpan(18, 0, 0))
+                    {
+                        using (var context = new dbOnlineStoreEntities())
+                        {
+                            // Check if the seat is available for the chosen date and time
+                            int count = context.tblReservations
+                                .Where(r => r.Date == reservation.Date && r.Time == reservation.Time)
+                                .Count();
+                            if (count >= 2)
+                            {
+                                ModelState.AddModelError("", "Sorry, this seat is already booked twice for the chosen date and time.");
+                                // Re-populate the SeatNumberList dropdown with the updated model
+                                reservation.SeatNumberList = GetSeatOptions();
+                                ViewBag.Submitted = false;
+                                return View(reservation);
+                            }
+
+                            // Check if the seat is available for the chosen date and has not been booked more than twice
+                            count = context.tblReservations
+                                .Where(r => r.Date == reservation.Date && r.Seating == reservation.Seating)
+                                .Count();
+                            if (count >= 2)
+                            {
+                                ModelState.AddModelError("", "Sorry, this seating option is already booked twice for the chosen date.");
+                                // Re-populate the SeatNumberList dropdown with the updated model
+                                reservation.SeatNumberList = GetSeatOptions();
+                                ViewBag.Submitted = false;
+                                return View(reservation);
+                            }
+                            g.BookingId = reservation.BookingId;
+                            g.Customer_Name = reservation.Customer_Name;
+                            g.Mail = reservation.Mail;
+                            g.Number = reservation.Number;
+                            g.Seating = reservation.Seating;
+                            g.Date = reservation.Date;
+                            g.Time = reservation.Time;
+                            context.tblReservations.Add(reservation);
+                            context.SaveChanges();
+                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating {reservation.Seating} is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and Time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>. Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
+                                $" If you have any queries, drop us an email (turbomeals123@gmail.com)";
+                            var message = new MailMessage();
+                            message.To.Add(new MailAddress(reservation.Mail));
+                            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                            message.Subject = "Reservation Confirmation";
+                            message.Body = string.Format(body);
+                            message.IsBodyHtml = true;
+
+
+                            using (var smtp = new SmtpClient())
+                            {
+                                smtp.Send(message);
+                            }
+                        }
+                        TempData["Submitted"] = true;
+
+                        return RedirectToAction("CheckoutReservation", "Home", new { reservationId = reservation.BookingId });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid time selection. Reservations are only available between 8am and 6pm.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid date selection. Reservations are only available from Monday to Friday.");
+                }
+            }
+
+            // Re-populate the SeatNumberList dropdown with the updated model
+            reservation.SeatNumberList = GetSeatOptions();
+            ViewBag.Submitted = false;
+            return View(reservation);
+        }
         private IEnumerable<SelectListItem> GetSeatOptions()  // v changes
 
         {
