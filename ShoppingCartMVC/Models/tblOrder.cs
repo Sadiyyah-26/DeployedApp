@@ -32,6 +32,8 @@ namespace ShoppingCartMVC.Models
         public DateTime? OrderDate { get; set; }
         public string RefundStatus { get; set; }
 
+        public string OrderReady { get; set; }
+
         public int? InvoiceId { get; set; }
 
         public virtual tblProduct TblProduct { get; set; }

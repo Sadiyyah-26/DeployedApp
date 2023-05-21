@@ -10,14 +10,15 @@
     </style>
 </head>
 
-@using (Html.BeginForm())
-{
-    <div class="col-lg-7 grid-margin stretch-card mx-auto">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title" style="text-align:center"><u> Order Information </u></h4>
+<br />
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title" style="text-align:center"><u> Order Information </u></h4>
+            @using (Html.BeginForm("ConfirmOrder", "Home", FormMethod.Post))
+            {
                 <br />
-                <p style="text-align:center;">Order No. : #@Html.DisplayFor(model => Model.OrderId)</p>
+                <p style="text-align:center;"><b>Order No. : #@Html.DisplayFor(model => Model.OrderId)</b></p>
 
                 <p style="text-align:center;">Customer : @Html.DisplayFor(model => Model.TblInvoice.TblUser.Name)</p>
                 <p style="text-align:center;">Payment Method : @Html.DisplayFor(model => model.TblInvoice.Payment)</p>
@@ -25,26 +26,23 @@
                 <p style="text-align:center;">Total : R @Html.DisplayFor(model => model.TblInvoice.Bill).00</p>
                 <p style="text-align:center;">Order Date: @Html.DisplayFor(model => model.OrderDate)</p>
 
-                <div class="card col-lg-5 grid-margin mx-auto">
-                    <div class="card-body">
-                        <p style="text-align:center;"><b>Update User Status: </b></p>
-                        <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
-
-                        @*<br />
-                        <input style="text-align: center;" type="radio" name="Status" value="Ready for Collection" /><label>&ensp; Ready for Collection</label>*@
-                        <br />
-                        <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
-                        <br />
+                if (Model.Method == "Collection")
+                {
+                    <div class="card col-lg-5 grid-margin mx-auto">
+                        <div class="card-body">
+                            <p style="text-align:center;"><b>Update User Status: </b></p>
+                            <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
+                            <br />
+                            <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
+                            <br />
+                        </div>
                     </div>
-                </div>
-
-                <br />
-                <p style="text-align:center;"><input type="submit" value="Confirm Order" class="btn btn-success" /></p>
-            </div>
+                    <br />
+                    <p style="text-align:center;"><input type="submit" value="Update" class="btn btn-success" /></p>
+                }
+            }
         </div>
     </div>
-
-}
-
+</div>
 <br />
 <br />

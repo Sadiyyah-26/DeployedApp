@@ -310,6 +310,8 @@
     <Content Include="Views\tblRefunds\Details.cshtml" />
     <Content Include="Views\tblRefunds\Edit.cshtml" />
     <Content Include="Views\tblRefunds\Index.cshtml" />
+    <Content Include="Views\Home\PrepStaff.cshtml" />
+    <Content Include="Views\Home\PrepOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

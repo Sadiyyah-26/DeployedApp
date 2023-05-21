@@ -2,16 +2,24 @@
 <head>
     <title>Order History</title>
 </head>
+</head>
+@{
+    // Order the data by OrderID in descending order
+    var sortedOrders = Model.OrderByDescending(o => o.OrderId).ToList();
+}
+
 <div class="container">
 
     <table class="table">
         <tr>
-
             <th>
-               Total
+                Order Num
             </th>
             <th>
-               Payment Method
+                Total
+            </th>
+            <th>
+                Payment Method
             </th>
             <th>
                 Payment Status
@@ -28,10 +36,10 @@
             <th>Invoice</th>
         </tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in sortedOrders)
         {
             <tr>
-
+                <td>#@Html.DisplayFor(modelitem => item.OrderId)</td>
 
                 <td>
                     R @Html.DisplayFor(modelItem => item.TblInvoice.Bill).00
@@ -55,9 +63,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
-                @*<th>
-                    @Html.DisplayFor(model => item.TblInvoice.Status)
-                </th>*@
 
                 <td>
                     @if (item.TblInvoice.Status == "Out for Delivery")
@@ -73,14 +78,27 @@
                         <span class="btn btn-success">Order Collected</span>
                     }
                     else
+                    if (item.TblInvoice.Status == "Cancelled")
+                    {
+                        <span class="btn btn-danger">Cancelled</span>
+                    }
+                    else
                     {
                         <span class="btn btn-dark">Order Placed</span>
                     }
 
                 </td>
                 <td>
+                    @*/changes*@
                     <a href="@Url.Action("Invoice", "Home", new { id = item.InvoiceId })" class="btn btn-primary">Print</a>
                 </td>
+                @*<td>
+                    @if (item.TblInvoice.Status == "Order Placed")
+                    {
+                        <a href="@Url.Action("CancelOrder", "Home",new { OrderId = item.OrderId })" class="btn btn-danger">Cancel Order</a>
+                    }
+
+                </td>*@
 
             </tr>
         }
