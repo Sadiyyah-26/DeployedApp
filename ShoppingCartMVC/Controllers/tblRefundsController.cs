@@ -57,9 +57,9 @@ namespace ShoppingCartMVC.Controllers
 
             if (ModelState.IsValid)
             {
-
+                
                 string subject = "Refund Request Confirmation";
-                string body = "Your request for a refund was recieved." +
+                string body = "Your request for a refund was recieved.<br><br>" +
                     "The manager will review your request and you will have a response within 3-5 business days.";
                 string emailID = tblRefund.EmailID;
 
@@ -83,7 +83,7 @@ namespace ShoppingCartMVC.Controllers
                 }
 
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Refund", "Home", new { id = @Session["uid"] });
             }
 
             return View(tblRefund);
@@ -136,16 +136,18 @@ namespace ShoppingCartMVC.Controllers
 
                         string emailSubject;
                         string emailBody;
+                        string orderNum = originalRefund.OrderId.ToString();
+                        
 
                         if (tblRefund.RefundStatus == "Successful")
                         {
                             emailSubject = "Refund Request Approved";
-                            emailBody = "Your refund request has been approved. The refund will be processed soon.";
+                            emailBody = "Dear Turbo Meals customer,<br><br>Your refund request for Order Number #"+orderNum+" has been approved.<br><br> Please note your refund will be processed soon.";
                         }
                         else if (tblRefund.RefundStatus == "Unsuccessful")
                         {
                             emailSubject = "Refund Request Denied";
-                            emailBody = "We regret to inform you that your refund request has been denied.";
+                            emailBody = "Dear Turbo Meals customer,<br><br>We regret to inform you that your refund request for Order Number # "+orderNum+" has been denied.<br><br>For any further queries please send a reply to this email and we will gladly get back to you within 24 hours.";
                         }
                         else
                         {

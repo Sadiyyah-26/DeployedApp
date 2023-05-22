@@ -1,41 +1,37 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblRefund>
 
-@{
-    ViewBag.Title = "Index";
-}
+<head>
+    <title>All Refund Request</title>
+</head>
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<br />
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.OrderId)
+            Order ID
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.EmailID)
+           Email
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RefundRequestDate)
+            Request Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RefundReason)
+           Refund Reason
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Image)
+            Image Proof
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RefundStatus)
+            Refund Status
         </th>
-        <th></th>
+        <th>Action</th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.OrderId)
+            #@Html.DisplayFor(modelItem => item.OrderId)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EmailID)
@@ -53,11 +49,18 @@
             @Html.DisplayFor(modelItem => item.RefundStatus)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.RefundId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.RefundId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.RefundId })
+            @if (item.RefundStatus == "Refund Requested")
+            {
+                <a href="@Url.Action("Edit","tblRefunds",new { id = item.RefundId })" class="btn btn-info">Reply</a>
+            }
+            else
+                {
+                    <span class="btn btn-success">Complete</span>
+                }
+
         </td>
     </tr>
 }
 
 </table>
+<br />

@@ -30,7 +30,7 @@
                 {
                     <div class="card col-lg-5 grid-margin mx-auto">
                         <div class="card-body">
-                            <p style="text-align:center;"><b>Update User Status: </b></p>
+                            <p style="text-align:center;"><b>Update Order Status: </b></p>
                             <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
                             <br />
                             <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
@@ -40,6 +40,9 @@
                     <br />
                     <p style="text-align:center;"><input type="submit" value="Update" class="btn btn-success" /></p>
                 }
+
+
+               <p style="text-align:center"> <a href="@Url.Action("GetAllOrderDetail", "Home")" class="btn btn-dark">Back</a></p>
             }
         </div>
     </div>

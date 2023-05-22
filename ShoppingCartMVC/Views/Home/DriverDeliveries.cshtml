@@ -1,12 +1,7 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.Drivers>
 
-@*@{
-    ViewBag.Title = "DeliveryDetail";
-    var orders = ViewBag.Orders as IEnumerable<ShoppingCartMVC.Models.Drivers>;
-    var orderCount = ViewBag.OrderCount as int?;
-}*@
-
-<!-- Add this code block within your Razor view -->
+<br />
+<br />
 <table class="table">
     <tr>
         <th>Order ID</th>
@@ -51,13 +46,5 @@
 
     }
 </table>
-
-@*@if (orderCount.HasValue && orderCount.Value > 0)
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        There are @orderCount.Value new orders out for delivery.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}*@
+<br />
+<br />

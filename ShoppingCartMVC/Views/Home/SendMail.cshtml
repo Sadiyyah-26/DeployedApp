@@ -4,14 +4,14 @@
     <title>Notify Customer</title>
     <style>
         .card {
-            border: 2px solid;
+            border: 2px solid #0094ff;
         }
     </style>
 </head>
 
 @using (Html.BeginForm("SendMail", "Home", FormMethod.Post))
 {
-    @*pop-up for delivery notification*@
+    
     <div class="col-lg-5 grid-margin stretch-card mx-auto">
         <div class="card">
             <div class="card-body">
@@ -32,7 +32,7 @@
                         <p style="text-align:center;"> License Number :    &ensp; &ensp;&ensp;&ensp;&ensp;&ensp;    <input type="text" id="licenseNum" name="licenseNum" required="required" /></p>
                     </div>
                     <br />
-                    <p style="text-align:center;"> <input type="submit" value="Send" class="btn btn-success" /></p>
+                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> &ensp;<a href="@Url.Action("DeliveryDetails","Home", new { OrderId = Model.OrderId })" class="btn btn-info">Complete Delivery</a></p>
                 </form>
 
 
