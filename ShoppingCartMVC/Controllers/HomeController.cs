@@ -56,8 +56,51 @@ namespace ShoppingCartMVC.Controllers
             return View(query);
         }
 
+        //[HttpPost]
+        //public ActionResult AddtoCart(int id, int qty)
+        //{
+        //    tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
+        //    Cart c = new Cart();
+        //    c.proid = id;
+        //    c.proname = p.P_Name;
+        //    c.price = Convert.ToInt32(p.Unit);
+        //    c.qty = Convert.ToInt32(qty);
+        //    c.bill = c.price * c.qty;
+        //    if (TempData["cart"] == null)
+        //    {
+        //        li.Add(c);
+        //        TempData["cart"] = li;
+        //    }
+        //    else
+        //    {
+        //        List<Cart> li2 = TempData["cart"] as List<Cart>;
+        //        int flag = 0;
+        //        foreach (var item in li2)
+        //        {
+        //            if (item.proid == c.proid)
+        //            {
+        //                item.qty += c.qty;
+        //                item.bill += c.bill;
+        //                flag = 1;
+        //            }
+
+        //        }
+        //        if (flag == 0)
+        //        {
+        //            li2.Add(c);
+        //            //new item
+        //        }
+        //        TempData["cart"] = li2;
+
+        //    }
+
+        //    TempData.Keep();
+
+        //    return RedirectToAction("Index");
+        //}
+
         [HttpPost]
-        public ActionResult AddtoCart(int id, int qty)
+        public ActionResult AddtoCart(int id, int qty, string[] addons)
         {
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
             Cart c = new Cart();
@@ -65,7 +108,25 @@ namespace ShoppingCartMVC.Controllers
             c.proname = p.P_Name;
             c.price = Convert.ToInt32(p.Unit);
             c.qty = Convert.ToInt32(qty);
-            c.bill = c.price * c.qty;
+
+            // Calculate the add-on total price
+            int addonTotalPrice = 0;
+            if (addons != null)
+            {
+                foreach (var addon in addons)
+                {
+                    if (addon == "Addon1")
+                        addonTotalPrice += 10;
+                    else if (addon == "Addon2")
+                        addonTotalPrice += 15;
+                    else if (addon == "Addon3")
+                        addonTotalPrice += 20;
+                }
+            }
+
+            // Add the add-on total price to the item's bill
+            c.bill = (c.price * c.qty) + addonTotalPrice;
+
             if (TempData["cart"] == null)
             {
                 li.Add(c);
@@ -83,7 +144,6 @@ namespace ShoppingCartMVC.Controllers
                         item.bill += c.bill;
                         flag = 1;
                     }
-
                 }
                 if (flag == 0)
                 {
@@ -91,7 +151,6 @@ namespace ShoppingCartMVC.Controllers
                     //new item
                 }
                 TempData["cart"] = li2;
-
             }
 
             TempData.Keep();
@@ -137,7 +196,7 @@ namespace ShoppingCartMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Checkout(string contact, string address, string Method, string PayMethod) /*My chnages for delivery*/
+        public ActionResult Checkout(string contact, string address, string Method, string PayMethod) //v changes
         {
             if (ModelState.IsValid)
             {
@@ -147,7 +206,8 @@ namespace ShoppingCartMVC.Controllers
                 iv.InvoiceDate = System.DateTime.Now;
                 iv.Bill = (int)TempData["total"];
                 iv.Payment = PayMethod;
-                iv.DC_Method = Method; /*My chnages for delivery*/
+                iv.DC_Method = Method;
+
                 if (PayMethod == "PayPal")
                 {
                     iv.Payment_Status = "Paid";
@@ -160,15 +220,19 @@ namespace ShoppingCartMVC.Controllers
                 db.tblInvoices.Add(iv);
                 db.SaveChanges();
 
-               
-                //order book
+                // Retrieve user information
+                tblUser user = db.tblUsers.Find(iv.UserId);
+                string userEmail = user.Email;
+                string userName = user.Name;
+
+                // Order book
                 foreach (var item in li2)
                 {
                     tblOrder od = new tblOrder();
                     od.ProID = item.proid;
                     od.Contact = contact;
                     od.Address = address;
-                    od.Method = Method; /*My chnages for delivery*/
+                    od.Method = Method;
                     od.OrderDate = System.DateTime.Now;
                     od.InvoiceId = iv.InvoiceId;
                     od.Qty = item.qty;
@@ -178,32 +242,70 @@ namespace ShoppingCartMVC.Controllers
 
                     db.tblOrders.Add(od);
                     db.SaveChanges();
-
                 }
+
+                // Send email to user
+                var body = $"Dear {userName},<br /><br />Your order was placed successfully. You will be notified when your order is ready.";
+
+                if (iv.Payment == "Cash")
+                {
+                    body += "Please note that your payment is pending. Kindly complete the payment when you recieve your order.";
+                }
+                else if (iv.Payment == "PayPal")
+                {
+                    body += "Your payment has been successfully processed.";
+                }
+
+                body += "<br /><br />Order Details:<br />";
+
+                foreach (var item in li2)
+                {
+                    tblProduct product = db.tblProducts.Find(item.proid);
+                    string productName = product.P_Name;
+                    int quantity = item.qty;
+                    int Price = (int)product.Unit;
+                    int bill = item.bill;
+
+                    body += $"Item: {productName}<br />" +
+                            $"Quantity: {quantity}<br />" +
+                            $"UnitPrice: {Price}<br />" +
+                            $"Total Bill: {bill}<br /><br />";
+                }
+
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(userEmail));
+                message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                message.Subject = "Order Confirmation";
+                message.Body = body;
+                message.IsBodyHtml = true;
+
+                using (var smtp = new SmtpClient())
+                {
+                    smtp.Send(message);
+                }
+
+
                 TempData.Remove("total");
                 TempData.Remove("cart");
-                // TempData["msg"] = "Order Book Successfully!!";
 
                 if (PayMethod == "PayPal")
                 {
                     return Content("<script>" +
-            "function callPayPal() {" +
-            "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023grp01a.azurewebsites.net/Home/Success';" +
-            "}" +
-            "callPayPal();" +
-         "</script>");
+                        "function callPayPal() {" +
+                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377/Home/Success';" +
+                        "}" +
+                        "callPayPal();" +
+                        "</script>");
                 }
                 else
                 {
-                    return RedirectToAction("Success", "Home"/*, new { id = @Session["uid"] }*/);
+                    return RedirectToAction("Success", "Home");
                 }
             }
-
 
             TempData.Keep();
             return View();
         }
-        
         #endregion
 
 
@@ -768,6 +870,11 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
+        public ActionResult HomePage()
+        {
+            return View();
+        }
+
         public ActionResult Contact()
         {
             return View();
@@ -958,7 +1065,7 @@ namespace ShoppingCartMVC.Controllers
                             g.Time = reservation.Time;
                             context.tblReservations.Add(reservation);
                             context.SaveChanges();
-                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating {reservation.Seating} is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and Time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>. Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
+                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating for {reservation.Seating} people is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and Time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>. Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
                                 $" If you have any queries, drop us an email (turbomeals123@gmail.com)";
                             var message = new MailMessage();
                             message.To.Add(new MailAddress(reservation.Mail));

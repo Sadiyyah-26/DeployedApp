@@ -16,24 +16,37 @@
     .form-control-sm {
         width: 200px;
     }
+
+    .image-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .image {
+        max-width: 600px;
+        margin-top:200px;
+        margin-left: 500px; /* Change to margin-left */
+    }
 </style>
 
-@*<h2>Check-in with yoour booking ID</h2>*@
+@*<h2>Check-in with your booking ID</h2>*@
 
 <div class="center">
-    @using (Html.BeginForm("VerifyBooking", "Home", FormMethod.Post))
-    {
-        <div class="form-group">
-            @Html.Label("Booking ID:")
-            @Html.TextBox("bookingId", null, new { @class = "form-control form-control-sm" })
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Check In" class="btn btn-primary" />
-        </div>
-    }
+    <div class="image-container">
+        <img src="~/Images/ReserveSuccess.png" alt="Image" class="image" />&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+        @using (Html.BeginForm("VerifyBooking", "Home", FormMethod.Post))
+        {
+            <div class="form-group">
+                @Html.Label("Booking ID:")
+                @Html.TextBox("bookingId", null, new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Check In" class="btn btn-primary" />
+            </div>
+        }
+    </div>
 </div>
-
-
 
 @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
 {
