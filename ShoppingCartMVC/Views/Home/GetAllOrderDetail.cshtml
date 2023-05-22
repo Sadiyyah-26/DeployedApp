@@ -85,7 +85,7 @@
                         @if (item.TblInvoice.Status == "Order Placed")
                         {
 
-                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-dark">Order Placed</a>
+                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-dark">Order Ready</a>
                         }
                         else if (item.TblInvoice.Status == "Out for Delivery")
                         {
@@ -120,7 +120,7 @@
                         }
                         else if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Out for Delivery"))
                         {
-                            <span class="btn btn-warning">Driver Dispatched</span>
+                            <span class="btn btn-primary">Driver Dispatched</span>
                         }
                         else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Order Placed"))
                         {
@@ -130,7 +130,7 @@
                         }
                         else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Ready for Collection"))
                         {
-                            <span class="btn btn-warning">Collection</span>
+                            <span class="btn btn-primary">Collection</span>
                         }
                         else
                         {

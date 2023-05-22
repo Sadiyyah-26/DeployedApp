@@ -89,7 +89,7 @@
     function callPayPal() {
         var amount = '50'; // Specify the amount here, in this case, R50
         var bookingId = '@Model.BookingId'; // Get the booking ID from the model
-        var paypalLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=' + amount + '&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377/Home/Reserve_SuccessCard?bookingId=' + bookingId;
+        var paypalLink = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=' + amount + '&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023grp01a.azurewebsites.net/Home/Reserve_SuccessCard?bookingId=' + bookingId;
         window.location.href = paypalLink;
     }
 </script>

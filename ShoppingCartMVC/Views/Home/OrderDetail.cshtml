@@ -2,7 +2,7 @@
 <head>
     <title>Order History</title>
 </head>
-</head>
+
 @{
     // Order the data by OrderID in descending order
     var sortedOrders = Model.OrderByDescending(o => o.OrderId).ToList();
@@ -84,7 +84,7 @@
                     }
                     else
                     {
-                        <span class="btn btn-dark">Order Placed</span>
+                        <a href="@Url.Action("CancelOrder", "Home", new { OrderId = item.OrderId })" class="btn btn-info">View Order Placed</a>
                     }
 
                 </td>
@@ -92,13 +92,7 @@
                     @*/changes*@
                     <a href="@Url.Action("Invoice", "Home", new { id = item.InvoiceId })" class="btn btn-primary">Print</a>
                 </td>
-                @*<td>
-                    @if (item.TblInvoice.Status == "Order Placed")
-                    {
-                        <a href="@Url.Action("CancelOrder", "Home",new { OrderId = item.OrderId })" class="btn btn-danger">Cancel Order</a>
-                    }
-
-                </td>*@
+               
 
             </tr>
         }

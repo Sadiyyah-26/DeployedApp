@@ -160,7 +160,7 @@ namespace ShoppingCartMVC.Controllers
                 db.tblInvoices.Add(iv);
                 db.SaveChanges();
 
-
+               
                 //order book
                 foreach (var item in li2)
                 {
@@ -203,7 +203,7 @@ namespace ShoppingCartMVC.Controllers
             TempData.Keep();
             return View();
         }
-
+        
         #endregion
 
 
@@ -227,7 +227,7 @@ namespace ShoppingCartMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConfirmOrder(tblOrder o, string Status)
+        public ActionResult ConfirmOrder( string Status)
         {
             int id = (int)TempData["orderNum"];
             tblInvoice tblInvoice = db.tblInvoices.Find(id);
@@ -258,44 +258,9 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Deliveries for Driver
-        public ActionResult DriverDeliveries(int id, tblOrder o)
+        public ActionResult DriverDeliveries(int id)
         {
             var query = db.tblDrivers.Where(m => m.UserId == id).ToList();
-            //var orders = db.tblOrders.ToList();
-            //var count = 0;
-
-            //using (var db = new dbOnlineStoreEntities())
-            //{
-            //    var match1 = db.tblDrivers.Any(n => n.UserId == id);
-
-            //    if (match1)
-            //    {
-            //        foreach (var order in orders)
-            //        {
-            //            var value = db.tblDrivers
-            //                .Where(t => t.OrderId == order.OrderId)
-            //                .Select(t => t.TblOrder.TblInvoice.Status)
-            //                .FirstOrDefault();
-
-            //            if (value != null && value == "Out for Delivery")
-            //            {
-            //                count++;
-            //            }
-            //        }
-            //    }
-
-            //    // Reset the orderCount to 0 when a different user logs in
-            //    if (TempData["CurrentUserId"] != null && (int)TempData["CurrentUserId"] != id)
-            //    {
-            //        count = 0;
-            //    }
-
-            //    // Store the current user's ID in TempData
-            //    TempData["CurrentUserId"] = id;
-
-            //    ViewBag.Orders = orders;
-            //    ViewBag.OrderCount = count;
-
             return View(query);
 
         }
@@ -317,9 +282,6 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult AssignDriver(int OrderId, tblOrder o)
         {
-
-            using (var db = new dbOnlineStoreEntities())
-            {
                 var dr = db.tblUsers.Where(u => u.RoleType == 3).ToList();
 
                 var driverSelectList = dr.Select(u => new SelectListItem
@@ -329,15 +291,13 @@ namespace ShoppingCartMVC.Controllers
                 });
 
                 ViewData["UserId"] = driverSelectList;
-            }
+            
 
             if (o.OrderId == OrderId)
             {
                 TempData["OrderID"] = o.OrderId;
             }
-
-            using (var db = new dbOnlineStoreEntities())
-            {
+       
                 var match1 = db.tblOrders.Any(n => n.OrderId == OrderId);
                 var match2 = db.tblOrders.Any(m => m.OrderId == OrderId);
 
@@ -369,22 +329,16 @@ namespace ShoppingCartMVC.Controllers
                     }
                 }
 
-            }
+            
 
             return View();
-
-
-
-
-
         }
 
         [HttpPost]
         public ActionResult AssignDriver(Drivers d, tblUser u, int OrderId, tblOrder o)
         {
 
-            using (var db = new dbOnlineStoreEntities())
-            {
+            
                 var dri = db.tblUsers.Where(ut => ut.RoleType == 3).ToList();
 
                 var driverSelectList = dri.Select(ut => new SelectListItem
@@ -394,12 +348,11 @@ namespace ShoppingCartMVC.Controllers
                 });
 
                 ViewData["UserId"] = driverSelectList;
-            }
+            
 
             Drivers dr = new Drivers();
 
-            using (var db = new dbOnlineStoreEntities())
-            {
+            
                 var match = db.tblUsers.Any(n => n.UserId == d.UserId);
 
                 if (match)
@@ -416,15 +369,14 @@ namespace ShoppingCartMVC.Controllers
                     }
 
                 }
-            }
+            
 
 
 
             dr.OrderId = OrderId;
             dr.UserId = d.UserId;
 
-            using (var db = new dbOnlineStoreEntities())
-            {
+           
                 var match1 = db.tblOrders.Any(n => n.OrderId == OrderId);
                 var match2 = db.tblOrders.Any(m => m.OrderId == OrderId);
 
@@ -452,7 +404,7 @@ namespace ShoppingCartMVC.Controllers
                     }
                 }
 
-            }
+            
 
 
             db.tblDrivers.Add(dr);
@@ -599,7 +551,7 @@ namespace ShoppingCartMVC.Controllers
                 var message = new MailMessage();
                 message.To.Add(new MailAddress(toEmail));
                 message.From = new MailAddress("turbomeals123@gmail.com");
-                message.Subject = "Your Turbo Meals Order Ready for Collection";
+                message.Subject = "Turbo Meals Order Ready for Collection";
                 message.Body = string.Format(body);
                 message.IsBodyHtml = true;
 
@@ -620,7 +572,7 @@ namespace ShoppingCartMVC.Controllers
         #region Directions for Driver
         public ActionResult Map(int OrderId)
         {
-            TempData["oId2"] = OrderId;
+            
             var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
             return View(query);
         }
@@ -645,8 +597,7 @@ namespace ShoppingCartMVC.Controllers
 
             if (Session["uid"] != null && int.TryParse(Session["uid"].ToString(), out id))
             {
-                using (var db = new dbOnlineStoreEntities())
-                {
+                
                     var matchDr = db.tblUsers.Any(n => n.UserId == id);
                     if (matchDr)
                     {
@@ -661,11 +612,11 @@ namespace ShoppingCartMVC.Controllers
                         }
 
                     }
-                }
+                
             }
             else
             {
-                TempData["drName"] = "A";
+                TempData["drName"] = "Driver";
             }
 
 
@@ -755,6 +706,63 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
+        #region Customer Cancels Order
+        public ActionResult CancelOrder(int OrderId)
+        {
+            TempData["o"] = OrderId;
+            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
+
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult CancelOrder()
+        {
+            int orderId = (int)TempData["o"];
+            tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
+            tblInvoice.Status = "Cancelled";
+
+            string oId = orderId.ToString();
+            string toEmail = tblInvoice.TblUser.Email;
+            string name = tblInvoice.TblUser.Name;
+            string total = tblInvoice.Bill.ToString();
+            string payMethod = tblInvoice.DC_Method;
+            string refund = "";
+            if (tblInvoice.Payment_Status == "Pending")
+            {
+                refund = "Since you have opted for Cash on " + payMethod + " there is no refund due to you." +
+                "<br><br>Hope to have you choose Turbo Meals in the future.";
+
+            }
+            else
+            {
+                refund = "Please note, your refund of R" + total + ".00 will be processed and credited to your account within 48 hours.<br><br>Hope to have you choose Turbo Meals in the future.";
+            }
+
+            var body = "Dear " + name + ",<br><br>" +
+           "Your Order #" + orderId + " has successfully been cancelled as per your request.<br><br>" +
+            refund;
+
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(toEmail));
+            message.From = new MailAddress("turbomeals123@gmail.com");
+            message.Subject = "Turbo Meals Order Cancellation";
+            message.Body = string.Format(body);
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(message);
+            }
+
+            db.Entry(tblInvoice).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("OrderDetail", "Home", new { id = @Session["uid"] });
+        }
+
+        #endregion
+
         public ActionResult Success()
         {
             return View();
@@ -786,7 +794,7 @@ namespace ShoppingCartMVC.Controllers
             var query = db.tblOrders.Where(m => m.TblInvoice.UserId == id).ToList();
             return View(query);
         }
-
+        #region Reservation
         public ActionResult Reservations()
         {
             return View();
@@ -801,6 +809,7 @@ namespace ShoppingCartMVC.Controllers
         {
             return View();
         }
+
         public ActionResult CheckoutReservation(int reservationId)
         {
             using (var context = new dbOnlineStoreEntities())
@@ -996,5 +1005,7 @@ namespace ShoppingCartMVC.Controllers
 
     };
         }
+        #endregion
+
     }
 }

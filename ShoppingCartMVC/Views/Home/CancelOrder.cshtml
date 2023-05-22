@@ -1,0 +1,49 @@
+﻿@model ShoppingCartMVC.Models.tblOrder
+@{
+    ViewBag.Title = "CancelOrder";
+}
+<head>
+        <title>
+            Order Details
+        </title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+
+    <style>
+        .cncl {
+            text-align: center;
+        }
+
+        .card{
+            border:2px solid #0094ff;
+        }
+    </style>
+</head>
+
+<body>
+    @using (Html.BeginForm())
+    {
+        <div class="col-lg-5 grid-margin stretch-card mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title" style="text-align:center"><u>Order #@Html.DisplayFor(m => Model.OrderId) Details</u></h4>
+                    <br />
+                    <p class="cncl"> Order          : @Html.DisplayFor(m => m.TblProduct.P_Name) x @Html.DisplayFor(m => m.Qty) </p>
+                    <p class="cncl"> Total Amount   :  R @Html.DisplayFor(m => m.TblInvoice.Bill).00 </p>
+                    <p class="cncl"> Payment Method : @Html.DisplayFor(m => m.TblInvoice.Payment) </p>
+                    <p class="cncl"> Payment Status : @Html.DisplayFor(m => m.TblInvoice.Payment_Status) </p>
+
+                    <br />
+                    
+                    <p class="cncl"><a href="@Url.Action("OrderDetail","Home", new { id=Model.TblInvoice.TblUser.UserId })" class="btn btn-dark">Back</a> &ensp;<input type="submit" id="cancelButton" value="Cancel Order" class="btn btn-danger" /> </p>
+                    
+                </div>
+            </div>
+        </div>
+    }
+</body>
+<br />
+<br />
+
