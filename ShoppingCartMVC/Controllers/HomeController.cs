@@ -245,7 +245,7 @@ namespace ShoppingCartMVC.Controllers
                 }
 
                 // Send email to user
-                var body = $"Dear {userName},<br /><br />Your order was placed successfully. You will be notified when your order is ready.";
+                var body = $"Dear {userName},<br /><br />Your order was placed successfully.<br><br> You will be notified when your order is ready.<br><br>";
 
                 if (iv.Payment == "Cash")
                 {
@@ -292,7 +292,7 @@ namespace ShoppingCartMVC.Controllers
                 {
                     return Content("<script>" +
                         "function callPayPal() {" +
-                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377/Home/Success';" +
+                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023grp01a.azurewebsites.net/Home/Success';" +
                         "}" +
                         "callPayPal();" +
                         "</script>");
@@ -342,6 +342,29 @@ namespace ShoppingCartMVC.Controllers
             }
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
+
+            tblOrder tblOrder = db.tblOrders.Find(id);
+            string oId = id.ToString();
+            string toEmail = tblInvoice.TblUser.Email;
+            string name = tblInvoice.TblUser.Name;
+
+
+            var body = "Dear " + name + ",<br><br>" +
+           "Your Order #" + oId + " has been collected from Turbo Meals.<br><br>Payment Status: Paid.<br><br>Thank you for choosing Turbo Meals!";
+
+
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(toEmail));
+            message.From = new MailAddress("turbomeals123@gmail.com");
+            message.Subject = "Turbo Meals Order Collected";
+            message.Body = string.Format(body);
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(message);
+            }
 
             return RedirectToAction("GetAllOrderDetail");
 
@@ -596,6 +619,7 @@ namespace ShoppingCartMVC.Controllers
             tblOrder tblOrder = db.tblOrders.Find(orderId);
             tblOrder.TblInvoice.Status = "Order Delivered";
 
+            string payment = "";
             tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
             if (tblInvoice.Payment_Status == "Pending")
             {
@@ -607,13 +631,38 @@ namespace ShoppingCartMVC.Controllers
                 {
                     tblInvoice.Payment_Status = "NPaid";
                 }
-            }
+                payment = "Please note, your Payment Status has now been updated to Paid.<br><br>";
 
+            }
+            payment = "Payment Status: Paid<br><br>";
 
             db.Entry(tblOrder).State = EntityState.Modified;
             db.SaveChanges();
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
+
+            string oId = orderId.ToString();
+            string toEmail = tblOrder.TblInvoice.TblUser.Email;
+            string name = tblOrder.TblInvoice.TblUser.Name;
+            string address = tblOrder.Address;
+
+            var body = "Dear " + name + ",<br><br>" +
+           "Your Order #" + orderId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
+           "Thank you for choosing Turbo Meals!";
+
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(toEmail));
+            message.From = new MailAddress("turbomeals123@gmail.com");
+            message.Subject = "Turbo Meals Order Delivered";
+            message.Body = string.Format(body);
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(message);
+            }
+
             return RedirectToAction("DeliveryDetails", new { OrderId = orderId });
 
         }
