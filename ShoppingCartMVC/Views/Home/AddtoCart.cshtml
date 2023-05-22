@@ -1,6 +1,25 @@
-﻿@model ShoppingCartMVC.Models.tblProduct
-<head>
+﻿<head>
     <title>Your Cart</title>
+    <style>
+        .addons-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+        }
+
+        .addons-image {
+            height: 80px;
+            width: 80px;
+            margin-right: 10px;
+        }
+
+        .addons-label {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <br />
 <br />
@@ -9,34 +28,50 @@
 <br />
 <br />
 <div class="container">
-
-
     @using (Html.BeginForm())
     {
-
-
         <div class="row">
             <div class="col-lg-6">
                 <input type="hidden" name="id" value="@Model.ProID" />
-                <img src="~/Uploads/@Model.Image" style="height:250px;width:100%" />
+                <img src="~/Uploads/@Model.Image" style="height:400px;width:100%" />
             </div>
 
             <div class="col-lg-6">
                 <h3>@Model.P_Name</h3>
-
                 <p>@Model.Description</p>
                 <p>R <strong>@Model.Unit</strong></p>
-                <input type="number" min="1" max="10" name="qty" value="1" />               
+                <input type="number" min="1" max="10" name="qty" />
+                <div class="addons-container">
+                    @*<img class="addons-image" src="path_to_addon_image" />*@
+                    <div>
+                        <h4>Add-ons:</h4>
+                        <div>
+                            <input type="checkbox" name="addons" value="Addon1" />
+                            <label class="addons-label">Add Extra Turbo Sauce (+R10)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="addons" value="Addon2" />
+                            <label class="addons-label">Add double cheese (+R15)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="addons" value="Addon3" />
+                            <label class="addons-label">Add Crispy Onions (+R20)</label>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+
                 <input type="submit" value="Add to Cart" class="btn btn-warning" />
             </div>
-
         </div>
-
     }
 </div>
+
 <br />
 <br />
 <br />
 <br />
 <br />
 <br />
+

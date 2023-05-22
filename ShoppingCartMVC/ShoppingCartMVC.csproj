@@ -215,7 +215,7 @@
     <Content Include="Images\b.jpg" />
     <Content Include="Images\bd.jpg" />
     <Content Include="Images\burger.jpg" />
-    <Content Include="Images\check-in.png" />
+    <Content Include="Images\Checkin.png" />
     <Content Include="Images\contactBG.jpg" />
     <Content Include="Images\contactEdited.png" />
     <Content Include="Images\edit.png" />
@@ -232,7 +232,8 @@
     <Content Include="Images\order-success.jpg" />
     <Content Include="Images\p.jpg" />
     <Content Include="Images\Reg.png" />
-    <Content Include="Images\Reserved2.png" />
+    <Content Include="Images\res.jpg" />
+    <Content Include="Images\ReserveSuccess.png" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
     <Content Include="js\bootstrap.min.js" />
@@ -302,7 +303,7 @@
     <Content Include="Views\Home\GetAllUser.cshtml" />
     <Content Include="Views\Home\Invoice.cshtml" />
     <Content Include="Views\Home\OrderDetail.cshtml" />
-    <Content Include="Views\Home\Single.cshtml" />
+    <Content Include="Views\Home\HomePage.cshtml" />
     <Content Include="Views\Home\Success.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\ThankYou.cshtml" />
