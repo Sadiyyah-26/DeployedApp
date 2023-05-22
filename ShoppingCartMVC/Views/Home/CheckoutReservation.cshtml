@@ -81,7 +81,7 @@
 
 <form action="@Url.Action("CancelReservation", "Home", new { bookingId = Model.BookingId })" method="post">
     @Html.HiddenFor(m => m.BookingId)
-    <button type="button" onclick="callPayPal()" class="btn btn-primary" style="text-align: center; display: inline-block; margin-left: 500px;">Pay with card</button>
+    <button type="button" onclick="callPayPal()" class="btn btn-primary" style="text-align: center; display: inline-block; margin-left: 600px;">Pay with card</button>
     <button type="button" onclick="window.location.href='@Url.Action("ReserveSuccess_Cash", "Home", new { bookingId = Model.BookingId })'" class="btn btn-secondary" style="text-align: center; display: inline-block; margin-left: 10px;">Pay with Cash</button>
 </form>
 

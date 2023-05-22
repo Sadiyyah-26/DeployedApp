@@ -22,6 +22,8 @@ namespace ShoppingCartMVC.Controllers
         /* Add to Cart List use */
         List<Cart> li = new List<Cart>();
 
+
+
         #region Home Page in Showing All Products 
 
         public ActionResult Index()
@@ -961,10 +963,13 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
-        public ActionResult Reserve_SuccessCash()
+        public ActionResult ReserveSuccess_Cash()
         {
             return View();
         }
+
+
+       
 
         public ActionResult CheckoutReservation(int reservationId)
         {
@@ -1114,7 +1119,7 @@ namespace ShoppingCartMVC.Controllers
                             g.Time = reservation.Time;
                             context.tblReservations.Add(reservation);
                             context.SaveChanges();
-                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating for {reservation.Seating} people is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and Time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>. Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
+                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating for {reservation.Seating} people is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
                                 $" If you have any queries, drop us an email (turbomeals123@gmail.com)";
                             var message = new MailMessage();
                             message.To.Add(new MailAddress(reservation.Mail));
