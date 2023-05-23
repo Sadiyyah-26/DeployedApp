@@ -9,54 +9,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/css/css/Login.css" rel="stylesheet" />
     <title>Login</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />  @*v changes*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-nOSnFRRtBH/3ek3U25d+2+uFICuOB19UW97p7A7F1YJSDfKsRrlYcWpTfB+DZQrkb2W4EfD+8Bhlu8pX76wWSA==" crossorigin="anonymous" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
+    <script>$(document).ready(function () {
+            $('#toggle-password').click(function () {
+                var passwordInput = $('#password-input');
+                var passwordFieldType = passwordInput.attr('type');
+
+                if (passwordFieldType === 'password') {
+                    passwordInput.attr('type', 'text');
+                    $('#toggle-password').removeClass('fa-eye-slash').addClass('fa-eye');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    $('#toggle-password').removeClass('fa-eye').addClass('fa-eye-slash');
+                }
+            });
+        });</script> @*v changes*@
     </head>
-<body>
+    <body>
 
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    @using (Html.BeginForm())
-    {
-        <div class="container">
-            <h2>Login</h2>
-            <div class="row">
-                <div class="col-lg-4">
-                    <img src="~/Images/LoginPic.png" />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        @using (Html.BeginForm())
+        {
+            <div class="container">
+                <h2>Login</h2>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <img src="~/Images/LoginPic.png" />
 
-                    <form class="bg-white p-5 contact-form">
-                        <div class="form-group">
+                        <form class="bg-white p-5 contact-form">
+                            <div class="form-group">
+                                <br />
+                                <span>Email:</span>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            </div>
                             <br />
-                            <span>Email:</span>
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <span>Password:</span>
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
-                        </div>
-                    </form>
-                    <h3 style="color:red;">@TempData["msg"]</h3>
+                            <div class="form-group">
+                                <span>Password:</span>
+                                <div class="input-group">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "password-input" })
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-eye-slash" id="toggle-password"></i>  @*v changes*@
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
+                            </div>
+                        </form>
+                        <h3 style="color:red;">@TempData["msg"]</h3>
+
+                    </div>
 
                 </div>
 
             </div>
-
-        </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-    }
-</body>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+        }
+    </body>
 </html>

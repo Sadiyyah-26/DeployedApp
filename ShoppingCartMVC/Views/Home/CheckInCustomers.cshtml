@@ -38,11 +38,19 @@
         <p>Email: @ViewBag.Reservation.Mail</p>
         <p>Phone: @ViewBag.Reservation.Number</p>
         <p>Seating: @ViewBag.Reservation.Seating</p>
-        <p>Time: @ViewBag.Reservation.Time</p>
-        <p>Date: @ViewBag.Reservation.Date</p>
+        <p>Time: @(ViewBag.Reservation.Time.ToString("hh:mm tt"))</p>
+        <p>Date: @(ViewBag.Reservation.Date != null ? ViewBag.Reservation.Date.ToShortDateString() : string.Empty)</p>
         <!-- Add more customer details as needed -->
     </div>
 }
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 <br />
 <br />
 <br />
