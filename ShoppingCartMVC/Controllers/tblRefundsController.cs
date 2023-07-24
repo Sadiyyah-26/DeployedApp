@@ -38,11 +38,24 @@ namespace ShoppingCartMVC.Controllers
         }
 
         // GET: tblRefunds/Create
-        public ActionResult Create()
+        public ActionResult Create(int orderId)
         {
+            var order = db.tblOrders.FirstOrDefault(o => o.OrderId == orderId);
+
+            var tblRefund = new tblRefund
+            {
+                OrderId = orderId
+            };
+
+            tblRefund.EmailID = order.TblInvoice.TblUser.Email;
+            TempData["email"] = tblRefund.EmailID;
+
             List<tblOrder> list = db.tblOrders.ToList();
             ViewBag.OrderList = new SelectList(list, "OrderId", "OrderId");
-            return View();
+
+            return View(tblRefund);
+
+
         }
 
         // POST: tblRefunds/Create
@@ -61,7 +74,7 @@ namespace ShoppingCartMVC.Controllers
                 string subject = "Refund Request Confirmation";
                 string body = "Your request for a refund was recieved.<br><br>" +
                     "The manager will review your request and you will have a response within 3-5 business days.";
-                string emailID = tblRefund.EmailID;
+                string emailID = Convert.ToString(TempData["email"]);
 
                 WebMail.Send(emailID, subject, body, null, null, null, true, null, null, null, null, null, null);
 

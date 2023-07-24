@@ -37,7 +37,7 @@
 
                     <div class="form-group">
                         <div class="col-md-10">
-                            Email Address: <b>@Html.EditorFor(model => model.EmailID, new { htmlAttributes = new { @class = "form-control" } })</b>
+                            Email Address: <b>@Html.DisplayFor(model => model.EmailID, new { htmlAttributes = new { @class = "form-control" } })</b>
                             @Html.ValidationMessageFor(model => model.EmailID, "", new { @class = "text-danger" })
                         </div>
                     </div>
