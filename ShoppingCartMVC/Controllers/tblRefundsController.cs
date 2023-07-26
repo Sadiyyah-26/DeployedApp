@@ -128,6 +128,7 @@ namespace ShoppingCartMVC.Controllers
             if (ModelState.IsValid)
             {
                 var originalRefund = db.tblRefunds.Find(tblRefund.RefundId);
+                TempData["e"] = originalRefund.EmailID;
                 if (originalRefund != null)
                 {
                     bool statusChanged = originalRefund.RefundStatus != tblRefund.RefundStatus;
@@ -169,7 +170,8 @@ namespace ShoppingCartMVC.Controllers
                         }
 
                         // Send email to the user
-                        string emailID = tblRefund.EmailID;
+                        string emailID = Convert.ToString(TempData["e"]);
+                       
                         WebMail.Send(emailID, emailSubject, emailBody, null, null, null, true, null, null, null, null, null, null);
                     }
                 }
