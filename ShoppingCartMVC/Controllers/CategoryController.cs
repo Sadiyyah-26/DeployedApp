@@ -45,7 +45,7 @@ namespace ShoppingCartMVC.Controllers
             }
             else
             {
-                TempData["msg"] = "Not Inserted Category";
+                TempData["msg"] = "Category Not Inserted ";
             }
             return View();
         }

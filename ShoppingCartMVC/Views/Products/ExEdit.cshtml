@@ -1,0 +1,74 @@
+﻿@model ShoppingCartMVC.Models.tblExtras
+<head>
+    <title>Update An Extra</title>
+    <style>
+        .card {
+            border: 2px solid green;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<br />
+<br />
+<br />
+
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title" style="text-align:center"><u> Update Extras </u></h2>
+            @using (Html.BeginForm())
+            {
+
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.ExtraID)
+
+                    <div class="form-group">
+                        <span>Name:</span>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.exName, new { htmlAttributes = new { @class = "form-control" } })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <span>Unit Price:</span>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.exCost, new { htmlAttributes = new { @class = "form-control" } })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <span>Select Category: </span>
+                        <div class="col-md-10">
+                            @Html.DropDownList("CatId", ViewBag.CatList as SelectList, htmlAttributes: new { @class = "form-control" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Update" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back">
+                    <a href="@Url.Action("ExIndex","Products")" class="btn btn-dark">Back</a>
+                </div>
+                <p>@TempData["msg"]</p>
+
+                <hr />
+
+            }
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+<br />

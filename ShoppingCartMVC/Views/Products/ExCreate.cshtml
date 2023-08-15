@@ -1,0 +1,59 @@
+﻿@model ShoppingCartMVC.Models.tblExtras
+<head>
+    <title>Add New Extra</title>
+    <style>
+        .card {
+            border: 2px solid green;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title" style="text-align:center"><u> Add Extras </u></h2>
+            @using (Html.BeginForm())
+            {
+                <div class="bg-white p-5 contact-form">
+                    <div class="form-group">
+                        <span>Name:</span>
+                        <div class="text">
+                            @Html.TextBoxFor(m => m.exName, new { @class = "form-control", required = "required" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <span>Unit Price:</span>
+                        @Html.TextBoxFor(m => m.exCost, new { @class = "form-control", required = "required" })
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <span>Category:</span>
+                        @Html.DropDownListFor(m => m.CatId, ViewBag.CatList as SelectList, "-- Select Category ---", new { @class = "form-control", required = "required" })
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <input type="submit" value="Add Extra" class="btn btn-primary py-3 px-5">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

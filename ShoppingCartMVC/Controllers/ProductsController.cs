@@ -132,5 +132,91 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
+        //extras 
+        #region all extras
+
+        public ActionResult ExIndex()
+        {
+            var query = db.tblExtras.ToList();
+            return View(query);
+        }
+
+        #endregion
+
+        #region adding extras 
+        public ActionResult ExCreate()
+        {
+            List<tblCategory> list = db.tblCategories.ToList();
+            ViewBag.CatList = new SelectList(list, "CatId", "Name");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ExCreate(tblExtras e)
+        {
+            List<tblCategory> list = db.tblCategories.ToList();
+            ViewBag.CatList = new SelectList(list, "CatId", "Name");
+
+            if (ModelState.IsValid)
+            {
+                tblExtras ex = new tblExtras();
+                ex.exName = e.exName;
+                ex.exCost = e.exCost;
+                ex.CatId = e.CatId;
+                db.tblExtras.Add(e);
+                db.SaveChanges();
+                return RedirectToAction("ExIndex");
+            }
+            else
+            {
+                TempData["msg"] = "Extra Not Added ";
+            }
+            return View();
+        }
+
+        #endregion
+
+        #region edit extras
+        public ActionResult ExEdit(int id)
+        {
+            List<tblCategory> list = db.tblCategories.ToList();
+            ViewBag.CatList = new SelectList(list, "CatId", "Name");
+
+            var query = db.tblExtras.SingleOrDefault(m => m.ExtraID == id);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult ExEdit(tblExtras e)
+        {
+            List<tblCategory> list = db.tblCategories.ToList();
+            ViewBag.CatList = new SelectList(list, "CatId", "Name");
+            try
+            {
+
+                db.Entry(e).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("ExIndex");
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = ex;
+            }
+            return RedirectToAction("ExIndex");
+
+        }
+        #endregion
+
+        #region delete extras
+        public ActionResult ExDelete(int id)
+        {
+           var query=db.tblExtras.SingleOrDefault(m=>m.ExtraID == id);
+            db.tblExtras.Remove(query);
+            db.SaveChanges();
+
+            return RedirectToAction("ExIndex");
+        }
+        #endregion
+
     }
 }

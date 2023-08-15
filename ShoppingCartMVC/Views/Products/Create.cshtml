@@ -4,49 +4,67 @@
 }
 <head>
     <title>Add New Product</title>
+    <style>
+        .card {
+            border: 2px solid green;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
 </head>
+<br />
+<br />
+<br />
+<br />
+<h2 class="card-title" style="text-align:center"><u> Add Product </u></h2>
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
 
-@using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-
-    <div class="container">
-        <h2>Add Product</h2>
-        <div class="row">
-            <div class="col-lg-4">
-
+            @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
 
                 <form class="bg-white p-5 contact-form">
                     <div class="form-group">
                         <span>Name:</span>
                         @Html.TextBoxFor(m => m.P_Name, new { @class = "form-control" })
                     </div>
+                    <br />
                     <div class="form-group">
                         <span>Categories:</span>
                         @Html.DropDownListFor(m => m.CatId, ViewBag.CatList as SelectList, "-- Select Category ---")
                     </div>
-
+                    <br />
                     <div class="form-group">
                         <span>Description:</span>
                         @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
                     </div>
+                    <br />
                     <div class="form-group">
                         <span>Unit Price:</span>
                         @Html.TextBoxFor(m => m.Unit, new { @class = "form-control" })
                     </div>
-
+                    <br />
                     <div class="form-group">
                         <span>Select Image:</span>
                         <input type="file" name="Image" />
                     </div>
+                    <br />
+                    <br />
                     <div class="form-group">
                         <input type="submit" value="Add Product" class="btn btn-primary py-3 px-5">
                     </div>
                 </form>
                 <h3 style="color:red;">@TempData["msg"]</h3>
 
-            </div>
+            }
 
         </div>
 
     </div>
-}
+
+</div>
+<br />
+<br />

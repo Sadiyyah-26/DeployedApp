@@ -16,5 +16,9 @@ namespace ShoppingCartMVC.Models
         public int price { get; set; }
 
         public int bill { get; set; }
+
+        public string extras { get; set; } = "None";
+
+        public int extrasCost { get; set; }
     }
 }
