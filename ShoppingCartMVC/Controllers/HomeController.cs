@@ -89,6 +89,13 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult AddtoCart(int id, int qty, string[] selectedExtras)
         {
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
+
+            if (qty > p.Qty)
+            {
+                ModelState.AddModelError("", "The selected quantity exceeds the available quantity.");
+                return View(p);
+            }
+
             Cart c = new Cart();
             c.proid = id;
             c.proname = p.P_Name;
@@ -235,6 +242,27 @@ namespace ShoppingCartMVC.Controllers
                     od.Extras = item.extras;
                     od.ExtrasCost = item.extrasCost;
                     db.tblOrders.Add(od);
+
+
+                    var product = db.tblProducts.SingleOrDefault(p => p.ProID == item.proid);
+                    if (product != null)
+                    {
+                        product.Qty -= item.qty;
+
+                    }
+
+                    var proTable = db.tblProducts.ToList();
+
+                    foreach (var record in proTable)
+                    {
+                        if ((record.Qty < 50) && (record.StockStatus == "In Stock"))
+                        {
+                            record.StockStatus = "Low Stock";
+                            //SendQuantityAlertEmail(product);
+                        }
+                        db.Entry(record).State = EntityState.Modified;
+                    }
+
                     db.SaveChanges();
                 }
 
@@ -302,6 +330,10 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
+        public ActionResult Error(string message)
+        {
+            return View();
+        }
 
         #region All Orders for Admin 
 

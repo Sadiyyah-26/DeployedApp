@@ -1,0 +1,85 @@
+﻿@model ShoppingCartMVC.Models.tblSupplierOrder
+
+<head>
+    <title>Supplier Order Details</title>
+    <style>
+        .card {
+            border: 2px solid #00ff90;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<h2 class="card-title" style="text-align:center"><u> Supplier Order Details </u></h2>
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <div style="text-align:center">
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>   Product  </dt><dd>  @Html.DisplayFor(model => model.TblProduct.P_Name) </dd>
+
+                    <dt>
+                        Supplier
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.tblSupplier.Name)
+                    </dd>
+
+                    <dt>
+                        Order Date
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OrderDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Total)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Total)
+                    </dd>
+
+                    <dt>
+                        Order Status
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.sOrderStatus)
+                    </dd>
+
+                    <dt>
+                        Unit Price
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.sUnit)
+                    </dd>
+
+                    <dt>
+                        Qty Ordered
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.QtyOrder)
+                    </dd>
+
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.OrderId }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />

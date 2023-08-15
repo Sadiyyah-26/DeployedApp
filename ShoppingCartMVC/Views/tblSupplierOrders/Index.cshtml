@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblSupplierOrder>
+
+<head>
+    <title>All Ordered Stock</title>
+  
+</head>
+
+<h2>Ordered Stock</h2>
+<br />
+<table class="table">
+    <tr>
+        <th>Product </th>
+        <th>Supplier </th>
+        <th>Order Date  </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th>Order Status </th>
+        <th>Unit Price  </th>
+        <th>Order Qty </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TblProduct.P_Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tblSupplier.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sOrderStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sUnit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QtyOrder)
+            </td>
+            <td>
+                @Html.ActionLink("Receiving Checklist", "Edit", new { id = item.OrderId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.OrderId }) 
+                @*@Html.ActionLink("Delete", "Delete", new { id = item.OrderId })*@
+            </td>
+        </tr>
+    }
+
+</table>
