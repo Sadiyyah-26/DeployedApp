@@ -40,23 +40,23 @@
                 <h3>@Model.P_Name</h3>
                 <p>@Model.Description</p>
                 <p>R <strong>@Model.Unit</strong></p>
-                <input type="number" min="1" max="10" name="qty" />
+                <p>Qty: &ensp;&ensp; <input type="number" min="1" max="100" name="qty" value="1" /></p>
                 <div class="addons-container">
-                    @*<img class="addons-image" src="path_to_addon_image" />*@
+                   
                     <div>
-                        <h4>Add-ons:</h4>
-                        <div>
-                            <input type="checkbox" name="addons" value="Addon1" />
-                            <label class="addons-label">Add Extra Turbo Sauce (+R10)</label>
-                        </div>
-                        <div>
-                            <input type="checkbox" name="addons" value="Addon2" />
-                            <label class="addons-label">Add double cheese (+R15)</label>
-                        </div>
-                        <div>
-                            <input type="checkbox" name="addons" value="Addon3" />
-                            <label class="addons-label">Add Crispy Onions (+R20)</label>
-                        </div>
+                        <h4>With Extra:</h4>
+                        @foreach (var extra in ViewBag.ExtraNames)
+                        {
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="selectedExtras[]" value="@extra.ExName" />
+                                    @extra.ExName - R @extra.ExCost
+                                </label>
+                            </div>
+
+                        }
+
+
                     </div>
                 </div>
                 <br />

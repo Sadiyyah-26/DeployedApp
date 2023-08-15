@@ -54,55 +54,39 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult AddtoCart(int id)
         {
+          
             var query = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
+            int? catIdToMatch = query.CatId;
+
+            var extrasWithCost = db.tblExtras
+        .Where(m => m.CatId == catIdToMatch)
+        .ToList() 
+        .Select(m => new
+        {
+            extName = m.exName,
+            extCost = m.exCost
+        })
+        .ToList();
+
+            
+            var extrasWithCostViewModel = extrasWithCost.Select(m => new ExtraVM
+            {
+                ExName = m.extName,
+                ExCost = decimal.Parse(m.extCost)
+            })
+            .ToList();
+
+
+
+            ViewBag.ExtraNames = extrasWithCostViewModel;
+
             return View(query);
         }
 
-        //[HttpPost]
-        //public ActionResult AddtoCart(int id, int qty)
-        //{
-        //    tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
-        //    Cart c = new Cart();
-        //    c.proid = id;
-        //    c.proname = p.P_Name;
-        //    c.price = Convert.ToInt32(p.Unit);
-        //    c.qty = Convert.ToInt32(qty);
-        //    c.bill = c.price * c.qty;
-        //    if (TempData["cart"] == null)
-        //    {
-        //        li.Add(c);
-        //        TempData["cart"] = li;
-        //    }
-        //    else
-        //    {
-        //        List<Cart> li2 = TempData["cart"] as List<Cart>;
-        //        int flag = 0;
-        //        foreach (var item in li2)
-        //        {
-        //            if (item.proid == c.proid)
-        //            {
-        //                item.qty += c.qty;
-        //                item.bill += c.bill;
-        //                flag = 1;
-        //            }
-
-        //        }
-        //        if (flag == 0)
-        //        {
-        //            li2.Add(c);
-        //            //new item
-        //        }
-        //        TempData["cart"] = li2;
-
-        //    }
-
-        //    TempData.Keep();
-
-        //    return RedirectToAction("Index");
-        //}
+       
 
         [HttpPost]
-        public ActionResult AddtoCart(int id, int qty, string[] addons)
+        public ActionResult AddtoCart(int id, int qty, string[] selectedExtras)
         {
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
             Cart c = new Cart();
@@ -111,22 +95,29 @@ namespace ShoppingCartMVC.Controllers
             c.price = Convert.ToInt32(p.Unit);
             c.qty = Convert.ToInt32(qty);
 
-            // Calculate the add-on total price
-            int addonTotalPrice = 0;
-            if (addons != null)
+
+            if (selectedExtras == null || selectedExtras.Length == 0)
             {
-                foreach (var addon in addons)
-                {
-                    if (addon == "Addon1")
-                        addonTotalPrice += 10;
-                    else if (addon == "Addon2")
-                        addonTotalPrice += 15;
-                    else if (addon == "Addon3")
-                        addonTotalPrice += 20;
-                }
+                selectedExtras = new string[] { "None" };
             }
 
-            // Add the add-on total price to the item's bill
+
+            c.extras = string.Join(",", selectedExtras);
+
+            // Calculate the add-on total price
+            int addonTotalPrice = 0;
+
+            foreach (var extra in selectedExtras)
+            {
+                tblExtras tblExtra = db.tblExtras.Where(e => e.exName == extra).SingleOrDefault();
+
+                if (tblExtra != null)
+                {
+                    addonTotalPrice += Convert.ToInt32(tblExtra.exCost);
+                }
+            }
+            c.extrasCost = Convert.ToInt32(addonTotalPrice);
+
             c.bill = (c.price * c.qty) + addonTotalPrice;
 
             if (TempData["cart"] == null)
@@ -241,7 +232,8 @@ namespace ShoppingCartMVC.Controllers
                     od.Unit = item.price;
                     od.Total = item.bill;
                     od.OrderReady = "Being Prepared";
-
+                    od.Extras = item.extras;
+                    od.ExtrasCost = item.extrasCost;
                     db.tblOrders.Add(od);
                     db.SaveChanges();
                 }
@@ -340,7 +332,7 @@ namespace ShoppingCartMVC.Controllers
             {
                 
                 tblInvoice.Payment_Status = "Paid";
-               
+                tblInvoice.Time_CD = DateTime.Now;
             }
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
@@ -567,6 +559,10 @@ namespace ShoppingCartMVC.Controllers
                                pr.P_Name,
                                o.Qty,
                                o.Unit,
+                               o.Extras,
+                               o.ExtrasCost,
+                               o.Method,
+                               i.Time_CD,
                                i.Payment_Status,
                                o.Total
 
@@ -592,6 +588,10 @@ namespace ShoppingCartMVC.Controllers
                     objVM.Qty = pro.Qty;
                     objVM.Unit = pro.Unit;
                     objVM.Amount = pro.Total;
+                    objVM.Extras = pro.Extras;
+                    objVM.ExtrasCost = pro.ExtrasCost;
+                    objVM.Method = pro.Method;
+                    objVM.CD_Time = pro.Time_CD;
                     objVM.Payment_Status = pro.Payment_Status;
                     objVM.TotalAmount = pro.Total;
                     InvceVMList.Add(objVM);

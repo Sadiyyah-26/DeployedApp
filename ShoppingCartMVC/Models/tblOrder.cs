@@ -26,6 +26,10 @@ namespace ShoppingCartMVC.Models
 
         public int? Qty { get; set; }
 
+        public string Extras { get; set; } = "None";
+
+        public int ExtrasCost { get; set; }
+
         public int? Total { get; set; }
 
         [DisplayName("Order Date")]

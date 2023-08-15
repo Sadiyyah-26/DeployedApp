@@ -34,6 +34,8 @@ namespace ShoppingCartMVC.Models
 
         public string Payment_Status { get; set; } = "Paid";
 
+        public DateTime? Time_CD { get; set; }
+
         public virtual tblUser TblUser { get; set; }
 
         public virtual ICollection<tblOrder> TblOrders { get; set; }

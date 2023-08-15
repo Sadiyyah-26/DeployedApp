@@ -156,9 +156,11 @@
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
     <Compile Include="Models\Drivers.cs" />
+    <Compile Include="Models\ExtraVM.cs" />
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
     <Compile Include="Models\tblCategory.cs" />
+    <Compile Include="Models\tblExtras.cs" />
     <Compile Include="Models\tblInvoice.cs" />
     <Compile Include="Models\tblOrder.cs" />
     <Compile Include="Models\tblProduct.cs" />
@@ -333,6 +335,9 @@
     <Content Include="Views\Home\ReserveSuccess_Cash.cshtml" />
     <Content Include="Views\Home\GetAllReservations.cshtml" />
     <Content Include="Views\Home\CancelOrder.cshtml" />
+    <Content Include="Views\Products\ExIndex.cshtml" />
+    <Content Include="Views\Products\ExCreate.cshtml" />
+    <Content Include="Views\Products\ExEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

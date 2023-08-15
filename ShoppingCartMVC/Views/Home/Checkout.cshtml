@@ -29,10 +29,12 @@
                             <tr class="text-center">
 
                                 <th></th>
-                                <th>ID</th>
-                                <th>Product Name</th>
+                                @*<th>ID</th>*@
+                                <th>Item</th>
                                 <th>Price</th>
                                 <th>Qty</th>
+                                <th>Extras</th>
+                                <th>Price</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -44,9 +46,9 @@
 
                                 <tr class="text-center">
                                     <td class="product-remove"><a href="@Url.Action("remove", "Home", new { id = item.proid })"><span class="fa fa-remove fa-1x"></span></a></td>
-                                    <td class="product-name">
-                                        <h3>@item.proid</h3>
-                                    </td>
+                                    @*<td class="product-name">
+            <h3>@item.proid</h3>
+        </td>*@
 
                                     <td class="product-name">
                                         <h3>@item.proname</h3>
@@ -57,6 +59,13 @@
 
                                     <td class="quantity">
                                         @item.qty
+                                    </td>
+
+                                    <td class="ex">
+                                        @item.extras
+                                    </td>
+                                    <td class="exC">
+                                        R @item.extrasCost
                                     </td>
 
                                     <td class="total">R @item.bill</td>

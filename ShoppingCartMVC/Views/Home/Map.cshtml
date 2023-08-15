@@ -41,35 +41,33 @@
 <br />
 <body>
     <div class="card">
-        <h1 class="card-title" style="text-align:center">Delivery Address</h1>
-        <p class="card-description" style="text-align:center">
-            Order No : <b>#@Html.DisplayFor(m => Model.OrderId)  </b> <br />
+        <h1 style="text-align:center"> <u><i>Order No : <b>#@Html.DisplayFor(m => Model.OrderId)  </b></i> <br /> </u> <br /></h1>
+        <h2 class="card-description" style="text-align:center">
+
+            &ensp;&ensp;&ensp; Source Address : &ensp;165 Bayview Rd, Wentworth, Bluff, 4052
+            <br />
+            <br />
             Delivery Address :  @Html.DisplayFor(m => Model.DeliveryAddress)
-        </p>
+        </h2>
 
         <br />
         <br />
         <table border="0" cellpadding="0" cellspacing="3">
             <tr>
                 <td colspan="2">
-                    Source:
-                    <input type="text" id="txtSource" placeholder="Enter Source...." size="35" />
-                    &nbsp; Destination:
+                    @*Source:
+        <input type="text" id="txtSource" placeholder="Enter Source...." size="35" />
+        &nbsp; Destination:
 
-                    <input type="text" id="txtDestination" placeholder="Enter Destination...." size="35" />
+        <input type="text" id="txtDestination" placeholder="Enter Destination...." size="35" />
+        <br />*@
+                    <br />
+                    <input type="button" value="Get Route" onclick="GetRoute()" /> &ensp; <a href="@Url.Action("SendMail","Home", new { OrderId = Model.OrderId })" class="nextPage"> Notify Customer</a>
                     <br />
                     <br />
-                    <input type="button" value="Get Route" onclick="GetRoute()" />
-                    <br />
-                    <br />
-
-
-
 
                     <hr />
-                    <br />
-                    <a href="@Url.Action("DeliveryDetails","Home", new { OrderId = Model.OrderId })" class="nextPage">Complete Delivery</a> &ensp;  <a href="@Url.Action("SendMail","Home", new { OrderId = Model.OrderId })" class="nextPage"> Notify Customer</a>
-                    <br /><br />
+                    <h1 class="card-title" style="text-align:center">Directions</h1>
 
 
                     <br />
@@ -132,17 +130,18 @@
 
     @*});
         </script>*@
-    <script type="text/javascript">var source, destination;
+<script type="text/javascript">
+    var source, destination;
         var directionsDisplay;
         var directionsService = new google.maps.DirectionsService();
         google.maps.event.addDomListener(window, 'load', function () {
-            new google.maps.places.SearchBox(document.getElementById('txtSource'));
-            new google.maps.places.SearchBox(document.getElementById('txtDestination'));
+           /*new google.maps. places.SearchBox(document.getElementById('txtSource'));*/
+            /*new google.maps.places.SearchBox(document.getElementById('txtDestination'));*/
             directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
         });
 
         function GetRoute() {
-            var durban = new google.maps.LatLng(-29.760725, 31.062702);
+            var durban = new google.maps.LatLng(-29.918138320337697, 30.999815627839574);
             var mapOptions = {
                 zoom: 15,
                 center: durban
@@ -151,9 +150,12 @@
             directionsDisplay.setMap(map);
             directionsDisplay.setPanel(document.getElementById('dvPanel'));
 
+            var source = '165 Bayview Rd, Wentworth, Bluff, 4052';
+
+
             //*********DIRECTIONS AND ROUTE**********************//
-            source = document.getElementById("txtSource").value;
-            destination = document.getElementById("txtDestination").value;
+           /* source = document.getElementById("txtSource").value;*/
+            destination = '@Model.DeliveryAddress'; /*document.getElementById("txtDestination").value;*/
 
             var request = {
                 origin: source,
@@ -181,16 +183,16 @@
                     var duration = response.rows[0].elements[0].duration.text;
                     var dvDistance = document.getElementById("dvDistance");
                     dvDistance.innerHTML = "";
-                    dvDistance.innerHTML += "Distance: " + distance + "<br />";
-                    dvDistance.innerHTML += "Duration:" + duration;
+                    dvDistance.innerHTML += "<h3>"+"Distance: " + distance +"</h3>";
+                    dvDistance.innerHTML += "<h3>" + "Duration: " + duration + "</h3>";
 
                 }
                 else {
                     alert("Unable to find the distance via road.");
                 }
             });
+
+           /* google.maps.event.addDomListener(window, 'load', GetRoute);*/
         }</script>
-
-
 
 </body>
