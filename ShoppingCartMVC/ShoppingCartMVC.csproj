@@ -148,7 +148,9 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\tblRefundsController.cs" />
+    <Compile Include="Controllers\tblSupplierOrdersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -166,6 +168,8 @@
     <Compile Include="Models\tblProduct.cs" />
     <Compile Include="Models\tblRefund.cs" />
     <Compile Include="Models\tblReservation.cs" />
+    <Compile Include="Models\tblSupplier.cs" />
+    <Compile Include="Models\tblSupplierOrder.cs" />
     <Compile Include="Models\tblUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -338,6 +342,15 @@
     <Content Include="Views\Products\ExIndex.cshtml" />
     <Content Include="Views\Products\ExCreate.cshtml" />
     <Content Include="Views\Products\ExEdit.cshtml" />
+    <Content Include="Views\Products\LowStock.cshtml" />
+    <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\Supplier\Create.cshtml" />
+    <Content Include="Views\Supplier\Edit.cshtml" />
+    <Content Include="Views\tblSupplierOrders\Index.cshtml" />
+    <Content Include="Views\tblSupplierOrders\ReturnIndex.cshtml" />
+    <Content Include="Views\tblSupplierOrders\Details.cshtml" />
+    <Content Include="Views\tblSupplierOrders\Create.cshtml" />
+    <Content Include="Views\tblSupplierOrders\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

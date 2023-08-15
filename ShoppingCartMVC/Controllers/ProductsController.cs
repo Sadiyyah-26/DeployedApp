@@ -18,7 +18,8 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult Index()
         {
-            var query = db.tblProducts.ToList();
+            var products = db.tblProducts.ToList();
+            var query = db.tblProducts.Include(p => p.tblSupplier).ToList();
             return View(query);
         }
 
@@ -31,6 +32,10 @@ namespace ShoppingCartMVC.Controllers
         {
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
+
+            List<tblSupplier> slist = db.tblSuppliers.ToList();
+            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
+
             return View();
         }
 
@@ -42,6 +47,8 @@ namespace ShoppingCartMVC.Controllers
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
 
+            List<tblSupplier> slist = db.tblSuppliers.ToList();
+            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
 
             if (ModelState.IsValid)
             {
@@ -53,6 +60,8 @@ namespace ShoppingCartMVC.Controllers
                 pro.Unit = p.Unit;
                 pro.Image = Image.FileName.ToString();
                 pro.CatId = p.CatId;
+                pro.SupplierId = p.SupplierId;
+                pro.Qty = p.Qty;
 
                 //image upload
                 var folder = Server.MapPath("~/Uploads/");
@@ -82,6 +91,9 @@ namespace ShoppingCartMVC.Controllers
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
 
+            List<tblSupplier> slist = db.tblSuppliers.ToList();
+            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
+
             var query = db.tblProducts.SingleOrDefault(m => m.ProID == id);
 
             return View(query);
@@ -93,6 +105,9 @@ namespace ShoppingCartMVC.Controllers
         {
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
+
+            List<tblSupplier> slist = db.tblSuppliers.ToList();
+            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
 
             try
             {
@@ -120,9 +135,15 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult Delete(int id)
         {
-            var query = db.tblProducts.SingleOrDefault(m => m.ProID == id);
-            db.tblProducts.Remove(query);
+            var product = db.tblProducts.SingleOrDefault(m => m.ProID == id);
 
+            // Update the foreign key column in the orders table to null
+            foreach (var order in product.tblOrders.ToList())
+            {
+                order.ProID = null;
+            }
+
+            db.tblProducts.Remove(product);
             db.SaveChanges();
 
 
@@ -130,6 +151,15 @@ namespace ShoppingCartMVC.Controllers
 
         }
 
+        #endregion
+
+        #region shwoing products with low stock for prep staff 
+        //Products that are low for customer ordering and needs topup
+        public ActionResult LowStock()
+        {
+            var lowStockProducts = db.tblProducts.Where(p => p.StockStatus == "Low Stock").ToList();
+            return View(lowStockProducts);
+        }
         #endregion
 
         //extras 

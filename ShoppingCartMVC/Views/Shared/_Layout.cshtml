@@ -240,6 +240,26 @@
                         {
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
                             <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link">New Orders</a></li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Stock</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                    <a class="dropdown-item" href="@Url.Action("LowStock", "Products")">Low Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "tblSupplierOrders")"> Ordered Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("ReturnIndex", "tblSupplierOrders")">Returned Stock Orders</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suppliers</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Supplier")">Add Supplier</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Supplier")">View Suppliers</a>
+
+                                </div>
+                            </li>
+
+
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
                         }
 

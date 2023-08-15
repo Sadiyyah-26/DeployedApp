@@ -22,6 +22,8 @@ namespace ShoppingCartMVC.Models
         public virtual DbSet<tblReservation> tblReservations { get; set; }
         public virtual DbSet<tblRefund> tblRefunds { get; set; }
         public virtual DbSet<tblExtras> tblExtras { get; set; }
+        public virtual DbSet<tblSupplier> tblSuppliers { get; set; }
+        public virtual DbSet<tblSupplierOrder> tblSuppliersOrders { get; set; }
     }
 }
 
