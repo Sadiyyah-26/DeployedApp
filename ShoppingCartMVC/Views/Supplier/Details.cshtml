@@ -1,0 +1,88 @@
+﻿@model ShoppingCartMVC.Models.tblSupplier
+
+<head>
+    <title>Add Supplier</title>
+    <style>
+        .card {
+            border: 2px solid #00ff90;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 2fr); /* Adjust the number of columns as needed */
+            gap: 10px; /* Adjust the gap between checkboxes */
+        }
+
+        
+    </style>
+</head>
+<br />
+
+<h2 class="card-title" style="text-align:center"><u> Supplier Details</u></h2>
+<div class="col-sm-7 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <dd>
+                
+                <dl class="dl-horizontal">
+                    <dt>
+                        <span style="display: inline-block; color: cadetblue;">Supplier Name:</span>
+                        @Html.DisplayFor(model => model.SupplName)
+                    </dt>
+
+                    <dd>
+                     Supplier Type: &ensp;&ensp;&ensp;&ensp;  @Html.DisplayFor(model => model.SupplType)
+                    </dd>
+
+                    <dt>
+                        Contact Person: &ensp; @Html.DisplayFor(model => model.ContactPerson)
+                    </dt>
+
+                    <dd>
+                     Contact Person Position:   @Html.DisplayFor(model => model.ContactPersonPos)
+                    </dd>
+                    <dd>
+                        Contact Number: &ensp;  @Html.DisplayFor(model => model.ContactNum)
+                    </dd>
+                    <dd>
+                        Email: &ensp;&ensp;  @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dd>
+                        Telephone: &ensp;&ensp;&ensp;&ensp;&ensp;  @Html.DisplayFor(model => model.Tel)
+                    </dd>
+                    <dd>
+                        Company Registration Number: &ensp;&ensp; @Html.DisplayFor(model => model.CompanyRegNum)
+                    </dd>
+                    <dd>
+                        Physical Address: &ensp;  @Html.DisplayFor(model => model.PhysicalAddress)
+                    </dd>
+                    <dd>
+                        Active: &ensp;  @Html.DisplayFor(model => model.Active)
+                    </dd>
+                    <hr />
+                    <dd>
+                        <h4 style="text-align:center">Ingredients being Supplied:</h4>
+                        @foreach (var ingredientName in ViewBag.SelectedIngredientNames)
+                        {
+                            <p>@ingredientName</p>
+                        }
+                    </dd>
+                </dl>
+
+                <p>
+
+                    <a href="@Url.Action("Index", "AdminHome",new {id=Model.SupplierId})">Order Ingredients</a>|
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.SupplierId }) |
+                    @Html.ActionLink("Back to List", "Index")
+                </p>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />

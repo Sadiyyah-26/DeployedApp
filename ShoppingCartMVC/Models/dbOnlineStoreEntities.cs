@@ -23,7 +23,13 @@ namespace ShoppingCartMVC.Models
         public virtual DbSet<tblRefund> tblRefunds { get; set; }
         public virtual DbSet<tblExtras> tblExtras { get; set; }
         public virtual DbSet<tblSupplier> tblSuppliers { get; set; }
-        public virtual DbSet<tblSupplierOrder> tblSuppliersOrders { get; set; }
+        //public virtual DbSet<tblSupplierOrder> tblSuppliersOrders { get; set; }
+        public virtual DbSet<tblIngredients> tblIngredients { get; set; }
+        public virtual DbSet<IngredientProduct> IngredientProducts { get; set; }
+        public virtual DbSet<SupplierIngredients> SupplierIngredients { get; set; }
+
+        public virtual DbSet<tblAdminOrder> tblAdminOrders { get; set; }
+        public virtual DbSet<tblAdminInvoice> tblAdminInvoices { get; set; }
     }
 }
 

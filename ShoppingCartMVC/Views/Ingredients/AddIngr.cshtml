@@ -1,0 +1,64 @@
+﻿@model ShoppingCartMVC.Models.tblIngredients
+<head>
+    <title>Add Ingredient</title>
+    <style>
+        .card {
+            border: 2px solid #00ff90;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<br />
+
+<h2 class="card-title" style="text-align:center"><u> Add Ingredient </u></h2>
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm("AddIngr", "Ingredients", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+               
+
+                            <form class="bg-white p-5 contact-form">
+                                <div class="form-group">
+                                    <span>Ingredient Name:</span>
+                                    @Html.TextBoxFor(m => m.Ing_Name, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Units Used Per Product:</span>
+                                    @Html.TextBoxFor(m => m.Ing_UnitsUsed, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Stock Qty:</span>
+                                    @Html.TextBoxFor(m => m.Ing_StockyQty, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Select Image:</span>
+                                    <input type="file" name="Image" />
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="submit" value="Add Ingrdient" class="btn btn-primary py-3 px-5">
+                                </div>
+                            </form>
+                            <h3 style="color:red;">@TempData["msg"]</h3>
+
+                      
+            }
+
+            <div>
+                @Html.ActionLink("Back to List", "IngIdex")
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />

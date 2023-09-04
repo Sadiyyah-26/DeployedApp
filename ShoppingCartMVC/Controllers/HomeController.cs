@@ -90,11 +90,11 @@ namespace ShoppingCartMVC.Controllers
         {
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
 
-            if (qty > p.Qty)
-            {
-                ModelState.AddModelError("", "The selected quantity exceeds the available quantity.");
-                return View(p);
-            }
+            //if (qty > p.Qty)
+            //{
+            //    ModelState.AddModelError("", "The selected quantity exceeds the available quantity.");
+            //    return View(p);
+            //}
 
             Cart c = new Cart();
             c.proid = id;
@@ -244,24 +244,24 @@ namespace ShoppingCartMVC.Controllers
                     db.tblOrders.Add(od);
 
 
-                    var product = db.tblProducts.SingleOrDefault(p => p.ProID == item.proid);
-                    if (product != null)
-                    {
-                        product.Qty -= item.qty;
+                    //var product = db.tblProducts.SingleOrDefault(p => p.ProID == item.proid);
+                    //if (product != null)
+                    //{
+                    //    product.Qty -= item.qty;
 
-                    }
+                    //}
 
-                    var proTable = db.tblProducts.ToList();
+                    //var proTable = db.tblProducts.ToList();
 
-                    foreach (var record in proTable)
-                    {
-                        if ((record.Qty < 50) && (record.StockStatus == "In Stock"))
-                        {
-                            record.StockStatus = "Low Stock";
-                            //SendQuantityAlertEmail(product);
-                        }
-                        db.Entry(record).State = EntityState.Modified;
-                    }
+                    //foreach (var record in proTable)
+                    //{
+                    //    if ((record.Qty < 50) && (record.StockStatus == "In Stock"))
+                    //    {
+                    //        record.StockStatus = "Low Stock";
+                    //        //SendQuantityAlertEmail(product);
+                    //    }
+                    //    db.Entry(record).State = EntityState.Modified;
+                    //}
 
                     db.SaveChanges();
                 }

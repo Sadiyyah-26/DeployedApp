@@ -7,14 +7,20 @@
         }
 
         .form-group {
-            text-align: center;
+            text-align: center;         
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 2fr); /* Adjust the number of columns as needed */
+            gap: 10px; /* Adjust the gap between checkboxes */
         }
     </style>
 </head>
 <br />
 
 <h2 class="card-title" style="text-align:center"><u> Add Supplier </u></h2>
-<div class="col-sm-6 mx-auto">
+<div class="col-sm-7 mx-auto">
     <div class="card">
         <div class="card-body">
             @using (Html.BeginForm())
@@ -23,8 +29,98 @@
 
                             <form class="bg-white p-5 contact-form">
                                 <div class="form-group">
-                                    <span>Name:</span>
-                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                    <span>Supplier Name:</span>
+                                    @Html.TextBoxFor(m => m.SupplName, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="state">Supplier Type:</label>
+                                    <select name="supplType">
+                                        <option value="" disabled selected></option>
+                                        <option value="Produce">Produce</option>
+                                        <option value="Bakery">Bakery </option>
+                                        <option value="Beverage">Beverage</option>
+                                        <option value="Dairy">Dairy</option>
+                                        <option value="Meat">Meat</option>
+                                        <option value="Condiments">Condiments</option>
+                                        <option value="General">General</option>
+                                        @*<option value="EC">Eastern Cape</option>
+                <option value="NC">Northern Cape</option>
+                <option value="FS">Free State</option>*@
+
+
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Contact Person:</span>
+                                    @Html.TextBoxFor(m => m.ContactPerson, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Contact Person Position:</span>
+                                    @Html.TextBoxFor(m => m.ContactPersonPos, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <span>Contact Number:</span>
+                                    @Html.TextBoxFor(m => m.ContactNum, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Email:</span>
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span> Telephone:</span>
+                                    @Html.TextBoxFor(m => m.Tel, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span>Company Registration Number:</span>
+                                    @Html.TextBoxFor(m => m.CompanyRegNum, new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <span> Physical Address:</span>
+                                    @Html.TextBoxFor(m => m.PhysicalAddress, new { @class = "form-control" })
+                                </div>
+
+                                <div class="col-sm-4" style="text-align:center">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <span class="card-title">Active:</span>
+                                            <br />
+                                            <input type="radio" name="Active" value="Yes" /><label>&ensp;Yes</label>
+                                            <br />
+                                            <input type="radio" name="Active" value="No" /><label>&ensp; No</label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+                                <div class="checkbox-grid">
+                                    <h4>Ingredients To be Supplied:</h4>
+                                    <br />
+                                    <br />
+                                    @foreach (var ing in ViewBag.IngrNames)
+                                    {
+                                        <div class="form-group">
+                                            <label>
+                                                <input type="checkbox" name="selectedIngrs[]" value="@ing.IngName" />
+                                                @ing.IngName
+                                            </label>
+                                            <br />
+                                                <span>Unit Cost:</span>
+                                                <input type="text" name="unitCosts[@ing.IngName]" />
+                                            
+                                        </div>
+
+                                    }
+
+
                                 </div>
 
                                 <div class="form-group">

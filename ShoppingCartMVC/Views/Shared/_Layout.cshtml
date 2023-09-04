@@ -242,11 +242,14 @@
                             <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link">New Orders</a></li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Stock</a>
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ingredients</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("LowStock", "Products")">Low Stock</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "tblSupplierOrders")"> Ordered Stock</a>
-                                    <a class="dropdown-item" href="@Url.Action("ReturnIndex", "tblSupplierOrders")">Returned Stock Orders</a>
+                                    <a class="dropdown-item" href="@Url.Action("AddIngr", "Ingredients")">Add Ingredients</a>
+                                    <a class="dropdown-item" href="@Url.Action("IngIdex", "Ingredients")">View Ingredients</a>
+                                    <a class="dropdown-item" href="@Url.Action("IngProIndex", "Ingredients")"> Ingredients for Products</a>
+                                    <a class="dropdown-item" href="@Url.Action("SupplIngIndex", "Ingredients")"> Supplier for Ingredients</a>
+                                   
+
                                 </div>
                             </li>
 
@@ -258,6 +261,18 @@
 
                                 </div>
                             </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Stock</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                    <a class="dropdown-item" href="@Url.Action("LowStock", "Ingredients")">Low Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("AdminGetAllOrderDetail", "AdminHome")">Ordered Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("ReturnedOrdersList", "AdminHome")">Returned Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("ReceivedOrdersList", "AdminHome")">Received Stock</a>
+                                </div>
+                            </li>
+
+
 
 
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>

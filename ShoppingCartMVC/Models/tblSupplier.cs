@@ -9,17 +9,24 @@ namespace ShoppingCartMVC.Models
 {
     public class tblSupplier
     {
-        public tblSupplier()
-        {
-            this.TblProducts = new HashSet<tblProduct>();
-        }
-
+        
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SupplierId { get; set; }
 
-        public string Name { get; set; }
+        public string SupplName { get; set; }
 
-        public virtual ICollection<tblProduct> TblProducts { get; set; }
+        public string SupplType { get; set; }
+
+        public string ContactPerson { get; set; }
+        public string ContactPersonPos { get; set; }
+        public string ContactNum { get; set; }
+        public string Email { get; set; }
+        public string Tel { get; set; }
+        public string CompanyRegNum { get; set; }
+        public string PhysicalAddress { get; set; }
+        public string Active { get; set; }
+
+        
     }
 }

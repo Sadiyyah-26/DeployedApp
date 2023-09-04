@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.SupplierIngredients>
+
+<script src="~/js/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $("#searchBox").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+
+<div class="container">
+    <h2> Ingredients used for Each Product</h2>
+    <div class="form-group">
+        <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                @*<th>ID</th>*@
+                <th>Supplier</th>
+                <th>Ingredient</th>
+                <th>Unit Cost</th>
+                @*<th>Action</th>*@
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.TblSupplier.SupplName</td>
+                    <td>@item.TblIngredients.Ing_Name</td>
+                    <td>@item.Ing_UnitCost</td>
+                    @*<td>
+                            <a href="@Url.Action("EditIngr", "Ingredients", new { id = item.Ing_ID})" class="btn btn-info">Edit</a>
+                            <a href="@Url.Action("DeleteIngr", "Ingredients", new { id = item.Ing_ID})" class="btn btn-danger">Delete</a>
+                        </td>*@
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
