@@ -90,11 +90,6 @@ namespace ShoppingCartMVC.Controllers
         {
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
 
-            //if (qty > p.Qty)
-            //{
-            //    ModelState.AddModelError("", "The selected quantity exceeds the available quantity.");
-            //    return View(p);
-            //}
 
             Cart c = new Cart();
             c.proid = id;
@@ -244,27 +239,54 @@ namespace ShoppingCartMVC.Controllers
                     db.tblOrders.Add(od);
 
 
-                    //var product = db.tblProducts.SingleOrDefault(p => p.ProID == item.proid);
-                    //if (product != null)
-                    //{
-                    //    product.Qty -= item.qty;
+                    var ingPro = db.IngredientProducts.Where(ip => ip.ProID == item.proid).ToList();
 
-                    //}
+                    foreach (var i in ingPro)
+                    {
+                        var ingID = i.Ing_ID;
 
-                    //var proTable = db.tblProducts.ToList();
+                        var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+                        var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
 
-                    //foreach (var record in proTable)
-                    //{
-                    //    if ((record.Qty < 50) && (record.StockStatus == "In Stock"))
-                    //    {
-                    //        record.StockStatus = "Low Stock";
-                    //        //SendQuantityAlertEmail(product);
-                    //    }
-                    //    db.Entry(record).State = EntityState.Modified;
-                    //}
+                        int qtyToReduce = 0;
+                        if (ingr != null)
+                        {
+                            qtyToReduce = ingr.Ing_UnitsUsed * item.qty;
+                            ingr.Ing_StockyQty -= qtyToReduce;
 
-                    db.SaveChanges();
+                            if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
+                            {
+                                ingr.StockStatus = "Low Stock";
+                                //send qty alert email 
+                                string ing = ingr.Ing_Name;
+                                string qty = Convert.ToString(ingr.Ing_StockyQty);
+                                string suppl = supplIngr.TblSupplier.SupplName;
+
+                                var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
+                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty;
+
+
+
+                                var email = new MailMessage();
+                                email.To.Add(new MailAddress("turbomeals516@gmail.com"));
+                                email.From = new MailAddress("turbomeals123@gmail.com");
+                                email.Subject = "Low Stock Alert!";
+                                email.Body = content;
+                                email.IsBodyHtml = true;
+
+                                using (var smtp = new SmtpClient())
+                                {
+                                    smtp.Send(email);
+                                }
+
+                            }
+
+                        }
+                        db.Entry(ingr).State = EntityState.Modified;
+                    }
+
                 }
+                db.SaveChanges();
 
                 // Send email to user
                 var body = $"Dear {userName},<br /><br />Your order was placed successfully.<br><br> You will be notified when your order is ready.<br><br>";

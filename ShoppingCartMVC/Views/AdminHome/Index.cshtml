@@ -1,0 +1,82 @@
+﻿@model ShoppingCartMVC.Models.tblSupplier
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-3 pb-3">
+            <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
+                <span class="subheading">Featured Meals</span>
+                <h2 class="mb-4">Supplier Menu</h2>
+                <p>
+                    A fast-food restaurant that provides delectable hot and cold delicacies in a snap without
+                    compromising on taste, quality or quantity.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#searchBox").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#result .col-md-6").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+    <div class="container">
+        <div class="form-group">
+            <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+        </div>
+
+        <div class="row" id="result">
+
+
+
+            @foreach (var item in ViewBag.ingrList)
+            {
+
+
+                <div class="col-md-6 col-lg-3 ftco-animate fadeInUp ftco-animated">
+                    <div class="product">
+                        <a href="@Url.Action("AdminAddtoCart", "AdminHome", new { id = @item.ID })" class="img-prod">
+                            <img class="img-fluid" src="~/Uploads/@item.Ing_Image" style="height:250px" alt="Colorlib Template">
+
+                            <div class="overlay"></div>
+                        </a>
+                        <div class="text py-3 pb-4 px-3 text-center">
+
+                            <h3><a href="#">@item.IngName</a></h3>
+                            <div class="d-flex">
+                                <div class="pricing">
+                                    <p class="price"><span class="price-sale">Unit Cost : R @item.Ing_UnitCost</span></p>
+                                </div>
+                            </div>
+                             @*<div class="d-flex">
+                                <div class="pricing">
+                                    <p class="price"><span class="price-sale">Stock :  @item.tbl</span></p>
+                                </div>
+                            </div>*@
+
+                            <div class="bottom-area d-flex px-3">
+                                <div class="m-auto d-flex">
+                                    <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
+                                        <span><i class="ion-ios-menu"></i></span>
+                                    </a>
+                                    <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
+                                        <span><i class="ion-ios-cart"></i></span>
+                                    </a>
+                                    <a href="#" class="heart d-flex justify-content-center align-items-center ">
+                                        <span><i class="ion-ios-heart"></i></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+   
+</section>

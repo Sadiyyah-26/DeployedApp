@@ -57,13 +57,20 @@ namespace ShoppingCartMVC.Controllers
                 tblIngredients ing = new tblIngredients();
                 ing.Ing_Name = i.Ing_Name;
                 ing.Ing_UnitsUsed = i.Ing_UnitsUsed;
-                ing.Ing_Image = Image.FileName.ToString();
+                if(Image!=null)
+                {
+                    ing.Ing_Image = Image.FileName.ToString();
+                }
+               
                 ing.Ing_StockyQty = i.Ing_StockyQty;
 
 
                 //image upload
-                var folder = Server.MapPath("~/Uploads/");
-                Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                if(Image!=null)
+                {
+                    var folder = Server.MapPath("~/Uploads/");
+                    Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                }
 
                 if (ing.Ing_StockyQty == 0)
                 {
@@ -117,10 +124,13 @@ namespace ShoppingCartMVC.Controllers
         {
             try
             {
-
-                i.Ing_Image = Image.FileName.ToString();
-                var folder = Server.MapPath("~/Uploads/");
-                Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                if(Image!=null)
+                {
+                    i.Ing_Image = Image.FileName.ToString();
+                    var folder = Server.MapPath("~/Uploads/");
+                    Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                }
+               
 
 
                 if ((i.Ing_StockyQty < 50) && (i.StockStatus == "In Stock"))
