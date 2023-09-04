@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblSupplier>
 
 <head>
-    <title>All Suppliers</title>
-
+    <title>Suppliers List</title>
 </head>
 <script src="~/js/jquery.min.js"></script>
 
@@ -19,7 +18,7 @@ $(document).ready(function(){
 
 
 <div class="container">
-    <h2>View Suppliers</h2>
+    <h2>View Supplier</h2>
     <div class="form-group">
         <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
     </div>
@@ -28,6 +27,7 @@ $(document).ready(function(){
             <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Type</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -36,8 +36,12 @@ $(document).ready(function(){
             {
                 <tr>
                     <td>@item.SupplierId</td>
-                    <td>@item.Name</td>
+                    <td>@item.SupplName</td>
+                    <td>@item.SupplType</td>
                     <td>
+
+                        <a href="@Url.Action("Details", "Supplier", new { id = item.SupplierId})" class="btn btn-info">Details</a>
+                        @*<a href="@Url.Action("PlaceOrder", "Supplier", new { id = item.SupplierId})" class="btn btn-info">Order Stock</a>*@
                         <a href="@Url.Action("Edit", "Supplier", new { id = item.SupplierId})" class="btn btn-info">Edit</a>
                         <a href="@Url.Action("Delete", "Supplier", new { id = item.SupplierId})" class="btn btn-danger">Delete</a>
                     </td>

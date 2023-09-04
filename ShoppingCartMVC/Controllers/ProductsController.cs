@@ -19,8 +19,8 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult Index()
         {
             var products = db.tblProducts.ToList();
-            var query = db.tblProducts.Include(p => p.tblSupplier).ToList();
-            return View(query);
+            //var query = db.tblProducts.Include(p => p.tblSupplier).ToList();
+            return View(products);
         }
 
         #endregion
@@ -60,8 +60,8 @@ namespace ShoppingCartMVC.Controllers
                 pro.Unit = p.Unit;
                 pro.Image = Image.FileName.ToString();
                 pro.CatId = p.CatId;
-                pro.SupplierId = p.SupplierId;
-                pro.Qty = p.Qty;
+                //pro.SupplierId = p.SupplierId;
+                //pro.Qty = p.Qty;
 
                 //image upload
                 var folder = Server.MapPath("~/Uploads/");
@@ -155,11 +155,11 @@ namespace ShoppingCartMVC.Controllers
 
         #region shwoing products with low stock for prep staff 
         //Products that are low for customer ordering and needs topup
-        public ActionResult LowStock()
-        {
-            var lowStockProducts = db.tblProducts.Where(p => p.StockStatus == "Low Stock").ToList();
-            return View(lowStockProducts);
-        }
+        //public ActionResult LowStock()
+        //{
+        //    var lowStockProducts = db.tblProducts.Where(p => p.StockStatus == "Low Stock").ToList();
+        //    return View(lowStockProducts);
+        //}
         #endregion
 
         //extras 

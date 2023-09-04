@@ -1,0 +1,59 @@
+﻿@model List<ShoppingCartMVC.Models.LowStockVM>
+
+<script src="~/js/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+<div class="container">
+    <h2>Low Stock Products</h2>
+    <div class="form-group">
+        <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                @*<th>Supplier</th>*@
+                <th>Ingredient Name</th>
+                @*<th>Category</th>
+                    <th>Desc</th>
+                    <th>Unit</th>*@
+                <th>Image</th>
+                <th>Qty Remaining</th>
+                <th>Supplier</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ing in Model)
+            {
+
+                <tr>
+                    <td>@ing.Ing_ID</td>
+                    @*<td>@(item.tbl != null ? item.tblSupplier.Name : "N/A")</td>*@
+                    <td>@ing.Ing_Name</td>
+                    @*<td>@item.tblCategory.Name</td>*@
+                    @*<td>@item.Description</td>*@
+                    @*<td>@item.Ing_StockyQty</td>*@
+                    <td><img src="~/Uploads/@ing.IngImage" style="width:150px; height:100px;" /></td>
+                    <td>@ing.StockQty</td>
+                    <td>
+                        @ing.SupplName
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Index", "AdminHome",new {id=ing.SupplierId})" class="btn btn-success">View Suppliers</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

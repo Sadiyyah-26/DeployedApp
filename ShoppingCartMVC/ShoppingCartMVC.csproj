@@ -147,6 +147,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IngredientsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\tblRefundsController.cs" />
@@ -155,14 +156,23 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AdminCart.cs" />
+    <Compile Include="Models\AdminInv_VM.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
     <Compile Include="Models\Drivers.cs" />
     <Compile Include="Models\ExtraVM.cs" />
+    <Compile Include="Models\IngredientProduct.cs" />
+    <Compile Include="Models\IngrVM.cs" />
     <Compile Include="Models\InvoiceVM.cs" />
+    <Compile Include="Models\LowStockVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
+    <Compile Include="Models\SupplierIngredients.cs" />
+    <Compile Include="Models\tblAdminInvoice.cs" />
+    <Compile Include="Models\tblAdminOrder.cs" />
     <Compile Include="Models\tblCategory.cs" />
     <Compile Include="Models\tblExtras.cs" />
+    <Compile Include="Models\tblIngredients.cs" />
     <Compile Include="Models\tblInvoice.cs" />
     <Compile Include="Models\tblOrder.cs" />
     <Compile Include="Models\tblProduct.cs" />
@@ -351,6 +361,13 @@
     <Content Include="Views\tblSupplierOrders\Details.cshtml" />
     <Content Include="Views\tblSupplierOrders\Create.cshtml" />
     <Content Include="Views\tblSupplierOrders\Edit.cshtml" />
+    <Content Include="Views\Supplier\Details.cshtml" />
+    <Content Include="Views\Ingredients\AddIngr.cshtml" />
+    <Content Include="Views\Ingredients\EditIngr.cshtml" />
+    <Content Include="Views\Ingredients\IngIdex.cshtml" />
+    <Content Include="Views\Ingredients\IngProIndex.cshtml" />
+    <Content Include="Views\Ingredients\LowStock.cshtml" />
+    <Content Include="Views\Ingredients\SupplIngIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

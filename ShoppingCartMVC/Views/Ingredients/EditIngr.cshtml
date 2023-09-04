@@ -1,0 +1,84 @@
+﻿@model ShoppingCartMVC.Models.tblIngredients
+<head>
+    <title>Update Ingredient</title>
+    <style>
+        .card {
+            border: 2px solid #00ff90;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<br />
+
+<h2 class="card-title" style="text-align:center"><u> Update Ingredient </u></h2>
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm("EditIngr", "Ingredients", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+
+
+               <div class="form-horizontal">
+
+                   @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                   @Html.HiddenFor(model => model.Ing_ID)
+
+                   <div class="form-group">
+                       Ingredient Name:
+                       <div class="col-md-10">
+                           @Html.EditorFor(model => model.Ing_Name, new { htmlAttributes = new { @class = "form-control" } })
+
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       Avg Units used for Product:
+                       <div class="col-md-10">
+                           @Html.EditorFor(model => model.Ing_UnitsUsed, new { htmlAttributes = new { @class = "form-control" } })
+
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       Ingredient Stock Qty:
+                       <div class="col-md-10">
+                           @Html.EditorFor(model => model.Ing_StockyQty, new { htmlAttributes = new { @class = "form-control" } })
+
+                       </div>
+                   </div>
+                   <div class="form-group">
+                       <span>Select Image:</span>
+                       <div class="col-md-10">
+
+                           <img src="~/Uploads/@Model.Ing_Image" style="width:150px; height:100px;" class="img-responsive" />
+                           <br />
+                           <input type="file" name="Image" />
+
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <div class="col-md-offset-2 col-md-10">
+                           <input type="submit" value="Update" class="btn btn-success" />
+                       </div>
+                   </div>
+               </div>
+                <h3 style="color:red;">@TempData["msg"]</h3>
+
+
+            }
+
+            <div>
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />
