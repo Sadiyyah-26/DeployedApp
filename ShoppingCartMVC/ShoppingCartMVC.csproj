@@ -145,13 +145,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminHomeController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngredientsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\tblRefundsController.cs" />
-    <Compile Include="Controllers\tblSupplierOrdersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -179,7 +179,6 @@
     <Compile Include="Models\tblRefund.cs" />
     <Compile Include="Models\tblReservation.cs" />
     <Compile Include="Models\tblSupplier.cs" />
-    <Compile Include="Models\tblSupplierOrder.cs" />
     <Compile Include="Models\tblUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -352,15 +351,9 @@
     <Content Include="Views\Products\ExIndex.cshtml" />
     <Content Include="Views\Products\ExCreate.cshtml" />
     <Content Include="Views\Products\ExEdit.cshtml" />
-    <Content Include="Views\Products\LowStock.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\Create.cshtml" />
     <Content Include="Views\Supplier\Edit.cshtml" />
-    <Content Include="Views\tblSupplierOrders\Index.cshtml" />
-    <Content Include="Views\tblSupplierOrders\ReturnIndex.cshtml" />
-    <Content Include="Views\tblSupplierOrders\Details.cshtml" />
-    <Content Include="Views\tblSupplierOrders\Create.cshtml" />
-    <Content Include="Views\tblSupplierOrders\Edit.cshtml" />
     <Content Include="Views\Supplier\Details.cshtml" />
     <Content Include="Views\Ingredients\AddIngr.cshtml" />
     <Content Include="Views\Ingredients\EditIngr.cshtml" />
@@ -368,6 +361,14 @@
     <Content Include="Views\Ingredients\IngProIndex.cshtml" />
     <Content Include="Views\Ingredients\LowStock.cshtml" />
     <Content Include="Views\Ingredients\SupplIngIndex.cshtml" />
+    <Content Include="Views\AdminHome\AdminAddtoCart.cshtml" />
+    <Content Include="Views\AdminHome\AdminCheckout.cshtml" />
+    <Content Include="Views\AdminHome\AdminGetAllOrderDetail.cshtml" />
+    <Content Include="Views\AdminHome\AdminInvoice.cshtml" />
+    <Content Include="Views\AdminHome\Index.cshtml" />
+    <Content Include="Views\AdminHome\ReceivedOrdersList.cshtml" />
+    <Content Include="Views\AdminHome\ReturnedOrdersList.cshtml" />
+    <Content Include="Views\AdminHome\SupplierConfirmOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

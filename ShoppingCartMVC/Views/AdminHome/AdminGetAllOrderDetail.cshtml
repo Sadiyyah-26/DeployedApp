@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblAdminOrder>
+
+<br />
+<h2> Supplier Restock Orders</h2>
+<div class="container">
+
+
+    <table class="table">
+
+        <tr>
+            <th>
+               Invoice No #
+            </th>
+            <th>
+                Supplier Name
+            </th>
+               
+            <th>
+                Order Date
+            </th>
+            <th>
+                Order Status
+            </th>
+
+            <th>
+                Invoice
+            </th>
+
+            <th>Action</th>
+            <th></th>
+        </tr>
+        <tbody id="myTable">
+            @foreach (var item in Model)
+            { 
+                <tr>
+                    <td>
+                        @item.InvoiceId
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem=>item.TblSupplier.SupplName)
+                    </td>
+                    <td>
+                        @item.OrderDate
+                    </td>
+                    <td>
+                        @item.OrderStatus
+                    </td>
+                    <td>
+                        <a href="@Url.Action("AdminInvoice", "AdminHome", new { InvID = item.InvoiceId })" class="btn btn-primary">View</a>
+                    </td>
+
+                    <td>
+                       
+                        @if (item.OrderStatus == "Ordered")
+                        {
+                            <a href="@Url.Action("SupplierConfirmOrder", "AdminHome", new { InvoiceID = item.InvoiceId })" class="btn btn-info">Receiving Checklist</a>
+                        }
+                        
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

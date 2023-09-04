@@ -12,6 +12,11 @@
         .form-group {
             text-align: center;
         }
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 2fr);
+            gap: 10px;
+        }
     </style>
 </head>
 <br />
@@ -27,10 +32,6 @@
             {
 
                 <form class="bg-white p-5 contact-form">
-                    <div class="form-group">
-                        <span>Suppliers:</span>
-                        @Html.DropDownListFor(m => m.SupplierId, ViewBag.SuppList as SelectList, "-- Select Supplier ---")
-                    </div>
 
                     <div class="form-group">
                         <span>Name:</span>
@@ -57,9 +58,22 @@
                         <input type="file" name="Image" />
                     </div>
                     <br />
-                    <div class="form-group">
-                        <span>Qty:</span>
-                        @Html.TextBoxFor(m => m.Qty, new { @class = "form-control" })
+                    <div class="checkbox-grid">
+                        <h4>Ingredients:</h4>
+                        <br />
+                        <br />
+                        @foreach (var ing in ViewBag.IngrNames)
+                        {
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="selectedIngrs[]" value="@ing.IngName" />
+                                    @ing.IngName
+                                </label>
+                            </div>
+
+                        }
+
+
                     </div>
                     <br />
                     <br />

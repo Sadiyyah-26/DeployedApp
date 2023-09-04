@@ -19,22 +19,40 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult Index()
         {
             var products = db.tblProducts.ToList();
-            //var query = db.tblProducts.Include(p => p.tblSupplier).ToList();
+            
             return View(products);
         }
 
         #endregion
 
 
-        #region products add for admin
+        #region Admin Adds Products
 
         public ActionResult Create()
         {
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
 
-            List<tblSupplier> slist = db.tblSuppliers.ToList();
-            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
+            var ingredients = db.tblIngredients
+       .ToList() // Materialize the data
+       .Select(m => new
+       {
+           ingName = m.Ing_Name,
+
+       })
+       .ToList();
+
+            // Perform the conversion in-memory
+            var ingrViewModel = ingredients.Select(m => new IngrVM
+            {
+                IngName = m.ingName,
+
+            })
+            .ToList();
+
+
+
+            ViewBag.IngrNames = ingrViewModel;
 
             return View();
         }
@@ -42,13 +60,10 @@ namespace ShoppingCartMVC.Controllers
 
 
         [HttpPost]
-        public ActionResult Create(tblProduct p, HttpPostedFileBase Image)
+        public ActionResult Create(tblProduct p, HttpPostedFileBase Image, string[] selectedIngrs)
         {
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
-
-            List<tblSupplier> slist = db.tblSuppliers.ToList();
-            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
 
             if (ModelState.IsValid)
             {
@@ -60,14 +75,32 @@ namespace ShoppingCartMVC.Controllers
                 pro.Unit = p.Unit;
                 pro.Image = Image.FileName.ToString();
                 pro.CatId = p.CatId;
-                //pro.SupplierId = p.SupplierId;
-                //pro.Qty = p.Qty;
 
                 //image upload
                 var folder = Server.MapPath("~/Uploads/");
                 Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
 
                 db.tblProducts.Add(pro);
+
+                if (selectedIngrs != null)
+                {
+                    foreach (var ingrName in selectedIngrs)
+                    {
+                        var ingredient = db.tblIngredients.FirstOrDefault(i => i.Ing_Name == ingrName);
+                        if (ingredient != null)
+                        {
+                            var ingredientProduct = new IngredientProduct
+                            {
+                                ProID = pro.ProID,
+                                Ing_ID = ingredient.Ing_ID,
+                                /* Quantity = 1*/ // Adjust as needed
+                            };
+                            db.IngredientProducts.Add(ingredientProduct);
+                        }
+                    }
+                }
+
+
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
@@ -83,7 +116,7 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
 
-        #region edit products
+        #region Edit Products
 
         public ActionResult Edit(int id)
         {
@@ -91,23 +124,28 @@ namespace ShoppingCartMVC.Controllers
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
 
-            List<tblSupplier> slist = db.tblSuppliers.ToList();
-            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
-
             var query = db.tblProducts.SingleOrDefault(m => m.ProID == id);
+
+            List<tblIngredients> allIngredients = db.tblIngredients.ToList();
+            List<int> selectedIngredientIds = db.IngredientProducts
+        .Where(ip => ip.ProID == id)
+        .Select(ip => ip.Ing_ID)
+        .ToList();
+
+            ViewBag.AllIngredients = allIngredients;
+            ViewBag.SelectedIngredientIds = selectedIngredientIds;
 
             return View(query);
         }
 
 
         [HttpPost]
-        public ActionResult Edit(tblProduct p, HttpPostedFileBase Image)
+        public ActionResult Edit(tblProduct p, HttpPostedFileBase Image, int[] selectedIngrs)
         {
             List<tblCategory> list = db.tblCategories.ToList();
             ViewBag.CatList = new SelectList(list, "CatId", "Name");
 
-            List<tblSupplier> slist = db.tblSuppliers.ToList();
-            ViewBag.SuppList = new SelectList(slist, "SupplierId", "Name");
+           
 
             try
             {
@@ -116,6 +154,23 @@ namespace ShoppingCartMVC.Controllers
                 var folder = Server.MapPath("~/Uploads/");
                 Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
                 db.Entry(p).State = EntityState.Modified;
+
+                var existingIngredients = db.IngredientProducts.Where(ip => ip.ProID == p.ProID);
+                db.IngredientProducts.RemoveRange(existingIngredients);
+
+                // Add selected ingredients to the product
+                if (selectedIngrs != null)
+                {
+                    foreach (var ingredientId in selectedIngrs)
+                    {
+                        db.IngredientProducts.Add(new IngredientProduct
+                        {
+                            ProID = p.ProID,
+                            Ing_ID = ingredientId
+                        });
+                    }
+                }
+
                 db.SaveChanges();
 
             }
@@ -131,7 +186,7 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
 
-        #region delete product 
+        #region Delete Product 
 
         public ActionResult Delete(int id)
         {
@@ -153,14 +208,6 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region shwoing products with low stock for prep staff 
-        //Products that are low for customer ordering and needs topup
-        //public ActionResult LowStock()
-        //{
-        //    var lowStockProducts = db.tblProducts.Where(p => p.StockStatus == "Low Stock").ToList();
-        //    return View(lowStockProducts);
-        //}
-        #endregion
 
         //extras 
         #region all extras

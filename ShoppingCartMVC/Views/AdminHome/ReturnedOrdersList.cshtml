@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblAdminOrder>
+
+<br />
+<h2> Supplier Returned Orders</h2>
+<div class="container">
+
+
+    <table class="table">
+
+        <tr>
+            <th>
+                Invoice No #
+            </th>
+            <th>
+                Supplier Name
+            </th>
+
+            <th>
+                Order Date
+            </th>
+            <th>
+                Return Reason
+            </th>
+
+            <th>
+                Invoice
+            </th>
+
+            <th>Action</th>
+            <th></th>
+        </tr>
+        <tbody id="myTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.InvoiceId
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TblSupplier.SupplName)
+                    </td>
+                    <td>
+                        @item.OrderDate
+                    </td>
+                    <td>
+                        @item.ReturnReason   
+                    </td>
+                    <td>
+                        <a href="@Url.Action("AdminInvoice", "AdminHome", new { InvID = item.InvoiceId })" class="btn btn-primary">View</a>
+                    </td>
+
+                    <td>
+                        <form action="@Url.Action("ReturnedOrdersList", "AdminHome", new { id = item.InvoiceId })" method="post">
+                            <input type="submit" value="Re-Order" class="btn btn-info" />
+                        </form>
+
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
