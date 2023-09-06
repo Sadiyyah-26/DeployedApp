@@ -1,16 +1,18 @@
-﻿@model IEnumerable<ShoppingCartMVC.Models.IngredientProduct>
-
+﻿@model List<System.Linq.IGrouping<int, ShoppingCartMVC.Models.IngredientProduct>>
+<head>
+    <title>Product Ingredients</title>
+</head>
 <script src="~/js/jquery.min.js"></script>
 
 <script>
-$(document).ready(function(){
-    $("#searchBox").on("keyup", function () {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    $(document).ready(function () {
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
     });
-  });
-});
 </script>
 
 
@@ -22,24 +24,21 @@ $(document).ready(function(){
     <table class="table">
         <thead>
             <tr>
-                @*<th>ID</th>*@
                 <th>Product</th>
-                <th>Ingredient</th>
-                @*<th>Action</th>*@
+                <th>Ingredients</th>
             </tr>
         </thead>
         <tbody id="myTable">
-            @foreach (var item in Model)
+            @foreach (var group in Model)
             {
                 <tr>
-
-                    <td>@item.TblProduct.P_Name</td>
-                    <td>@item.TblIngredients.Ing_Name</td>
-                    @*<td>
-                        <a href="@Url.Action("EditIngr", "Ingredients", new { id = item.Ing_ID})" class="btn btn-info">Edit</a>
-                        <a href="@Url.Action("DeleteIngr", "Ingredients", new { id = item.Ing_ID})" class="btn btn-danger">Delete</a>
-                    </td>*@
-
+                    <td>@group.First().TblProduct.P_Name</td>
+                    <td>
+                        @foreach (var item in group)
+                        {
+                            <p>@item.TblIngredients.Ing_Name</p>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
@@ -47,3 +46,5 @@ $(document).ready(function(){
 
 
 </div>
+<br />
+<br />

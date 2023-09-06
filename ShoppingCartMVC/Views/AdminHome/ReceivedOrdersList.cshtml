@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblAdminOrder>
-
+<head>
+    <title>
+        Supplier Received Orders
+    </title>
+</head>
 <br />
 <h2> Supplier Received Orders</h2>
 <div class="container">
@@ -18,16 +22,11 @@
             <th>
                 Order Date
             </th>
-            @*<th>
-                Order Status
-            </th>*@
-
+           
             <th>
                 Invoice
             </th>
 
-            @*<th>Action</th>
-            <th></th>*@
         </tr>
         <tbody id="myTable">
             @foreach (var item in Model)
@@ -43,9 +42,7 @@
                     <td>
                         @item.OrderDate
                     </td>
-                    @*<td>
-                        @item.OrderStatus
-                    </td>*@
+                   
                     <td>
                         <a href="@Url.Action("AdminInvoice", "AdminHome", new { InvID = item.InvoiceId })" class="btn btn-primary">View</a>
                     </td>
@@ -58,3 +55,6 @@
     </table>
 
 </div>
+
+<br />
+<br />

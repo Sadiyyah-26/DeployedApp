@@ -29,7 +29,8 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult IngProIndex()
         {
             var all = db.IngredientProducts.ToList();
-            return View(all);
+            var groupedIng = all.GroupBy(m => m.ProID).ToList();
+            return View(groupedIng);
         }
         #endregion
 
@@ -152,6 +153,36 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
 
+        #region Update Supplier Ingredient Unit Cost
+        public ActionResult UpdateUnitCost(int id)
+        {
+            TempData["id"] = id;
+            var qry = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == id);
+            return View(qry);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateUnitCost(double unitCost)
+        {
+            // Retrieve the id from TempData and cast it to an int
+            if (TempData["id"] != null && int.TryParse(TempData["id"].ToString(), out int id))
+            {
+                SupplierIngredients qry = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == id);
+
+                if (qry != null)
+                {
+                    qry.Ing_UnitCost = unitCost;
+                    db.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("SupplIngIndex");
+        }
+
+
+
+        #endregion
+
         #region Showing Low Stock Ingredients for Kitchen Staff
         //Ingrediemts that are low for customer ordering and needs topup
         public ActionResult LowStock()
@@ -182,7 +213,8 @@ namespace ShoppingCartMVC.Controllers
                   IngImage = info.Ing_Image,
                   SupplName = s.SupplName
               })
-        .Where(info => info.StockStatus == "Low Stock")
+        .Where(info => info.StockStatus == "Low Stock" &&
+                   !db.tblAdminOrders.Any(order => order.IngrID == info.Ing_ID && order.OrderStatus == "Ordered"))
         .ToList();
 
             return View(lowStockIngredients);

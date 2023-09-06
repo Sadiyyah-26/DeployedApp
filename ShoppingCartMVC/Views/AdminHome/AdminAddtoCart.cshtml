@@ -1,6 +1,11 @@
 ﻿@model ShoppingCartMVC.Models.tblIngredients
-
-
+<head>
+    <title>Ingredient Add To Cart</title>
+</head>
+<br />
+<br />
+<br />
+<br />
 <div class="container">
 
     @using (Html.BeginForm())
@@ -17,9 +22,9 @@
                 <h3>@Model.Ing_Name</h3>
 
 
-                <p>Rs. <strong>@TempData["unit"]</strong></p>
-                <p><strong>Available: @Model.Ing_StockyQty</strong></p>
-                <input type="number" min="1" max="200" name="qty" />
+                <p>Supplier Unit Cost: R <strong>@TempData["unit"].00 </strong></p>
+                <p><strong>Current Qty Available: @Model.Ing_StockyQty</strong></p>
+                <input type="number" min="1" max="200" name="qty" /> &ensp;&ensp;
                 <input type="submit" value="Add to Cart" class="btn btn-warning" />
             </div>
 
@@ -28,3 +33,7 @@
     }
 </div>
 
+<br />
+<br />
+<br />
+<br />

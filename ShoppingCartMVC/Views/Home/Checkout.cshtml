@@ -68,7 +68,7 @@
                                         R @item.extrasCost
                                     </td>
 
-                                    <td class="total">R @item.bill</td>
+                                    <td class="total">R @item.bill.00</td>
                                 </tr><!-- END TR-->
                             }
 
@@ -89,7 +89,7 @@
                     <hr>
                     <p class="d-flex total-price">
                         <span>Total</span>
-                        <span>R @TempData["total"]</span>
+                        <span>R @TempData["total"].00</span>
                     </p>
                 </div>
 

@@ -1,7 +1,7 @@
 ﻿@model ShoppingCartMVC.Models.tblSupplier
 
 <head>
-    <title>Add Supplier</title>
+    <title> Supplier Details</title>
     <style>
         .card {
             border: 2px solid #00ff90;
@@ -35,33 +35,42 @@
                     </dt>
 
                     <dd>
-                     Supplier Type: &ensp;&ensp;&ensp;&ensp;  @Html.DisplayFor(model => model.SupplType)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Supplier Type: </b></span>
+                        &ensp; @Html.DisplayFor(model => model.SupplType)
                     </dd>
 
                     <dt>
-                        Contact Person: &ensp; @Html.DisplayFor(model => model.ContactPerson)
+                        <span style="display: inline-block; color: cadetblue;">Contact Person:</span>
+                        &ensp; @Html.DisplayFor(model => model.ContactPerson)
                     </dt>
 
                     <dd>
-                     Contact Person Position:   @Html.DisplayFor(model => model.ContactPersonPos)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Contact Person Position: </b></span>
+                        @Html.DisplayFor(model => model.ContactPersonPos)
                     </dd>
                     <dd>
-                        Contact Number: &ensp;  @Html.DisplayFor(model => model.ContactNum)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Contact Number: </b></span>
+                        &ensp;  @Html.DisplayFor(model => model.ContactNum)
                     </dd>
                     <dd>
-                        Email: &ensp;&ensp;  @Html.DisplayFor(model => model.Email)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Email: </b></span>
+                        &ensp;  @Html.DisplayFor(model => model.Email)
                     </dd>
                     <dd>
-                        Telephone: &ensp;&ensp;&ensp;&ensp;&ensp;  @Html.DisplayFor(model => model.Tel)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Telephone: </b></span>
+                        &ensp;  @Html.DisplayFor(model => model.Tel)
                     </dd>
                     <dd>
-                        Company Registration Number: &ensp;&ensp; @Html.DisplayFor(model => model.CompanyRegNum)
+                        <span style="display: inline-block; color: cadetblue;"> <b> Company Registration Number: </b></span>
+                        &ensp; @Html.DisplayFor(model => model.CompanyRegNum)
                     </dd>
                     <dd>
-                        Physical Address: &ensp;  @Html.DisplayFor(model => model.PhysicalAddress)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Physical Address: </b></span>
+                        &ensp;  @Html.DisplayFor(model => model.PhysicalAddress)
                     </dd>
                     <dd>
-                        Active: &ensp;  @Html.DisplayFor(model => model.Active)
+                        <span style="display: inline-block; color: cadetblue;"> <b>Active: </b></span>
+                        &ensp;  @Html.DisplayFor(model => model.Active)
                     </dd>
                     <hr />
                     <dd>
@@ -73,7 +82,7 @@
                     </dd>
                 </dl>
 
-                <p>
+                <p style="text-align:center">
 
                     <a href="@Url.Action("Index", "AdminHome",new {id=Model.SupplierId})">Order Ingredients</a>|
                     @Html.ActionLink("Edit", "Edit", new { id = Model.SupplierId }) |

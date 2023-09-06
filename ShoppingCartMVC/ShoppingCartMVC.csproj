@@ -369,6 +369,7 @@
     <Content Include="Views\AdminHome\ReceivedOrdersList.cshtml" />
     <Content Include="Views\AdminHome\ReturnedOrdersList.cshtml" />
     <Content Include="Views\AdminHome\SupplierConfirmOrder.cshtml" />
+    <Content Include="Views\Ingredients\UpdateUnitCost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

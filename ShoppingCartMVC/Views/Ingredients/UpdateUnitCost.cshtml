@@ -1,0 +1,48 @@
+﻿@model ShoppingCartMVC.Models.SupplierIngredients
+<head>
+    <title>Update Unit Cost</title>
+    <style>
+        .card {
+            border: 2px solid #00ff90;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<br />
+
+<h2 class="card-title" style="text-align:center"><u> Update Unit Cost </u></h2>
+<div class="col-sm-5 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm("UpdateUnitCost", "Ingredients", FormMethod.Post))
+            {
+                <div class="form-group">
+                    <b> @Html.DisplayFor(m => m.TblIngredients.Ing_Name)</b>
+                </div>
+
+                <div class="form-group">
+                    Current Unit Cost: R @Model.Ing_UnitCost .00
+                </div>
+                <br />
+                <div class="form-group">
+                    <p style="text-align:center">New Unit Cost: </p> R <input type="number" name="unitCost" value="0" /> .00
+                </div>
+
+                <br />
+                <div class="form-group">
+
+                    <input type="submit" value="Update" class="btn btn-success" />
+
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />
