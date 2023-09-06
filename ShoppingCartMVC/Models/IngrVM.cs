@@ -15,5 +15,6 @@ namespace ShoppingCartMVC.Models
         public string IngName { get; internal set; }
         public string Ing_Image { get; set; }
         public double Ing_UnitCost { get; set; }
+        public int Ing_StockyQty { get; set; }
     }
 }

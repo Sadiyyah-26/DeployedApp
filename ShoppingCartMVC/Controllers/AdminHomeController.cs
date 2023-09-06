@@ -38,7 +38,7 @@ namespace ShoppingCartMVC.Controllers
 
             var suppliedIngredients = db.SupplierIngredients
      .Where(si => si.SupplierId == id)
-     .Join(db.tblIngredients, si => si.Ing_ID, i => i.Ing_ID, (si, i) => new IngrVM { ID = si.Ing_ID, IngName = i.Ing_Name, Ing_Image = i.Ing_Image, Ing_UnitCost = si.Ing_UnitCost })
+     .Join(db.tblIngredients, si => si.Ing_ID, i => i.Ing_ID, (si, i) => new IngrVM { ID = si.Ing_ID, IngName = i.Ing_Name, Ing_Image = i.Ing_Image, Ing_UnitCost = si.Ing_UnitCost, Ing_StockyQty = i.Ing_StockyQty })
      .ToList();
 
 
@@ -152,19 +152,7 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult AdminCheckout(string contact, string address)
         {
 
-            //DateTime currentTime = DateTime.Now;
-            //DateTime cutoffStartTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, 0, 0, 0); // set the cutoff start time to 12:00 AM
-            //DateTime cutoffEndTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, 8, 0, 0); // set the cutoff end time to 8:00 AM
-
-            //if (currentTime >= cutoffStartTime && currentTime < cutoffEndTime) // check if the current time is after or equal to the cutoff start time and before the cutoff end time
-            //{
-            //    // throw an error if it's cutOffTime
-            //    return RedirectToAction("Error", "Home");
-            //}
-            //else
-            //{
-                // perform some action if it's not cutOffTime
-                // ...
+           
                 if (ModelState.IsValid)
                 {
                     List<AdminCart> Ali2 = TempData["admincart"] as List<AdminCart>;
@@ -248,14 +236,21 @@ namespace ShoppingCartMVC.Controllers
         [HttpPost]
         public ActionResult ReturnedOrdersList(int id)
         {
-            var query = db.tblAdminOrders.Find(id);
-            if (query != null)
+            var allOrders = db.tblAdminOrders.Where(m => m.InvoiceId == id).ToList();
+
+            if (allOrders.Count > 0)
             {
-                query.OrderStatus = "Ordered";
-                query.OrderDate = System.DateTime.Now;
+                foreach (var order in allOrders )
+                {
+                    order.OrderStatus = "Ordered";
+                    order.OrderDate = System.DateTime.Now;
+                    order.TblAdminInvoice.InvoiceDate= System.DateTime.Now;
+                }
+                db.SaveChanges();
             }
-            db.SaveChanges();
+
             return RedirectToAction("AdminGetAllOrderDetail");
+
         }
         #endregion
 

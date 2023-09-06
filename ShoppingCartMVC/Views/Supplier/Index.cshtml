@@ -6,14 +6,14 @@
 <script src="~/js/jquery.min.js"></script>
 
 <script>
-$(document).ready(function(){
-    $("#searchBox").on("keyup", function () {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    $(document).ready(function () {
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
     });
-  });
-});
 </script>
 
 
@@ -41,7 +41,7 @@ $(document).ready(function(){
                     <td>
 
                         <a href="@Url.Action("Details", "Supplier", new { id = item.SupplierId})" class="btn btn-info">Details</a>
-                        @*<a href="@Url.Action("PlaceOrder", "Supplier", new { id = item.SupplierId})" class="btn btn-info">Order Stock</a>*@
+                       
                         <a href="@Url.Action("Edit", "Supplier", new { id = item.SupplierId})" class="btn btn-info">Edit</a>
                         <a href="@Url.Action("Delete", "Supplier", new { id = item.SupplierId})" class="btn btn-danger">Delete</a>
                     </td>
@@ -53,5 +53,6 @@ $(document).ready(function(){
 
 
 </div>
-
+<br />
+<br />
 
