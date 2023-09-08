@@ -1,0 +1,51 @@
+﻿@model ShoppingCartMVC.Models.tblDonations
+<head>
+    <title>
+        Donation Details
+    </title>
+    <style>
+        .card {
+            border: 2px solid green;
+            text-align:center
+        }
+    </style>
+</head>
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2 style="text-align:center" class="bg-primary text-white">Donation Details</h2>
+
+<div class="col-md-6 mx-auto">
+    <hr />
+    <div class="card mx-auto">
+
+
+        <dl class="dl-v">
+            <dt>
+                Oraginzation Donated Too:
+            </dt>
+
+            <dd>@Html.DisplayFor(model => model.DonCharityOrg)</dd>
+
+            <dt>
+                Donator's Email:
+            </dt>
+
+            <dd> @Html.DisplayFor(model => model.DonEmail) </dd>
+
+            <dt>
+                Donation Amount:
+            </dt>
+
+            <dd>R @Html.DisplayFor(model => model.DonationAmount) </dd>
+
+        </dl>
+        <p>
+            @Html.ActionLink("Back to List", "DonationDetails")
+        </p>
+    </div>
+</div>
+
+<br />
+<br />

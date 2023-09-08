@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblDonations>
+@{
+    ViewBag.Title = "DonationDetails";
+}
+<head>
+    <title>Donations List</title>
+</head>
+
+
+<h2>Donation List</h2>
+<br />
+<br />
+<table class="table">
+    <tr>
+        <th>
+            Donation Organization
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Donation Amount
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DonCharityOrg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DonEmail)
+            </td>
+            <td>
+                R @Html.DisplayFor(modelItem => item.DonationAmount)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.DonationId })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+<br />

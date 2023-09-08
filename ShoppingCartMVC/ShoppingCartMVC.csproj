@@ -147,6 +147,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminHomeController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\DonationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IngredientsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Models\tblAdminInvoice.cs" />
     <Compile Include="Models\tblAdminOrder.cs" />
     <Compile Include="Models\tblCategory.cs" />
+    <Compile Include="Models\tblDonations.cs" />
     <Compile Include="Models\tblExtras.cs" />
     <Compile Include="Models\tblIngredients.cs" />
     <Compile Include="Models\tblInvoice.cs" />
@@ -244,6 +246,7 @@
     <Content Include="Images\LogoW2.jpg" />
     <Content Include="Images\mail-sent.jpg" />
     <Content Include="Images\Make_Reservation.png" />
+    <Content Include="Images\mealsOnWheelsLogo.png" />
     <Content Include="Images\Menu.png" />
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
     <Content Include="Images\order-success.jpg" />
@@ -251,6 +254,8 @@
     <Content Include="Images\Reg.png" />
     <Content Include="Images\res.jpg" />
     <Content Include="Images\ReserveSuccess.png" />
+    <Content Include="Images\Vop-logo-retina.png" />
+    <Content Include="Images\WFPLogo.png" />
     <Content Include="js\aos.js" />
     <Content Include="js\bootstrap-datepicker.js" />
     <Content Include="js\bootstrap.min.js" />
@@ -372,6 +377,13 @@
     <Content Include="Views\AdminHome\ReturnedOrdersList.cshtml" />
     <Content Include="Views\AdminHome\SupplierConfirmOrder.cshtml" />
     <Content Include="Views\Ingredients\UpdateUnitCost.cshtml" />
+    <Content Include="Views\Donations\Create.cshtml" />
+    <Content Include="Views\Donations\Delete.cshtml" />
+    <Content Include="Views\Donations\Details.cshtml" />
+    <Content Include="Views\Donations\Edit.cshtml" />
+    <Content Include="Views\Donations\Index.cshtml" />
+    <Content Include="Views\Donations\DonationDetails.cshtml" />
+    <Content Include="Views\Donations\DonationSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
