@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblDonations>
+
+<head>
+    <title>
+        Donations
+    </title>
+</head>
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+
+    .box {
+        display: flex; /* always present for Flexbox practices */
+        flex-direction: row; /* elements stack */
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+        .box > * {
+            flex: 1 20vw;
+            /*flex-grow: 1;*/ /*Allow the element to grow if there is available space */
+            /*flex-shrink: 1;*/ /*Elements shrink at the same rate */
+            /*flex-basis: 100%;*/ /* Elements will cover the same amount, if is possible the 100% of the width */
+            margin: 20px;
+        }
+
+    .boxStart {
+        display: flex; /* always present for Flexbox practices */
+        flex-direction: row; /* elements stack */
+        flex-wrap: nowrap;
+        flex-shrink: 1;
+        flex-grow: 0;
+    }
+
+        .boxStart > * {
+            flex: 1;
+            flex-grow: 0;
+            flex-shrink: 1;
+            justify-content: center;
+            /*flex-grow: 1;*/ /*Allow the element to grow if there is available space */
+            /*flex-shrink: 1;*/ /*Elements shrink at the same rate */
+            /*flex-basis: 100%;*/ /* Elements will cover the same amount, if is possible the 100% of the width */
+            margin-inline: 5px;
+        }
+
+    .coverImage {
+        object-fit: contain;
+        width: 100%;
+        height: 160px;
+    }
+
+    .ImageRoundBorders {
+        --bs-card-inner-border-radius: calc(0.5rem - 1px);
+        border-top-left-radius: var(--bs-card-inner-border-radius);
+        border-top-right-radius: var(--bs-card-inner-border-radius);
+        border-bottom-right-radius: var(--bs-card-inner-border-radius);
+        border-bottom-left-radius: var(--bs-card-inner-border-radius);
+    }
+
+    .detailImage {
+        object-fit: scale-down;
+        width: 100%;
+        height: 100%;
+    }
+
+</style>
+
+<h2 class="bg-primary text-white">Donations Home</h2>
+
+<div  class="col-md-10">
+    <h3>About Our Supported Charity Organizations</h3>
+</div>
+<div class="box">
+    <div class="card bg-primary" style="max-width: 20rem;">
+        <div class="card-body">
+            <h4 class="card-title text-white">Village of peace</h4>
+            <div class="justify-content-center">
+                <image src="@Url.Content("~/Images/Vop-logo-retina.png")" class="d-block user-select-none coverImage card-img-top bg-white" width="10px" height="10px" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle" />
+            </div>
+            <p class="card-body text-white">Help malnourished children in Afghanistan together with Village of Peace. For R50 we can help a child for one month. With your donation you contribute to a better future for children in Afghanistan</p>
+
+        </div>
+    </div>
+
+    <div class="card bg-primary" style="max-width: 20rem;">
+        <div class="card-body">
+            <h4 class="card-title text-white">Meals On Wheels</h4>
+            <div class="justify-content-center">
+                <image src="@Url.Content("~/Images/mealsOnWheelsLogo.png")" class="d-block user-select-none coverImage card-img-top bg-white" width="10px" height="10px" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle" />
+            </div>
+            <p class="card-body text-white">Meals on Wheels is a multi-faceted welfare non-profit organization tasked with helping poverty-stricken South Africans with nutritious meals and food security.</p>
+
+        </div>
+    </div>
+
+    <div class="card bg-primary" style="max-width: 20rem;">
+        <div class="card-body">
+            <h4 class="card-title text-white">World Food Program</h4>
+            <div class="justify-content-center">
+                <image src="@Url.Content("~/Images/WFPLogo.png")" class="d-block user-select-none coverImage card-img-top bg-white" width="10px" height="10px" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle" />
+            </div>
+            <p class="card-body text-white">We bring life-saving relief in emergencies and use food assistance to build a pathway to peace, stability and prosperity for people recovering from conflict, disasters and the impacts of climate change.</p>
+        </div>
+    </div>
+
+    <div class="card bg-primary" style="max-width: 20rem;">
+        <div class="card-body justify-content-center">
+            <h3 class="card-title text-white">Our Total Donations This Month</h3>
+            <div class="card bg-dark" style="max-width: 20rem;">
+                <div class="card-body justify-content-center">
+                    <h3 class="text-white">R @ViewBag.TotalDonations </h3>
+                </div>
+
+            </div>
+            <br />
+            <br />
+            <div @*class="col-md-1 mx-auto"*@>
+                <a class="btn btn-dark text-white" asp-controller="Donations" asp-action="Create" href="@Url.Action("Create","Donations")" )>Make Donation</a>
+            </div>
+        </div>
+            </div>
+        </div>
+
+<p></p>
+
+    @*<h2 class="bg-primary text-white">Your Donations</h2>*@
+   
+ <br />
+<br />  

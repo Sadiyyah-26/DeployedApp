@@ -171,6 +171,7 @@
                         <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fa fa-pencil"></span>Reviews</a></li>
                         <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Contact Us</a></li>
                         <li class="nav-item"><a href="@Url.Action("Reservations", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Reservations</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index", "Donations")" class="nav-link"><span class="fa fa-envelope"></span>Donations</a></li>
                         if (TempData["cart"] != null)
                         {
                             TempData.Keep();
@@ -212,6 +213,7 @@
                             //<li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
                             <li class="nav-item"><a href="@Url.Action("Index", "tblRefunds")" class="nav-link"><span class="fa fa-list"></span>Refund Requests</a></li>
                             <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
+                            <li class="nav-item"><a href="@Url.Action("DonationDetails", "Donations")" class="nav-link"><span class="fa fa-envelope"></span>Donations</a></li>
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
                         }
                         if (User.IsInRole("2"))
