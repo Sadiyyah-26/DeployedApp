@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShoppingCartMVC.Models.tblUser>
+﻿@model IEnumerable<ShoppingCartMVC.Models.AccountPoints>
 <head>
     <title>Turbo Meals Users</title>
 </head>
@@ -20,7 +20,9 @@
         <th>
             @Html.DisplayNameFor(model => model.RoleType)
         </th>
-        <th></th>
+        <th>
+            Account Points
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -33,11 +35,24 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             @*<td>
-                    @Html.DisplayFor(modelItem => item.Password)
-                </td>*@
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.RoleType)
             </td>
+            @if (item.RoleType != 2)
+            {
+                <td>
+                    -
+                </td>
+            }
+
+            @if (item.RoleType == 2)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.PointBalance)
+                </td>
+            }
 
         </tr>
     }

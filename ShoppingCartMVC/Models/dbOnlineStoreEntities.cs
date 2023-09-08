@@ -30,6 +30,10 @@ namespace ShoppingCartMVC.Models
 
         public virtual DbSet<tblAdminOrder> tblAdminOrders { get; set; }
         public virtual DbSet<tblAdminInvoice> tblAdminInvoices { get; set; }
+
+        public virtual DbSet<UserPoints> tblPoints { get; set; }
+
+        public virtual DbSet<AccountPoints> tblAccPoints { get; set; }
     }
 }
 
