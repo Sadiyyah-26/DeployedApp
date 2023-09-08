@@ -40,6 +40,10 @@ namespace ShoppingCartMVC.Controllers
                     db.tblUsers.Add(u);
                     db.SaveChanges();
 
+                    var accPoints = new UserPoints { UserID = u.UserId, PointBalance = 50 };
+                    db.tblPoints.Add(accPoints);
+                    db.SaveChanges();
+
                     var body = $"Dear {t.Name},<br /><br />Thank you for registering at Turbo Meals. Your registration was successful. You can now login with your credentials to access the Turbo Meals Site.<br /><br />";
                     var message = new MailMessage();
                     message.To.Add(new MailAddress(t.Email));

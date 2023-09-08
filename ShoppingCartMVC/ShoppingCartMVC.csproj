@@ -156,6 +156,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountPoints.cs" />
     <Compile Include="Models\AdminCart.cs" />
     <Compile Include="Models\AdminInv_VM.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Models\tblReservation.cs" />
     <Compile Include="Models\tblSupplier.cs" />
     <Compile Include="Models\tblUser.cs" />
+    <Compile Include="Models\UserPoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

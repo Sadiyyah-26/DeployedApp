@@ -42,6 +42,28 @@ namespace ShoppingCartMVC.Controllers
                 TempData["total"] = x;
                 TempData["item_count"] = li2.Count();
             }
+
+            //get the users point balance
+            if (Session["uid"] != null)
+            {
+                try
+                {
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    if (userID > 0)
+                    {
+                        var value = (from e in db.tblPoints
+                                     where e.UserID == userID
+                                     select e.PointBalance).SingleOrDefault();
+                        ViewBag.TotalPoints = value;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+
             TempData.Keep();
 
             var query = db.tblProducts.ToList();
@@ -56,6 +78,8 @@ namespace ShoppingCartMVC.Controllers
         {
           
             var query = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
+
+            //extras
             int? catIdToMatch = query.CatId;
 
             var extrasWithCost = db.tblExtras
@@ -80,6 +104,29 @@ namespace ShoppingCartMVC.Controllers
 
             ViewBag.ExtraNames = extrasWithCostViewModel;
 
+            //points
+            if (Session["uid"] != null)
+            {
+                try
+                {
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    if (userID > 0)
+                    {
+                        var value = (from e in db.tblPoints
+                                     where e.UserID == userID
+                                     select e.PointBalance).SingleOrDefault();
+                        TempData["points"] = value;
+                        ViewBag.TotalPoints = value;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            TempData.Keep();
+
             return View(query);
         }
 
@@ -88,6 +135,30 @@ namespace ShoppingCartMVC.Controllers
         [HttpPost]
         public ActionResult AddtoCart(int id, int qty, string[] selectedExtras)
         {
+            //points
+            if (Session["uid"] != null)
+            {
+                try
+                {
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    if (userID > 0)
+                    {
+                        var value = (from e in db.tblPoints
+                                     where e.UserID == userID
+                                     select e.PointBalance).SingleOrDefault();
+                        TempData["points"] = value;
+                        ViewBag.TotalPoints = value;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            TempData.Keep();
+
+            //retrive info
             tblProduct p = db.tblProducts.Where(x => x.ProID == id).SingleOrDefault();
 
 
@@ -186,12 +257,32 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult Checkout()
         {
+            if (Session["uid"] != null)
+            {
+                try
+                {
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    if (userID > 0)
+                    {
+                        var value = (from e in db.tblPoints
+                                     where e.UserID == userID
+                                     select e.PointBalance).SingleOrDefault();
+                        TempData["points"] = value;
+                        ViewBag.TotalPoints = value;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
             TempData.Keep();
             return View();
         }
 
         [HttpPost]
-        public ActionResult Checkout(string contact, string address, string Method, string PayMethod) //v changes
+        public ActionResult Checkout(string contact, string address, string Method, string PayMethod, string RedeemPoints) //v changes
         {
             if (ModelState.IsValid)
             {
@@ -199,17 +290,63 @@ namespace ShoppingCartMVC.Controllers
                 tblInvoice iv = new tblInvoice();
                 iv.UserId = Convert.ToInt32(Session["uid"].ToString());
                 iv.InvoiceDate = System.DateTime.Now;
-                iv.Bill = (int)TempData["total"];
+                //iv.Bill = (int)TempData["total"];
+
+                if (RedeemPoints == "No" || RedeemPoints == null) { iv.Bill = (int)TempData["total"]; }
+                else if (RedeemPoints == "Yes")
+                {
+                    iv.Bill = Convert.ToInt32((int)TempData["total"] * 0.5);
+
+                    //Remove points from the user's account
+                    UserPoints uPoints = new UserPoints();
+                    //Find the user
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    var cols = db.tblPoints.Where(w => w.UserID == userID);
+                    foreach (var item in cols)
+                    {
+                        //Add 5% of the total bill as points to their account
+                        item.PointBalance -= Convert.ToDouble(iv.Bill);
+                    }
+                    db.SaveChanges();
+                }
+
+
+
+
                 iv.Payment = PayMethod;
                 iv.DC_Method = Method;
 
                 if (PayMethod == "PayPal")
                 {
                     iv.Payment_Status = "Paid";
+
+                    //Add points to the user's account
+                    UserPoints uPoints = new UserPoints();
+                    //Find the user
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    var cols = db.tblPoints.Where(w => w.UserID == userID);
+                    foreach (var item in cols)
+                    {
+                        //Add 5% of the total bill as points to their account
+                        item.PointBalance += (int)TempData["total"] * 0.05;
+                    }
+                    db.SaveChanges();
                 }
-                else
+                else if (PayMethod == "Cash")
                 {
                     iv.Payment_Status = "Pending";
+
+                    //Add points to the user's account
+                    UserPoints uPoints = new UserPoints();
+                    //Find the user
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    var cols = db.tblPoints.Where(w => w.UserID == userID);
+                    foreach (var item in cols)
+                    {
+                        //Add 5% of the total bill as points to their account
+                        item.PointBalance += (int)TempData["total"] * 0.05;
+                    }
+                    db.SaveChanges();
                 }
 
                 db.tblInvoices.Add(iv);
@@ -336,7 +473,7 @@ namespace ShoppingCartMVC.Controllers
                 {
                     return Content("<script>" +
                         "function callPayPal() {" +
-                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023grp01a.azurewebsites.net/Home/Success';" +
+                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377//Home/Success';" +
                         "}" +
                         "callPayPal();" +
                         "</script>");
@@ -446,7 +583,16 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult GetAllUser()
         {
             var query = db.tblUsers.ToList();
-            return View(query);
+            List<AccountPoints> accPoints = new List<AccountPoints>();
+            foreach (var item in query)
+            {
+                var value = (from e in db.tblPoints
+                             where e.UserID == item.UserId
+                             select e.PointBalance).SingleOrDefault();
+                accPoints.Add(new AccountPoints(item.UserId, item.Name, item.Email, value, item.RoleType));
+            }
+            var list = accPoints.ToList();
+            return View(list);
         }
 
         #endregion
@@ -597,6 +743,28 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult Invoice(int id)
         {
+            if (Session["uid"] != null)
+            {
+                try
+                {
+                    int userID = Convert.ToInt32(Session["uid"].ToString());
+                    if (userID > 0)
+                    {
+                        var value = (from e in db.tblPoints
+                                     where e.UserID == userID
+                                     select e.PointBalance).SingleOrDefault();
+                        TempData["points"] = value;
+                        ViewBag.TotalPoints = value;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            TempData.Keep();
+
             List<InvoiceVM> InvceVMList = new List<InvoiceVM>();
 
             var invList = (from o in db.tblOrders

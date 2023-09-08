@@ -47,8 +47,8 @@
                                 <tr class="text-center">
                                     <td class="product-remove"><a href="@Url.Action("remove", "Home", new { id = item.proid })"><span class="fa fa-remove fa-1x"></span></a></td>
                                     @*<td class="product-name">
-            <h3>@item.proid</h3>
-        </td>*@
+                                            <h3>@item.proid</h3>
+                                        </td>*@
 
                                     <td class="product-name">
                                         <h3>@item.proname</h3>
@@ -118,10 +118,23 @@
                 using (Html.BeginForm())
                 {
 
-                    <span>Contact :</span> <input type="text" name="contact" class="form-control col-lg-6" required maxlength="10"/>
+                    <span>Contact :</span> <input type="text" name="contact" class="form-control col-lg-6" required maxlength="10" />
                     <br />
                     <span>Address :</span><textarea name="address" class="form-control col-lg-6" required></textarea>
-    <br />
+                    <br />
+
+                    if (Convert.ToInt16(TempData["total"]) * 0.5 <= Convert.ToInt16(TempData["points"]))
+                    {
+                        <span> 50% Points Discount :</span>
+                        <div class="col-sm-3">
+                            <input type="radio" name="RedeemPoints" value="Yes" /><label>&ensp;Yes</label>
+                            <br />
+                            <input type="radio" name="RedeemPoints" value="No" /><label>&ensp;No</label>
+                        </div>
+                    }
+
+
+                    <br />
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="card">
@@ -153,7 +166,7 @@
                     <br />
                     <input type="submit" value="Checkout" class="btn btn-primary py-3 px-4" />
                     <br />
-                    
+
                 }
             }
 
