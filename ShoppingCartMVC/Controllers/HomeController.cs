@@ -632,17 +632,26 @@ namespace ShoppingCartMVC.Controllers
                 if (match)
                 {
 
-                    var value = db.tblUsers.Where(t => t.UserId == d.UserId).Select(t => t.Name).FirstOrDefault();
-                    if (value != null)
-                    {
-                        dr.DriverName = value;
-                    }
-                    else
-                    {
-                        dr.DriverName = "";
-                    }
+                var user = db.tblUsers.FirstOrDefault(t => t.UserId == d.UserId);
 
+                if (user != null)
+                {
+                    dr.DriverName = user.Name;
+                    dr.DriverImage = user.Image;
+                    dr.DriverRating = user.Rating;
+                    dr.DriverTips = user.Tips;
+                    dr.DriverEmail = user.Email; // Add this line
                 }
+                else
+                {
+                    dr.DriverName = "";
+                    dr.DriverImage = ""; // Set default values if needed
+                    dr.DriverRating = 0; // Set default values if needed
+                    dr.DriverTips = 0;   // Set default values if needed
+                    dr.DriverEmail = ""; // Set default values if needed
+                }
+
+            }
             
 
 
@@ -825,9 +834,16 @@ namespace ShoppingCartMVC.Controllers
             string name = tblOrder.TblInvoice.TblUser.Name;
             string address = tblOrder.Address;
 
+            string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+            string url = Url.Action("RateAndTip", "Account", new { OrderId = TempData["oId"] });
+            string link = $"{baseUrl}{url}";
+
+            //var urlHelper = new UrlHelper(ControllerContext.RequestContext);
+            //var rateAndTipUrl = urlHelper.Action("RateAndTip", "Account", new { OrderId = orderId }, Request.Url.Scheme);
             var body = "Dear " + name + ",<br><br>" +
-           "Your Order #" + orderId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
-           "Thank you for choosing Turbo Meals!";
+                "Your Order #" + orderId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
+                "Thank you for choosing Turbo Meals!<br>" +
+                "Click here to rate and tip your driver: " + link;
 
 
             var message = new MailMessage();

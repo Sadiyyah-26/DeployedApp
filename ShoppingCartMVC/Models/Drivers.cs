@@ -15,6 +15,10 @@ namespace ShoppingCartMVC.Models
         public int DriverId { get; set; }
 
         public string DriverName { get; set; }
+        public string DriverEmail { get; set; }
+        public string DriverImage { get; set; }
+        public double DriverRating { get; set; }
+        public double DriverTips { get; set; }
 
         public int OrderId { get; set; }
         public virtual tblOrder TblOrder { get; set; }

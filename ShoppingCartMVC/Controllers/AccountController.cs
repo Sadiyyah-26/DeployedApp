@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
@@ -20,7 +22,7 @@ namespace ShoppingCartMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(tblUser t)
+        public ActionResult Register(tblUser t, HttpPostedFileBase Image)
         {
             tblUser u = new tblUser();
             if (ModelState.IsValid)
@@ -35,8 +37,16 @@ namespace ShoppingCartMVC.Controllers
                 {
                     u.Name = t.Name;
                     u.Email = t.Email;
+                    u.Image = Image.FileName.ToString();
+                    u.Rating = t.Rating;
+                    u.Tips = t.Tips;
                     u.Password = t.Password;
                     u.RoleType = 2;
+
+                    //image upload
+                    var folder = Server.MapPath("~/Uploads/");
+                    Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+
                     db.tblUsers.Add(u);
                     db.SaveChanges();
 
@@ -139,6 +149,78 @@ namespace ShoppingCartMVC.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+        #endregion
+
+        #region User Details
+        public ActionResult UserDetails()
+        {
+            string userEmail = User.Identity.Name; // Get the email of the currently logged-in user
+            tblUser currentUser = db.tblUsers.SingleOrDefault(u => u.Email == userEmail);
+
+            if (currentUser != null)
+            {
+                return View(currentUser);
+            }
+            else
+            {
+                // Handle the case where the user is not found (e.g., show an error message)
+                return RedirectToAction("Index", "Home"); // Redirect to a different page if needed
+            }
+        }
+        #endregion
+
+        #region Edit Account
+
+        public ActionResult EditAccount(int id)
+        {
+            var query = db.tblUsers.SingleOrDefault(m => m.UserId == id);
+            return View(query);
+        }
+
+
+        [HttpPost]
+        public ActionResult EditAccount(tblUser u, HttpPostedFileBase Image)
+        {
+            try
+            {
+                if (Image != null)
+                {
+                    u.Image = Image.FileName.ToString();
+                    var folder = Server.MapPath("~/Uploads/");
+                    Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                }
+
+                // Attach the entity to the context and mark only the Image property as modified
+                db.tblUsers.Attach(u);
+                db.Entry(u).Property(x => x.Image).IsModified = true;
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = ex;
+            }
+
+            return RedirectToAction("UserDetails");
+        }
+
+
+        #endregion
+
+        #region Rate And Tip
+        public ActionResult RateAndTip(int OrderId)
+        {
+            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
+
+            if (query == null)
+            {
+                // Handle case where driver is not found
+                return HttpNotFound();
+            }
+
+            return View(query);
+        }
+
 
         #endregion
     }

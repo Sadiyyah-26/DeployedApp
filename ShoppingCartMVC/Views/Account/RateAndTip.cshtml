@@ -1,0 +1,72 @@
+﻿@model ShoppingCartMVC.Models.Drivers
+
+<head>
+    <title>Rate & Tip</title>
+    <style>
+        .card {
+            border: 2px solid green;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 2fr);
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<br />
+
+<h2 class="card-title" style="text-align:center"><u> Rate & Tip </u></h2>
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm("RateAndTip", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    <hr />
+                    <div class="col-lg-6">
+                        <input type="hidden" name="id" value="@Model.DriverName" />
+                        <img src="~/Uploads/@Model.DriverImage" style="height:250px;width:100%" />
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h3>@Model.DriverName</h3>
+                        <p>@Model.DriverEmail</p>
+
+                        <p>Current Rating: <h2><strong>@Model.DriverRating</strong></h2></p>
+                    </div>
+
+
+                    <div class="form-group">
+                        <span>Your Rating: <p>@Html.RadioButtonFor(rat => rat.DriverRating, 1) 1 @Html.RadioButtonFor(rat => rat.DriverRating, 2) 2 @Html.RadioButtonFor(rat => rat.DriverRating, 3) 3 @Html.RadioButtonFor(rat => rat.DriverRating, 4) 4 @Html.RadioButtonFor(rat => rat.DriverRating, 5) 5</p></span>
+                    </div>
+
+                    <div class="form-group">
+                        <span>Your Tip: <p>@Html.RadioButtonFor(tip => tip.DriverTips, 10 / 100) 10% @Html.RadioButtonFor(tip => tip.DriverTips, 15 / 100) 15% @Html.RadioButtonFor(tip => tip.DriverTips, 20 / 100) 20% @Html.RadioButtonFor(tip => tip.DriverTips, 25 / 100) 25% @Html.RadioButtonFor(tip => tip.DriverTips, 30 / 100) 30%</p></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Proceed" class="btn btn-success" />
+                    </div>
+
+                    <p style="text-align:center">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-dark">Home</a>
+                    </p>
+                </div>
+                <p>@TempData["msg"]</p>
+            }
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+
+
+
