@@ -1408,25 +1408,6 @@ namespace ShoppingCartMVC.Controllers
             return View(dineInOrders);
         }
 
-        public ActionResult CompleteOrder(string orderNumber)
-        {
-            using (var dbContext = new dbOnlineStoreEntities())
-            {
-                // Find and delete all occurrences of the order number in the bill table
-                var billsToDelete = dbContext.TblBills.Where(b => b.OrderNumber == orderNumber).ToList();
-                dbContext.TblBills.RemoveRange(billsToDelete);
-
-                // Find and delete all occurrences of the order number in the order table
-                var ordersToDelete = dbContext.TblInStoreOrders.Where(o => o.OrderNumber == orderNumber).ToList();
-                dbContext.TblInStoreOrders.RemoveRange(ordersToDelete);
-
-                // Save changes to the database
-                dbContext.SaveChanges();
-            }
-
-            // Redirect back to the Dine-In page
-            return RedirectToAction("DineIn");
-        }
 
 
         public ActionResult InStoreSuccess()
@@ -1618,6 +1599,71 @@ namespace ShoppingCartMVC.Controllers
 
             return RedirectToAction("PrepInStoreOrders");
         }
+
+        [HttpPost]
+        public ActionResult UpdatePaymentMethod(string orderNumber, string paymentMethod)
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                // Find all bills and orders with the given order number
+                var bills = dbContext.TblBills.Where(b => b.OrderNumber == orderNumber).ToList();
+                var orders = dbContext.TblInStoreOrders.Where(o => o.OrderNumber == orderNumber).ToList();
+
+                if (bills.Count > 0 && orders.Count > 0)
+                {
+                    // Update the payment method for all bills and orders with the same order number
+                    foreach (var bill in bills)
+                    {
+                        bill.PayMethod = paymentMethod;
+                    }
+
+                    foreach (var order in orders)
+                    {
+                        order.PayMethod = paymentMethod;
+                    }
+
+                    // Save changes to the database
+                    dbContext.SaveChanges();
+
+                    if (paymentMethod.Equals("Card", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string returnURL = "https://localhost:44377/Home/POSDashboard"; // Change this URL to match your actual URL
+
+                        // Redirect to PayPal with the calculated total amount and return URL
+                        return Content("<script>" +
+                            "function callPayPal() {" +
+                            "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=" + returnURL + "';" +
+                            "}" +
+                            "callPayPal();" +
+                            "</script>");
+
+                    }
+                }
+            }
+
+            return RedirectToAction("GenerateBill", new { orderNumber });
+        }
+
+        public ActionResult CompleteOrder(string orderNumber)
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                // Find and delete all occurrences of the order number in the bill table
+                var billsToDelete = dbContext.TblBills.Where(b => b.OrderNumber == orderNumber).ToList();
+                dbContext.TblBills.RemoveRange(billsToDelete);
+
+                // Find and delete all occurrences of the order number in the order table
+                var ordersToDelete = dbContext.TblInStoreOrders.Where(o => o.OrderNumber == orderNumber).ToList();
+                dbContext.TblInStoreOrders.RemoveRange(ordersToDelete);
+
+                // Save changes to the database
+                dbContext.SaveChanges();
+            }
+
+            // Redirect back to the Dine-In page
+            return RedirectToAction("DineIn");
+        }
+
         #region Reservation
         public ActionResult Reservations()
         {
