@@ -401,6 +401,9 @@
     <Content Include="Views\Home\PrepInStoreOrder.cshtml" />
     <Content Include="Views\Home\PrepInStoreOrders.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
+    <Content Include="Views\Account\EditAccount.cshtml" />
+    <Content Include="Views\Account\RateAndTip.cshtml" />
+    <Content Include="Views\Account\UserDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

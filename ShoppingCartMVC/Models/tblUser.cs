@@ -19,6 +19,9 @@ namespace ShoppingCartMVC.Models
         public int UserId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string Image { get; set; }
+        public double Rating { get; set; } = 0;
+        public double Tips { get; set; } = 0;
         public string Password { get; set; }
         public int? RoleType { get; set; }
 
