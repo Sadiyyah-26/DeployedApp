@@ -154,7 +154,7 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
-            
+
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
 
@@ -243,6 +243,8 @@
                         {
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
                             <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link">New Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("PrepInStoreOrders", "Home", new { id = @Session["uid"] })" class="nav-link">InStore Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("ReadyOrders", "Home", new { id = @Session["uid"] })" class="nav-link">OrdersReady</a></li>
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ingredients</a>
@@ -284,6 +286,16 @@
 
 
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
+                        }
+                        if (User.IsInRole("5"))
+                        {
+
+                            <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
+                            <li class="nav-item"><a href="@Url.Action("POSDashboard", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>POS_Dashboard</a></li>
+                            <li class="nav-item"><a href="@Url.Action("WaiterMenu", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>WaiterMenu</a></li>
+                            <li class="nav-item"><a href="@Url.Action("ReadyOrders", "Home", new { id = @Session["uid"] })" class="nav-link">OrdersReady</a></li>
+                            <li class="nav-item"><a href="@Url.Action("DineIn", "Home", new { id = @Session["uid"] })" class="nav-link">Dine-in Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
                         }
 
                     }
@@ -350,79 +362,85 @@
         </section>*@
 
 
-
     @RenderBody()
+    @{
+        var isPosView = ViewContext.RouteData.Values["Action"].ToString() == "WaiterMenu";
+        // Change "PosActionName" to the actual action name of your POS view
+    }
 
+    @if (!isPosView)
+    {
 
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="footer-col">
-                    <h4>Restaurant</h4>
-                    <ul>
-                        <li><a href="@Url.Action("Index","Home")">Home</a></li>
-                        <li><a href="@Url.Action("Index","Home")">Menu</a></li>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="#">Reviews</a></li>
-                        <li><a href="@Url.Action("Login","Account")">Login</a></li>
-                        <li><a href="@Url.Action("Register", "Account")">Register</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Get Help</h4>
-                    <ul>
-                        <li><a href="@Url.Action("Contact", "Home")">Contact us</a></li>
-                        <li><a href="@Url.Action("Login","Account")">Order</a></li>
-                        <li><a href="#">Payment</a></li>
-                        <li><a href="#">Delivery</a></li>
-                        <li><a href="#">payment options</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Online Menu</h4>
-                    <ul>
-                        <li><a href="#">Burgers</a></li>
-                        <li><a href="#">Wraps and Pita's'</a></li>
-                        <li><a href="#">Pizzas</a></li>
-                        <li><a href="#">Tasty Treats</a></li>
-                        <li><a href="#">Cold Beverages</a></li>
-                        <li><a href="#">Hot Beverages</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Follow us</h4>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col">
+                        <h4>Restaurant</h4>
+                        <ul>
+                            <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                            <li><a href="@Url.Action("Index", "Home")">Menu</a></li>
+                            <li><a href="#">About us</a></li>
+                            <li><a href="#">Reviews</a></li>
+                            <li><a href="@Url.Action("Login", "Account")">Login</a></li>
+                            <li><a href="@Url.Action("Register", "Account")">Register</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Get Help</h4>
+                        <ul>
+                            <li><a href="@Url.Action("Contact", "Home")">Contact us</a></li>
+                            <li><a href="@Url.Action("Login", "Account")">Order</a></li>
+                            <li><a href="#">Payment</a></li>
+                            <li><a href="#">Delivery</a></li>
+                            <li><a href="#">payment options</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Online Menu</h4>
+                        <ul>
+                            <li><a href="#">Burgers</a></li>
+                            <li><a href="#">Wraps and Pita's'</a></li>
+                            <li><a href="#">Pizzas</a></li>
+                            <li><a href="#">Tasty Treats</a></li>
+                            <li><a href="#">Cold Beverages</a></li>
+                            <li><a href="#">Hot Beverages</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Follow us</h4>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    }
 
 
 
 
-    <!-- loader -->
-    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
-    <!-- footer links -->
-    <script src="~/js/jquery.min.js"></script>
-    <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="~/js/popper.min.js"></script>
-    <script src="~/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery.easing.1.3.js"></script>
-    <script src="~/js/jquery.waypoints.min.js"></script>
-    <script src="~/js/jquery.stellar.min.js"></script>
-    <script src="~/js/owl.carousel.min.js"></script>
-    <script src="~/js/jquery.magnific-popup.min.js"></script>
-    <script src="~/js/aos.js"></script>
-    <script src="~/js/jquery.animateNumber.min.js"></script>
-    <script src="~/js/bootstrap-datepicker.js"></script>
-    <script src="~/js/scrollax.min.js"></script>
-   
-    <script src="~/js/main.js"></script>
+        <!-- loader -->
+        <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
+        <!-- footer links -->
+        <script src="~/js/jquery.min.js"></script>
+        <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+        <script src="~/js/popper.min.js"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+        <script src="~/js/jquery.easing.1.3.js"></script>
+        <script src="~/js/jquery.waypoints.min.js"></script>
+        <script src="~/js/jquery.stellar.min.js"></script>
+        <script src="~/js/owl.carousel.min.js"></script>
+        <script src="~/js/jquery.magnific-popup.min.js"></script>
+        <script src="~/js/aos.js"></script>
+        <script src="~/js/jquery.animateNumber.min.js"></script>
+        <script src="~/js/bootstrap-datepicker.js"></script>
+        <script src="~/js/scrollax.min.js"></script>
+
+        <script src="~/js/main.js"></script>
 
 
-    @*@RenderSection("scripts", required: false)*@
-</body>
+        @*@RenderSection("scripts", required: false)*@
+    </body>
 </html>
