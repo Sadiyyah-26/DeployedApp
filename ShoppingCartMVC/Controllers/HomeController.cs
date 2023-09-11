@@ -1174,6 +1174,259 @@ namespace ShoppingCartMVC.Controllers
             var query = db.tblOrders.Where(m => m.TblInvoice.UserId == id).ToList();
             return View(query);
         }
+
+        public ActionResult POSDashboard()
+        {
+            return View();
+        }
+
+        public ActionResult WaiterMenu()
+        {
+            var categories = db.tblCategories.Include("TblProducts").ToList();
+            ViewBag.Categories = categories;
+
+            var products = db.tblProducts.ToList();
+            return View(products);
+        }
+
+        private string GenerateOrderNumber()
+        {
+            string orderNumber;
+
+            do
+            {
+                orderNumber = new Random().Next(1, 1000).ToString("D3"); // Generate a new order number.
+
+            } while (OrderNumberExists(orderNumber)); // Check if the generated order number already exists in the database.
+
+            return orderNumber;
+        }
+
+        private bool OrderNumberExists(string orderNumber)
+        {
+            var existingOrder = db.TblInStoreOrders.FirstOrDefault(o => o.OrderNumber == orderNumber);
+            return existingOrder != null;
+        }
+        [HttpPost]
+        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod)
+        {
+            if (selectedProducts == null || selectedProducts.Count == 0)
+            {
+                return RedirectToAction("Index");
+            }
+
+
+            string waiterName = Session["User"] as string;
+
+
+            string payMethod = Request.Form["paymentOption"];
+
+            DateTime orderDateTime = DateTime.Now;
+
+
+            var ordersToInsert = new List<tblInStoreOrder>();
+
+
+            var billsToInsert = new List<tblBill>();
+
+
+            int totalAmount = (int)selectedProducts.Sum(product => product.Total);
+
+            string orderNumber = GenerateOrderNumber();
+
+
+            foreach (var product in selectedProducts)
+            {
+                string method = isDineIn ? "Dine-in" : "Takeaway";
+
+                var order = new tblInStoreOrder
+                {
+                    OrderNumber = orderNumber,
+                    OrderDateTime = orderDateTime,
+                    WaiterName = waiterName,
+                    ProductName = product.Product,
+                    Unit = product.UnitPrice,
+                    Qty = product.Quantity,
+                    Total = product.TotalPrice,
+                    Method = method,
+                    PayMethod = isDineIn ? null : paymentMethod,
+                    Status = "Preparing",
+                    TableNumber = string.IsNullOrEmpty(tableNumber) ? "NONE" : tableNumber,
+                    ReservedDate = null,
+                    ReservedTime = null
+                };
+
+
+                db.TblInStoreOrders.Add(order);
+                db.SaveChanges();
+
+
+                int orderId = order.OrderId;
+
+
+                var bill = new tblBill
+                {
+                    OrderId = orderId,
+                    OrderNumber = order.OrderNumber,
+                    OrderDateTime = order.OrderDateTime,
+                    WaiterName = order.WaiterName,
+                    ProductName = order.ProductName,
+                    Unit = order.Unit,
+                    Qty = order.Qty,
+                    Total = order.Total,
+                    TableNumber = order.TableNumber,
+                    Method = order.Method,
+                    PayMethod = order.PayMethod ?? "Pending"
+                };
+
+
+                db.TblBills.Add(bill);
+                db.SaveChanges();
+            }
+
+            if (!isDineIn && paymentMethod == "Card")
+            {
+
+                string returnURL = "https://localhost:44377/Home/InStoreSuccess"; // Change this URL to match your actual URL
+
+                // Redirect to PayPal with the calculated total amount and return URL
+                return Content("<script>" +
+                    "function callPayPal() {" +
+                    "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + totalAmount.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=" + returnURL + "';" +
+                    "}" +
+                    "callPayPal();" +
+                    "</script>");
+
+
+            }
+            if (isDineIn)
+            {
+
+                return RedirectToAction("InStoreSuccess");
+            }
+            else
+            {
+                var lastBill = db.TblBills.OrderByDescending(b => b.OrderDateTime).FirstOrDefault();
+
+
+                if (lastBill != null)
+                {
+
+                    var viewModel = new InStoreSuccessCashViewModel
+                    {
+                        OrderNumber = lastBill.OrderNumber,
+                        OrderDateTime = (DateTime)lastBill.OrderDateTime,
+                        Products = db.TblBills
+                            .Where(b => b.OrderNumber == lastBill.OrderNumber)
+                            .Select(b => new SelectedProductModel
+                            {
+                                ProductName = b.ProductName,
+                                Qty = b.Qty,
+                                Total = b.Total
+                            })
+                            .ToList(),
+                        TotalAmount = (int)db.TblBills
+                            .Where(b => b.OrderNumber == lastBill.OrderNumber)
+                            .Sum(b => b.Total)
+                    };
+
+                    return View("InStoreSuccessCash", viewModel);
+                }
+                else
+                {
+
+                    return RedirectToAction("Index");
+                }
+            }
+        }
+
+        public ActionResult GenerateBill(string orderNumber)
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                // Retrieve all products with the given 'orderNumber'
+                var products = dbContext.TblInStoreOrders
+                    .Where(o => o.OrderNumber == orderNumber)
+                    .Select(o => new SelectedProductModel
+                    {
+                        ProductName = o.ProductName,
+                        Qty = o.Qty,
+                        Total = o.Total
+                    })
+                    .ToList();
+
+                // Calculate the total for all related order numbers
+                var totalAmount = dbContext.TblInStoreOrders
+                    .Where(o => o.OrderNumber == orderNumber)
+                    .Sum(o => o.Total);
+
+                var paymentMethod = dbContext.TblInStoreOrders
+                    .Where(o => o.OrderNumber == orderNumber)
+                    .Select(o => o.PayMethod)
+                    .FirstOrDefault();
+
+                var viewModel = new BillViewModel
+                {
+                    OrderNumber = orderNumber,
+                    Products = products,
+                    TotalAmount = (int)totalAmount,
+                    PaymentMethod = paymentMethod // Corrected property name
+                };
+                // Create a view model and populate it with the product data and total amount
+                return View("GenerateBill", viewModel);
+            }
+        }
+
+        public ActionResult TrackReservations()
+        {
+            using (var db = new dbOnlineStoreEntities())
+            {
+                var reservations = db.tblReservations.ToList();
+                return View(reservations);
+            }
+        }
+        [HttpPost]
+        public ActionResult GenerateOutput(DateTime date)
+        {
+            using (var db = new dbOnlineStoreEntities())
+            {
+                // Retrieve reservations for the selected date
+                ViewBag.SelectedDateReservations = db.tblReservations
+                    .Where(r => r.Date == date.Date)
+                    .ToList();
+
+                // Return to the TrackReservations view
+                return View("TrackReservations", db.tblReservations.ToList());
+            }
+        }
+
+        public ActionResult DineIn()
+        {
+            // Assuming you have a DbContext named "db" and a DbSet for orders named "TblInStoreOrders"
+            var dineInOrders = db.TblInStoreOrders.Where(order => order.Method == "Dine-in").ToList();
+
+            return View(dineInOrders);
+        }
+
+        public ActionResult CompleteOrder(string orderNumber)
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                // Find and delete all occurrences of the order number in the bill table
+                var billsToDelete = dbContext.TblBills.Where(b => b.OrderNumber == orderNumber).ToList();
+                dbContext.TblBills.RemoveRange(billsToDelete);
+
+                // Find and delete all occurrences of the order number in the order table
+                var ordersToDelete = dbContext.TblInStoreOrders.Where(o => o.OrderNumber == orderNumber).ToList();
+                dbContext.TblInStoreOrders.RemoveRange(ordersToDelete);
+
+                // Save changes to the database
+                dbContext.SaveChanges();
+            }
+
+            // Redirect back to the Dine-In page
+            return RedirectToAction("DineIn");
+        }
         #region Reservation
         public ActionResult Reservations()
         {

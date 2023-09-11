@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 100vh;
+            padding: 10px;
+        }
+
+        .dashboard-box {
+            width: calc(33.33% - 20px);
+            height: 300px;
+            background-color: #f2f2f2;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+            .dashboard-box:hover {
+                background-color: #8bd3e1;
+            }
+
+        .dashboard-icon img {
+            width: 100%;
+            max-height: 70%;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-text {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-box" onclick="navigateTo('Link1')">
+            <div class="dashboard-icon">
+                <i class="fas fa-cash-register fa-4x"></i>
+            </div>
+            <div class="dashboard-text">
+                Cash Drawer
+            </div>
+        </div>
+
+        <div class="dashboard-box" onclick="navigateTo('WaiterMenu')">
+            <div class="dashboard-icon">
+                <i class="fas fa-book fa-4x"></i>
+            </div>
+            <div class="dashboard-text">
+                Waiter Menu
+            </div>
+        </div>
+
+        <div class="dashboard-box" onclick="navigateTo('TrackReservations')">
+            <div class="dashboard-icon">
+                <i class="fas fa-table fa-4x"></i>
+            </div>
+            <div class="dashboard-text">
+                Reservations
+            </div>
+        </div>
+
+        <div class="dashboard-box" onclick="navigateTo('DineIn')">
+            <div class="dashboard-icon">
+                <i class="fas fa-receipt fa-4x"></i>
+            </div>
+            <div class="dashboard-text">
+                Generate Bill
+            </div>
+        </div>
+
+        <div class="dashboard-box" onclick="navigateTo('InstoreOrders')">
+            <div class="dashboard-icon">
+                <i class="fas fa-utensils fa-4x"></i>
+            </div>
+            <div class="dashboard-text">
+                View Orders
+            </div>
+        </div>
+
+        <script>
+            function navigateTo(destination) {
+                // Redirect to the specified URL
+                window.location.href = destination;
+            }
+        </script>
+    </div>
+</body>
+</html>
+

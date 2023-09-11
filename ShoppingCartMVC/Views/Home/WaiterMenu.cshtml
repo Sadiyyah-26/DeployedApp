@@ -1,0 +1,363 @@
+﻿@model IEnumerable<ShoppingCartMVC.Models.tblProduct>
+@{
+    ViewBag.Title = "Waiter Menu";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <style>
+
+        .category-tabs {
+            flex: 0 0 20%;
+        }
+
+        .product-groups {
+            flex: 0 0 60%;
+        }
+
+        .selected-products {
+            flex: 0 0 20%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: row; /* Display content in a row */
+            justify-content: space-between; /* Space between sections */
+            align-items: flex-start; /* Align items to the top */
+            padding: 20px; /* Add some padding for spacing */
+        }
+
+        #content-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            padding-top: 150px; /* Adjust the value as needed */
+            margin-left: -900px;
+        }
+
+
+
+        #categoryTabs {
+            width: 25%;
+        }
+
+        #categoryContent {
+            width: 70%;
+        }
+
+        .selected-products {
+            width: 25%; /* Adjust width as needed */
+            height: 300px; /* Set a fixed height */
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #f0f0f0;
+            margin-left: -600px; /* Add margin between selected products and other sections */
+            overflow-y: auto; /* Add vertical scrollbar if content overflows */
+        }
+
+        .category-tabs {
+            flex: 0 0 25%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-groups {
+            flex: 0 0 70%;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            border: 1px solid #ddd;
+            padding: 60px;
+            margin: 0 10px 10px 0;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .product-group {
+            display: none;
+            background-color: #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+            .product-group.active {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: space-between;
+            }
+
+        .product {
+            border: 1px solid #ddd;
+            padding: 20px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            flex-basis: calc(25% - 10px);
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .quantity-input {
+            position: relative;
+            bottom: 0;
+            right: 0;
+            padding: 5px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .active {
+            background-color: #ffffff;
+        }
+
+        .selected-products {
+            width: 30%;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #f0f0f0;
+            height: 600px;
+        }
+
+        #content-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin-top: 20px; /* Add margin between menu tabs and content */
+        }
+
+        .product {
+            display: flex; /* Display product and image side by side */
+            align-items: center; /* Align content vertically */
+            margin-bottom: 10px; /* Add space between product tabs */
+        }
+
+        .product-pic {
+            max-width: 100px; /* Adjust the image size as needed */
+            margin-right: 10px; /* Add space between image and product details */
+        }
+    </style>
+</head>
+<body>
+
+    @*<p>Welcome, @Session["User"]</p>*@
+    <div id="content-container">
+        <div class="category-tabs" id="categoryTabs">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <div class="category-tab" data-category="@category.Name">
+                    @category.Name
+                </div>
+            }
+        </div>
+
+        <div class="product-groups" id="categoryContent">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <div class="product-group" id="@category.Name">
+                    @foreach (var product in category.TblProducts)
+                    {
+                        <div class="product" data-category="@category.Name">
+                            <img class="product-pic" src="~/Uploads/@product.Image" alt="Product Image">
+                            <div>
+                                <h4 class="product-name">@product.P_Name</h4>
+                                <p class="unit-price">R @product.Unit</p>
+                                <input class="quantity-input selected-quantity" type="number" value="1" min="1" />
+                                <span class="quantity" style="display: none;">1</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <div class="selected-products" id="selectedProducts">
+            <h2>Selected Products</h2>
+            <ul id="selectedList"></ul>
+            <p>Total Price: <span id="totalPrice">R 0</span></p>
+            <button id="dineInButton">Dine-in</button>
+            <button id="takeAwayButton">Takeaway</button>
+
+            <!-- Add container for table number selection -->
+            <div id="tableNumberContainer" style="display: none;">
+                <label for="tableNumber">Table Number:</label>
+                <select id="tableNumber">
+                    <option value="">None</option> <!-- Add this line for "None" option -->
+                    @for (int i = 1; i <= 15; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Add container for payment options -->
+            <div id="paymentOptionsContainer" style="display: none;">
+                <label for="paymentOption">Payment Options:</label>
+                <br />
+                <input type="radio" name="paymentOption" value="Cash"> Cash
+                <input type="radio" name="paymentOption" value="Card"> Card
+            </div>
+            <!-- Add container for cash amount input -->
+            <div id="cashAmountContainer" style="display: none;">
+                <label for="cashAmount">Cash Amount:</label>
+                <input type="text" id="cashAmount" name="cashAmount" />
+            </div>
+
+            <!-- Add container for change due label -->
+            <div id="changeDueLabel" style="display: none;">
+                <label>Change Due:</label>
+                <span id="changeDue">0.00</span>
+            </div>
+        </div>
+        <button id="generateButton">Generate</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.category-tab').click(function () {
+                var category = $(this).data('category');
+               // console.log('Selected category:', category); // Add this line for debugging
+                $('.product-group').hide();
+                $('#' + category).show();
+                $('.category-tab').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            $('.product').click(function () {
+                var product = $(this).find('.product-name').text();
+                var unitPrice = parseFloat($(this).find('.unit-price').text().replace('R ', ''));
+                var quantity = parseInt($(this).find('.quantity-input').val());
+                var selectedList = $('#selectedList');
+                var existingItem = selectedList.find('li[data-product="' + product + '"]');
+
+                if (quantity > 0) {
+                    if (existingItem.length) {
+                        existingItem.data('quantity', quantity);
+                        existingItem.text(product + ' x' + quantity + ' - R ' + (unitPrice * quantity).toFixed(2));
+                    } else {
+                        var listItem = $('<li>').text(product + ' x' + quantity + ' - R ' + (unitPrice * quantity).toFixed(2))
+                            .attr('data-product', product).data('quantity', quantity);
+                        selectedList.append(listItem);
+                    }
+                } else {
+                    existingItem.remove();
+                }
+
+                // Calculate and update total price
+                var totalPrice = calculateTotalPrice();
+                $('#totalPrice').text('R ' + totalPrice.toFixed(2));
+            });
+
+            // Function to calculate total price
+            function calculateTotalPrice() {
+                var totalPrice = 0;
+                $('.selected-products li').each(function () {
+                    var quantity = $(this).data('quantity');
+                    var productPrice = parseFloat($(this).text().split(' - R ')[1]);
+                    totalPrice += quantity * productPrice;
+                });
+                return totalPrice;
+            }
+            $('#dineInButton').click(function () {
+                $('#tableNumberContainer').show();
+                $('#paymentOptionsContainer').hide();
+
+                // Set a class to indicate "Dine-in" is selected
+                $(this).addClass('active');
+                $('#takeAwayButton').removeClass('active');
+            });
+
+            $('#takeAwayButton').click(function () {
+                $('#tableNumberContainer').hide();
+                $('#paymentOptionsContainer').show();
+
+                // Set a class to indicate "Takeaway" is selected
+                $(this).addClass('active');
+                $('#dineInButton').removeClass('active');
+            });
+
+
+            $('#cashPayment').click(function () {
+                $('#cashAmount').show(); // Show the cash amount input field
+                $('#changeDisplay').hide(); // Hide the change display initially
+            });
+
+            // Show cash amount input and hide change due label when "Cash" is selected
+            $('input[name="paymentOption"]').change(function () {
+                if ($(this).val() === "Cash") {
+                    $('#cashAmountContainer').show();
+                    $('#changeDueLabel').hide();
+                } else {
+                    $('#cashAmountContainer').hide();
+                    $('#changeDueLabel').hide();
+                }
+            });
+
+            // Calculate and display change when cash amount is entered
+            $('#cashAmount').on('input', function () {
+                calculateChange();
+            });
+
+            // Function to calculate and display the change
+            function calculateChange() {
+                var cashAmount = parseFloat($('#cashAmount').val());
+                var totalAmount = calculateTotalPrice(); // Implement this function to calculate the total order amount
+
+                if (!isNaN(cashAmount) && cashAmount >= totalAmount) {
+                    var changeDue = cashAmount - totalAmount;
+                    $('#changeDue').text(changeDue.toFixed(2));
+                    $('#changeDueLabel').show();
+                } else {
+                    $('#changeDueLabel').hide();
+                }
+            }
+
+
+            $('#generateButton').click(function () {
+                // Get selected options for Dine-in/Takeaway, table number, and payment method
+                var isDineIn = $('#dineInButton').hasClass('active');
+                var tableNumber = $('#tableNumber').val();
+                var paymentMethod = $('input[name="paymentOption"]:checked').val();
+
+                var selectedProducts = [];
+
+                $('.selected-products li').each(function () {
+                    var product = $(this).data('product');
+                    var unitPrice = parseFloat($(this).text().split(' - R ')[1]);
+                    var quantity = $(this).data('quantity');
+                    var totalPrice = unitPrice * quantity;
+
+                    selectedProducts.push({ Product: product, UnitPrice: unitPrice, Quantity: quantity, TotalPrice: totalPrice });
+                });
+
+                // Create a hidden input field in the form to send the selected products data
+                var form = $('<form>').attr('method', 'post').attr('action', '/Home/ConfirmInStore');
+
+                // Add hidden fields for selected options
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'isDineIn').val(isDineIn));
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'tableNumber').val(tableNumber));
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'paymentMethod').val(paymentMethod));
+
+                for (var i = 0; i < selectedProducts.length; i++) {
+                    form.append($('<input>').attr('type', 'hidden').attr('name', 'selectedProducts[' + i + '].Product').val(selectedProducts[i].Product));
+                    form.append($('<input>').attr('type', 'hidden').attr('name', 'selectedProducts[' + i + '].UnitPrice').val(selectedProducts[i].UnitPrice));
+                    form.append($('<input>').attr('type', 'hidden').attr('name', 'selectedProducts[' + i + '].Quantity').val(selectedProducts[i].Quantity));
+                    form.append($('<input>').attr('type', 'hidden').attr('name', 'selectedProducts[' + i + '].TotalPrice').val(selectedProducts[i].TotalPrice));
+                }
+
+                $('body').append(form);
+                form.submit();
+            });
+        });
+
+    </script>
+</body>
+</html>
+
