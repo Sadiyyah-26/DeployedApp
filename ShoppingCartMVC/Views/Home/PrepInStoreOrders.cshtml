@@ -1,7 +1,51 @@
-﻿
-@{
-    ViewBag.Title = "PrepInStoreOrders";
-}
+﻿@model List<ShoppingCartMVC.Models.tblInStoreOrder>
 
 <h2>PrepInStoreOrders</h2>
 
+@foreach (var orderGroup in Model.GroupBy(o => o.OrderNumber))
+{
+    <table class="table">
+        <tr>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <!-- Other order details... -->
+            <th>
+                Actions
+            </th>
+        </tr>
+
+        @foreach (var productOrder in orderGroup)
+        {
+            <tr>
+                @if (productOrder == orderGroup.First())
+                {
+                    <td rowspan="@orderGroup.Count()">@productOrder.OrderNumber</td>
+                }
+                <td>
+                    @Html.DisplayFor(m => productOrder.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => productOrder.Qty)
+                </td>
+                <!-- Other product details... -->
+                <td>
+                    @if (productOrder.Status == "Preparing" && productOrder == orderGroup.First())
+                    {
+                        using (Html.BeginForm("MarkAsReady", "Home", FormMethod.Post))
+                        {
+                            @Html.Hidden("OrderId", productOrder.OrderId)
+                            <button type="submit" class="btn btn-success">Mark as Ready</button>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}

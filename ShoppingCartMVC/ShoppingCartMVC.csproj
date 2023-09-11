@@ -400,6 +400,7 @@
     <Content Include="Views\Home\ReadyOrders.cshtml" />
     <Content Include="Views\Home\PrepInStoreOrder.cshtml" />
     <Content Include="Views\Home\PrepInStoreOrders.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
