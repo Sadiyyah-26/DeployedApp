@@ -1409,7 +1409,6 @@ namespace ShoppingCartMVC.Controllers
         }
 
 
-
         public ActionResult InStoreSuccess()
         {
             var lastBill = db.TblBills.OrderByDescending(b => b.OrderDateTime).FirstOrDefault();
@@ -1458,6 +1457,134 @@ namespace ShoppingCartMVC.Controllers
             ViewBag.Submitted = false;
 
             return View(model);
+        }
+
+
+        public ActionResult Dashboard()
+        {
+            int userCount = GetUserCountFromDatabase(); // Implement this function to get user count
+            int orderCount = GetTotalOrderCount();
+            int posCount = GetTotalPOSsales();// Get total order count
+            int productCount = GetTotalProducts();
+            decimal totalSales = GetTotalSalesAmount();
+            decimal totalInStore = GetTotalInStoreSalesAmount();
+            decimal totalOnline = GetTotalOnlineSalesAmount();
+            int deliveryInvoiceCount = GetDeliveryInvoiceCount();
+            int takeawayCount = GetTakeawayCount();
+
+            ViewBag.UserCount = userCount;
+            ViewBag.OrderCount = orderCount;
+            ViewBag.POSCount = posCount;
+            ViewBag.ProductCount = productCount;
+            ViewBag.TotalSales = totalSales;
+            ViewBag.TotalInStore = totalInStore;
+            ViewBag.TotalOnline = totalOnline;
+            ViewBag.DeliveryInvoiceCount = deliveryInvoiceCount;
+            ViewBag.TakeawayCount = takeawayCount;
+
+            return View();
+        }
+
+        public int GetUserCountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int UserCount = context.tblUsers.Count();
+
+                return UserCount;
+            }
+        }
+
+        public int GetTotalOrderCount()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int orderCount = context.tblOrders.Count();
+
+                return orderCount;
+            }
+        }
+        public int GetTotalPOSsales()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int PosCount = context.TblInStoreOrders.GroupBy(o => o.OrderNumber)
+                                                      .Count();
+                return PosCount;
+            }
+        }
+        public int GetTotalProducts()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int productCount = context.tblProducts.Count();
+
+                return productCount;
+            }
+        }
+
+        public decimal GetTotalInStoreSalesAmount()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                // Calculate the sum of total fields in tblInStoreOrder
+                decimal totalInStore = context.TblInStoreOrders.Sum(o => o.Total) ?? 0; ;
+
+                return totalInStore;
+            }
+        }
+
+        public decimal GetTotalOnlineSalesAmount()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                // Calculate the sum of total fields in tblInStoreOrder
+                decimal totalOnline = context.tblOrders.Sum(o => o.Total) ?? 0; ;
+
+                return totalOnline;
+            }
+        }
+
+        public decimal GetTotalSalesAmount()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+
+                decimal totalSalesInStore = context.TblInStoreOrders.Sum(o => o.Total) ?? 0;
+                decimal totalSalesOnline = context.tblOrders.Sum(o => o.Total) ?? 0;
+                decimal totalSales = totalSalesInStore + totalSalesOnline;
+
+                return totalSales;
+            }
+        }
+
+        public int GetDeliveryInvoiceCount()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int deliveryInvoiceCount = context.tblInvoices.Count(i => i.DC_Method == "Delivery");
+
+                return deliveryInvoiceCount;
+            }
+        }
+
+        public int GetTakeawayCount()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int takeawayCount = context.tblInvoices
+                    .Count(i => i.DC_Method == "Collection" && i.TblOrders.Any(o => o.Method == "Takeaway"));
+
+                // To count unique order numbers for takeaway records
+                var takeawayOrderNumbers = context.TblInStoreOrders
+                    .Where(o => o.Method == "Takeaway")
+                    .Select(o => o.OrderNumber)
+                    .Distinct();
+
+                int uniqueTakeawayCount = takeawayOrderNumbers.Count();
+
+                return takeawayCount + uniqueTakeawayCount;
+            }
         }
         [HttpPost]
         public ActionResult ReserveTable(tblReservation reservation)
