@@ -1175,11 +1175,14 @@ namespace ShoppingCartMVC.Controllers
             return View(query);
         }
 
+        #region POSDashboard
         public ActionResult POSDashboard()
         {
             return View();
         }
+        #endregion
 
+        #region Waiter Menu
         public ActionResult WaiterMenu()
         {
             var categories = db.tblCategories.Include("TblProducts").ToList();
@@ -1188,7 +1191,9 @@ namespace ShoppingCartMVC.Controllers
             var products = db.tblProducts.ToList();
             return View(products);
         }
+        #endregion
 
+        #region Generate Order
         private string GenerateOrderNumber()
         {
             string orderNumber;
@@ -1339,7 +1344,9 @@ namespace ShoppingCartMVC.Controllers
                 }
             }
         }
+        #endregion
 
+        #region Generate Bill
         public ActionResult GenerateBill(string orderNumber)
         {
             using (var dbContext = new dbOnlineStoreEntities())
@@ -1376,7 +1383,9 @@ namespace ShoppingCartMVC.Controllers
                 return View("GenerateBill", viewModel);
             }
         }
+        #endregion
 
+        #region Track Reservation
         public ActionResult TrackReservations()
         {
             using (var db = new dbOnlineStoreEntities())
@@ -1385,6 +1394,9 @@ namespace ShoppingCartMVC.Controllers
                 return View(reservations);
             }
         }
+        #endregion
+
+        #region Generate Output
         [HttpPost]
         public ActionResult GenerateOutput(DateTime date)
         {
@@ -1399,7 +1411,9 @@ namespace ShoppingCartMVC.Controllers
                 return View("TrackReservations", db.tblReservations.ToList());
             }
         }
+        #endregion
 
+        #region Dine In
         public ActionResult DineIn()
         {
             // Assuming you have a DbContext named "db" and a DbSet for orders named "TblInStoreOrders"
@@ -1407,9 +1421,9 @@ namespace ShoppingCartMVC.Controllers
 
             return View(dineInOrders);
         }
+        #endregion
 
-
-
+        #region In Store
         public ActionResult InStoreSuccess()
         {
             var lastBill = db.TblBills.OrderByDescending(b => b.OrderDateTime).FirstOrDefault();
@@ -1450,7 +1464,9 @@ namespace ShoppingCartMVC.Controllers
         {
             return View();
         }
+        #endregion
 
+        #region Reserve Table
         public ActionResult ReserveTable()
         {
             var model = new tblReservation();
@@ -1549,8 +1565,10 @@ namespace ShoppingCartMVC.Controllers
             ViewBag.Submitted = false;
             return View(reservation);
         }
+        #endregion
 
 
+        #region Staff In Store Order 
         public ActionResult ReadyOrders()
         {
             var readyOrders = db.TblInStoreOrders.Where(m => m.Status == "Ready").ToList();
@@ -1599,7 +1617,9 @@ namespace ShoppingCartMVC.Controllers
 
             return RedirectToAction("PrepInStoreOrders");
         }
+        #endregion
 
+        #region Update Payment Method
         [HttpPost]
         public ActionResult UpdatePaymentMethod(string orderNumber, string paymentMethod)
         {
@@ -1643,7 +1663,9 @@ namespace ShoppingCartMVC.Controllers
 
             return RedirectToAction("GenerateBill", new { orderNumber });
         }
+        #endregion
 
+        #region Complete Order
         public ActionResult CompleteOrder(string orderNumber)
         {
             using (var dbContext = new dbOnlineStoreEntities())
@@ -1663,6 +1685,7 @@ namespace ShoppingCartMVC.Controllers
             // Redirect back to the Dine-In page
             return RedirectToAction("DineIn");
         }
+        #endregion
 
         #region Reservation
         public ActionResult Reservations()
