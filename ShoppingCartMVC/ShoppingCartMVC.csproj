@@ -172,10 +172,12 @@
     <Compile Include="Models\SupplierIngredients.cs" />
     <Compile Include="Models\tblAdminInvoice.cs" />
     <Compile Include="Models\tblAdminOrder.cs" />
+    <Compile Include="Models\tblBill.cs" />
     <Compile Include="Models\tblCategory.cs" />
     <Compile Include="Models\tblDonations.cs" />
     <Compile Include="Models\tblExtras.cs" />
     <Compile Include="Models\tblIngredients.cs" />
+    <Compile Include="Models\tblInStoreOrder.cs" />
     <Compile Include="Models\tblInvoice.cs" />
     <Compile Include="Models\tblOrder.cs" />
     <Compile Include="Models\tblProduct.cs" />
