@@ -1,7 +1,236 @@
-﻿
-@{
-    ViewBag.Title = "Dashboard";
-}
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
 
-<h2>Dashboard</h2>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns */
+            gap: 20px;
+            padding: 50px;
+        }
+
+        /* Blue border */
+        .dashboard-block.blue {
+            border-left: 6px solid #007bff;
+        }
+
+        /* Orange border */
+        .dashboard-block.orange {
+            border-left: 6px solid #FFA500;
+        }
+
+        /* Green border */
+        .dashboard-block.green {
+            border-left: 6px solid #008000;
+        }
+
+        .dashboard-block {
+            padding: 30px; /* Increased padding for wider blocks */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f2f2f2;
+            border-radius: 9px; /* Increased border radius */
+        }
+
+        .dashboard-icon {
+            font-size: 36px; /* Larger font size for icons */
+            margin-right: 15px; /* Increased margin */
+        }
+
+        .dashboard-big-text {
+            font-size: 30px;
+            margin-top: 10px; /* Add some spacing between the texts */
+        }
+    </style>
+
+    <script>
+        function generatePDF() {
+            // Get selected time period
+            var timePeriod = document.getElementById("timePeriod").value;
+
+            // Define date range based on the selected time period
+            var startDate, endDate;
+            var today = new Date();
+
+            if (timePeriod === "lastMonth") {
+                startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+            } else if (timePeriod === "thisMonth") {
+                startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            }
+
+            // Collect text from dashboard containers
+            var customersRegistered = document.querySelector(".dashboard-block.blue .dashboard-big-text").textContent;
+            var totalOnlineOrders = document.querySelector(".dashboard-block.orange .dashboard-big-text").textContent;
+            var totalPosSales = document.querySelector(".dashboard-block.green .dashboard-big-text").textContent;
+            // Collect more text from other containers as needed
+
+            // Define your document content with the collected text
+            var docDefinition = {
+                content: [
+                    { text: 'Sales Report', style: 'header' },
+                    '--------------',
+                    'Time Period: ' + timePeriod, // Display the selected time period
+                    'Start Date: ' + startDate.toLocaleDateString(),
+                    'End Date: ' + endDate.toLocaleDateString(),
+                    'Customers Registered: ' + customersRegistered,
+                    'Total Online Orders: ' + totalOnlineOrders,
+                    'Total POS Sales: ' + totalPosSales,
+                    // Add more content using the collected text
+                    '--------------',
+                    // Add more content as needed
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                    },
+                },
+            };
+
+            // Create the PDF
+            pdfMake.createPdf(docDefinition).download('sales_report.pdf');
+        }
+    </script>
+</head>
+<body>
+    <h2>@ViewBag.Title</h2>
+
+    <!-- Select time period -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; padding-right: 20px;">
+        <!-- Select time period -->
+        <label for="timePeriod" style="margin-right: 10px;">Select Time Period:</label>
+        <select id="timePeriod">
+            <option value="lastMonth">Last Month</option>
+            <option value="thisMonth">This Month</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <!-- Generate Sales Report button -->
+        <button onclick="generatePDF()" style="background-color: #28a745; color: #fff; border: none; padding: 10px 10px; border-radius: 3px; cursor: pointer;">
+            Generate Sales Report PDF
+        </button>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Start of Dashboard Blocks -->
+        <!-- Block 1 with blue border -->
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Customers Registered</div>
+            <div class="dashboard-big-text">
+                @ViewBag.UserCount <!-- Insert user count here -->
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-user"></i></div>
+        </div>
+
+        <!-- Block 2 with orange border -->
+        <div class="dashboard-block orange">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Total Online Orders </div>
+            <div class="dashboard-big-text">
+                @ViewBag.OrderCount <!-- Display the total order count here -->
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-shopping-cart"></i></div>
+        </div>
+
+        <!-- Block 3 with green border -->
+        <div class="dashboard-block green">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Total POS Sales</div>
+            <div class="dashboard-big-text">
+                @ViewBag.POSCount
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-cash-register"></i></div>
+        </div>
+
+        <!-- Block 4 with blue border -->
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Products for sale</div>
+            <div class="dashboard-big-text">
+                @ViewBag.ProductCount
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-box-open"></i></div>
+        </div>
+
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Total Income</div>
+            <div class="dashboard-big-text">
+                R @string.Format("{0:n2}", ViewBag.TotalSales)
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-money"></i></div>
+        </div>
+
+
+        <div class="dashboard-block green">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>POS Income</div>
+            <div class="dashboard-big-text">
+                R @string.Format("{0:n2}", ViewBag.TotalInStore)
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-cash-register"></i></div>
+        </div>
+
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Online Income</div>
+            <div class="dashboard-big-text">
+                R @string.Format("{0:n2}", ViewBag.TotalOnline)
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-box-open"></i></div>
+        </div>
+
+        <div class="dashboard-block orange">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Total Deliveries</div>
+            <div class="dashboard-big-text">
+                @ViewBag.DeliveryInvoiceCount
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-shopping-cart"></i></div>
+        </div>
+
+        <div class="dashboard-block green">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Total Take-aways</div>
+            <div class="dashboard-big-text">
+                @ViewBag.TakeawayCount
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-shopping-cart"></i></div>
+        </div>
+        <!-- Add more blocks with different colors as needed -->
+        <!-- End of Dashboard Blocks -->
+    </div>
+
+</body>
+</html>
+
 
