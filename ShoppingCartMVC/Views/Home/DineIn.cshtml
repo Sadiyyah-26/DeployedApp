@@ -1,0 +1,73 @@
+﻿@model List<ShoppingCartMVC.Models.tblInStoreOrder>
+
+@{
+    ViewBag.Title = "DineIn";
+}
+
+<h2>Dine-In Orders</h2>
+
+@if (Model.Any())
+{
+    foreach (var orderGroup in Model.GroupBy(o => o.OrderNumber))
+    {
+        <h3>Order Number: @orderGroup.Key</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Method</th>
+                    <th>Pay Method</th>
+                    <th>Table Number</th>
+                    <th>Status</th> <!-- Added Status column -->
+                    <th>Generate Bill</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in orderGroup)
+                {
+                    <tr>
+                        <td>@order.ProductName</td>
+                        <td>@order.Method</td>
+                        <td>@order.PayMethod</td>
+                        <td>@order.TableNumber</td>
+                        <td>@order.Status</td> <!-- Display Status -->
+                        <td>
+                            <a href="@Url.Action("GenerateBill", "Home", new { orderNumber = order.OrderNumber })" class="btn btn-primary">Generate Bill</a>
+                            <a href="@Url.Action("CompleteOrder", "Home", new { orderNumber = order.OrderNumber })" class="btn btn-success">Complete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+else
+{
+    <p>No Dine-In orders found.</p>
+}
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

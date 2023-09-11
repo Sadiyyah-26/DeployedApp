@@ -160,15 +160,18 @@
     <Compile Include="Models\AccountPoints.cs" />
     <Compile Include="Models\AdminCart.cs" />
     <Compile Include="Models\AdminInv_VM.cs" />
+    <Compile Include="Models\BillViewModel.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
     <Compile Include="Models\Drivers.cs" />
     <Compile Include="Models\ExtraVM.cs" />
     <Compile Include="Models\IngredientProduct.cs" />
     <Compile Include="Models\IngrVM.cs" />
+    <Compile Include="Models\InStoreSuccessCashViewModel.cs" />
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\LowStockVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
+    <Compile Include="Models\SelectedProductModel.cs" />
     <Compile Include="Models\SupplierIngredients.cs" />
     <Compile Include="Models\tblAdminInvoice.cs" />
     <Compile Include="Models\tblAdminOrder.cs" />
@@ -386,6 +389,13 @@
     <Content Include="Views\Donations\Index.cshtml" />
     <Content Include="Views\Donations\DonationDetails.cshtml" />
     <Content Include="Views\Donations\DonationSuccess.cshtml" />
+    <Content Include="Views\Home\POSDashboard.cshtml" />
+    <Content Include="Views\Home\WaiterMenu.cshtml" />
+    <Content Include="Views\Home\GenerateBill.cshtml" />
+    <Content Include="Views\Home\TrackReservations.cshtml" />
+    <Content Include="Views\Home\DineIn.cshtml" />
+    <Content Include="Views\Home\InStoreSuccess.cshtml" />
+    <Content Include="Views\Home\InStoreSuccessCash.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
