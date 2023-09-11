@@ -1,0 +1,42 @@
+﻿@model List<ShoppingCartMVC.Models.tblInStoreOrder>
+
+<h2>PrepInStoreOrder</h2>
+
+@foreach (var orderGroup in Model.GroupBy(o => o.OrderNumber))
+{
+    var firstOrder = orderGroup.First(); // Get the first order in the group
+    <h3>Order Number: @firstOrder.OrderNumber</h3>
+    <table class="table">
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <!-- Other order details... -->
+        </tr>
+
+        @foreach (var productOrder in orderGroup)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => productOrder.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => productOrder.Qty)
+                </td>
+                <!-- Other product details... -->
+            </tr>
+        }
+    </table>
+
+    if (firstOrder.Status == "Preparing")
+    {
+        using (Html.BeginForm("MarkAsReady", "Home", FormMethod.Post))
+        {
+            @Html.Hidden("OrderId", firstOrder.OrderId)
+            <button type="submit" class="btn btn-success">Mark as Ready</button>
+        }
+    }
+}

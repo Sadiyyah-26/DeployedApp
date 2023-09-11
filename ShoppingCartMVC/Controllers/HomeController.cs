@@ -1427,6 +1427,197 @@ namespace ShoppingCartMVC.Controllers
             // Redirect back to the Dine-In page
             return RedirectToAction("DineIn");
         }
+
+
+        public ActionResult InStoreSuccess()
+        {
+            var lastBill = db.TblBills.OrderByDescending(b => b.OrderDateTime).FirstOrDefault();
+
+            // Check if a bill was found
+            if (lastBill != null)
+            {
+                // Prepare the data to be sent to the view
+                var viewModel = new InStoreSuccessCashViewModel
+                {
+                    OrderNumber = lastBill.OrderNumber,
+                    OrderDateTime = (DateTime)lastBill.OrderDateTime,
+                    Products = db.TblBills
+                        .Where(b => b.OrderNumber == lastBill.OrderNumber)
+                        .Select(b => new SelectedProductModel
+                        {
+                            ProductName = b.ProductName,
+                            Qty = b.Qty,
+                            Total = b.Total
+                        })
+                        .ToList(),
+                    TotalAmount = (int)db.TblBills
+                        .Where(b => b.OrderNumber == lastBill.OrderNumber)
+                        .Sum(b => b.Total)
+                };
+
+                return View("InStoreSuccessCash", viewModel);
+            }
+            else
+            {
+                // Handle the case where no order is found (e.g., display an error message)
+                return RedirectToAction("Index");
+            }
+        }
+
+
+        public ActionResult InStoreSuccessCash()
+        {
+            return View();
+        }
+
+        public ActionResult ReserveTable()
+        {
+            var model = new tblReservation();
+            model.SeatNumberList = GetSeatOptions();
+            ViewBag.Submitted = false;
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult ReserveTable(tblReservation reservation)
+        {
+            tblReservation g = new tblReservation();
+            // Check if the input fields are not blank
+            if (string.IsNullOrWhiteSpace(reservation.Mail) ||
+                string.IsNullOrWhiteSpace(reservation.Number) ||
+                string.IsNullOrWhiteSpace(reservation.Seating))
+            {
+                ModelState.AddModelError("", "Please fill in all the required fields.");
+            }
+            else if (ModelState.IsValid)
+            {
+                // Check if the date is from Monday to Friday
+                if (reservation.Date.HasValue && reservation.Date.Value.DayOfWeek >= DayOfWeek.Monday && reservation.Date.Value.DayOfWeek <= DayOfWeek.Friday)
+                {
+                    // Check if the time is between 9am and 3pm
+                    if (reservation.Time.HasValue && reservation.Time.Value.TimeOfDay >= new TimeSpan(8, 0, 0) && reservation.Time.Value.TimeOfDay <= new TimeSpan(18, 0, 0))
+                    {
+                        using (var context = new dbOnlineStoreEntities())
+                        {
+                            // Check if the seat is available for the chosen date and time
+                            int count = context.tblReservations
+                                .Where(r => r.Date == reservation.Date && r.Time == reservation.Time)
+                                .Count();
+                            if (count >= 2)
+                            {
+                                ModelState.AddModelError("", "Sorry, this seat is already booked twice for the chosen date and time.");
+                                // Re-populate the SeatNumberList dropdown with the updated model
+                                reservation.SeatNumberList = GetSeatOptions();
+                                ViewBag.Submitted = false;
+                                return View(reservation);
+                            }
+
+                            // Check if the seat is available for the chosen date and has not been booked more than twice
+                            count = context.tblReservations
+                                .Where(r => r.Date == reservation.Date && r.Seating == reservation.Seating)
+                                .Count();
+                            if (count >= 2)
+                            {
+                                ModelState.AddModelError("", "Sorry, this seating option is already booked twice for the chosen date.");
+                                // Re-populate the SeatNumberList dropdown with the updated model
+                                reservation.SeatNumberList = GetSeatOptions();
+                                ViewBag.Submitted = false;
+                                return View(reservation);
+                            }
+                            g.BookingId = reservation.BookingId;
+                            g.Customer_Name = reservation.Customer_Name;
+                            g.Mail = reservation.Mail;
+                            g.Number = reservation.Number;
+                            g.Seating = reservation.Seating;
+                            g.Date = reservation.Date;
+                            g.Time = reservation.Time;
+                            context.tblReservations.Add(reservation);
+                            context.SaveChanges();
+                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating for {reservation.Seating} people is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
+                                $" If you have any queries, drop us an email (turbomeals123@gmail.com)";
+                            var message = new MailMessage();
+                            message.To.Add(new MailAddress(reservation.Mail));
+                            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                            message.Subject = "Reservation Confirmation";
+                            message.Body = string.Format(body);
+                            message.IsBodyHtml = true;
+
+
+                            using (var smtp = new SmtpClient())
+                            {
+                                smtp.Send(message);
+                            }
+                        }
+                        TempData["Submitted"] = true;
+
+                        return RedirectToAction("Reserve_SuccessCard");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid time selection. Reservations are only available between 8am and 6pm.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid date selection. Reservations are only available from Monday to Friday.");
+                }
+            }
+
+            // Re-populate the SeatNumberList dropdown with the updated model
+            reservation.SeatNumberList = GetSeatOptions();
+            ViewBag.Submitted = false;
+            return View(reservation);
+        }
+
+
+        public ActionResult ReadyOrders()
+        {
+            var readyOrders = db.TblInStoreOrders.Where(m => m.Status == "Ready").ToList();
+            return View(readyOrders);
+        }
+
+        public ActionResult PrepInStoreOrders()
+        {
+            var orders = db.TblInStoreOrders.Where(m => m.Status == "Preparing").ToList();
+            return View(orders);
+        }
+
+        public ActionResult PrepInStoreOrder(int OrderId)
+        {
+
+            var selectedOrder = db.TblInStoreOrders.FirstOrDefault(o => o.OrderId == OrderId);
+
+            if (selectedOrder == null)
+            {
+
+                return RedirectToAction("PrepInStoreOrders");
+            }
+
+            var ordersWithSameOrderNumber = db.TblInStoreOrders.Where(o => o.OrderNumber == selectedOrder.OrderNumber).ToList();
+
+            return View(ordersWithSameOrderNumber);
+        }
+
+        [HttpPost]
+        public ActionResult MarkAsReady(int OrderId)
+        {
+
+            var order = db.TblInStoreOrders.Find(OrderId);
+
+            if (order != null)
+            {
+
+                var relatedOrders = db.TblInStoreOrders.Where(o => o.OrderNumber == order.OrderNumber);
+                foreach (var relatedOrder in relatedOrders)
+                {
+                    relatedOrder.Status = "Ready";
+                }
+
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("PrepInStoreOrders");
+        }
         #region Reservation
         public ActionResult Reservations()
         {

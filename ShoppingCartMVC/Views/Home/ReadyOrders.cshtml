@@ -1,0 +1,49 @@
+﻿@model List<ShoppingCartMVC.Models.tblInStoreOrder>
+
+<h2>Ready Orders</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Order Num
+        </th>
+        <th>
+            Order Date
+        </th>
+        <th>
+            Order Detail
+        </th>
+        <th>
+            Order Status + Table Number
+        </th>
+    </tr>
+
+    @{
+        string previousOrderNumber = null;
+    }
+
+    @foreach (var order in Model.OrderBy(o => o.OrderNumber))
+    {
+        if (order.OrderNumber != previousOrderNumber)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => order.OrderNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => order.OrderDateTime)
+                </td>
+                <td>
+                    <a href="@Url.Action("PrepInStoreOrder", "Home", new { OrderId = order.OrderId })" class="btn btn-primary">Order Details</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(m => order.Status)
+                </td>
+            </tr>
+        }
+
+        previousOrderNumber = order.OrderNumber;
+    }
+</table>
+
+
