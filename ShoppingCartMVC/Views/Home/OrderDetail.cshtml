@@ -13,7 +13,7 @@
     <table class="table">
         <tr>
             <th>
-                Order Num
+                Invoice Num
             </th>
             <th>
                 Total
@@ -39,7 +39,7 @@
         @foreach (var item in sortedOrders)
         {
             <tr>
-                <td>#@Html.DisplayFor(modelitem => item.OrderId)</td>
+                <td>#@Html.DisplayFor(modelitem => item.InvoiceId)</td>
 
                 <td>
                     R @Html.DisplayFor(modelItem => item.TblInvoice.Bill).00

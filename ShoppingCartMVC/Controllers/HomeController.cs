@@ -373,54 +373,7 @@ namespace ShoppingCartMVC.Controllers
                     od.OrderReady = "Being Prepared";
                     od.Extras = item.extras;
                     od.ExtrasCost = item.extrasCost;
-                    db.tblOrders.Add(od);
-
-
-                    var ingPro = db.IngredientProducts.Where(ip => ip.ProID == item.proid).ToList();
-
-                    foreach (var i in ingPro)
-                    {
-                        var ingID = i.Ing_ID;
-
-                        var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-                        var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-
-                        int qtyToReduce = 0;
-                        if (ingr != null)
-                        {
-                            qtyToReduce = ingr.Ing_UnitsUsed * item.qty;
-                            ingr.Ing_StockyQty -= qtyToReduce;
-
-                            if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
-                            {
-                                ingr.StockStatus = "Low Stock";
-                                //send qty alert email 
-                                string ing = ingr.Ing_Name;
-                                string qty = Convert.ToString(ingr.Ing_StockyQty);
-                                string suppl = supplIngr.TblSupplier.SupplName;
-
-                                var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
-                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty;
-
-
-
-                                var email = new MailMessage();
-                                email.To.Add(new MailAddress("turbomeals516@gmail.com"));
-                                email.From = new MailAddress("turbomeals123@gmail.com");
-                                email.Subject = "Low Stock Alert!";
-                                email.Body = content;
-                                email.IsBodyHtml = true;
-
-                                using (var smtp = new SmtpClient())
-                                {
-                                    smtp.Send(email);
-                                }
-
-                            }
-
-                        }
-                        db.Entry(ingr).State = EntityState.Modified;
-                    }
+                    db.tblOrders.Add(od);                  
 
                 }
                 db.SaveChanges();
@@ -561,7 +514,9 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult OrderDetail(int id)
         {
-            var query = db.tblOrders.Where(m => m.TblInvoice.UserId == id).ToList();
+            var query = db.tblOrders.Where(m => m.TblInvoice.UserId == id)
+               .GroupBy(i => i.InvoiceId)
+                .Select(m => m.FirstOrDefault()).ToList();
             return View(query);
         }
 
@@ -765,13 +720,14 @@ namespace ShoppingCartMVC.Controllers
             }
             TempData.Keep();
 
-            List<InvoiceVM> InvceVMList = new List<InvoiceVM>();
+
 
             var invList = (from o in db.tblOrders
                            join i in db.tblInvoices on o.InvoiceId equals i.InvoiceId
                            join u in db.tblUsers on i.UserId equals u.UserId
                            join pr in db.tblProducts on o.ProID equals pr.ProID
-                           select new
+                           where i.InvoiceId == id
+                           group new
                            {
                                i.InvoiceId,
                                i.InvoiceDate,
@@ -787,40 +743,39 @@ namespace ShoppingCartMVC.Controllers
                                i.Time_CD,
                                i.Payment_Status,
                                o.Total
+                           } by i.InvoiceId into grouped
+                           select new InvoiceVM
+                           {
+                               InvoiceID = grouped.Key,
+                               InvoiceDate = grouped.FirstOrDefault().InvoiceDate,
+                               Name = grouped.FirstOrDefault().Name,
+                               Address = grouped.FirstOrDefault().Address,
+                               Contact = grouped.FirstOrDefault().Contact,
+                               Item = grouped.FirstOrDefault().P_Name,
+                               Qty = grouped.FirstOrDefault().Qty,
+                               Unit = grouped.FirstOrDefault().Unit,
+                               Amount = grouped.FirstOrDefault().Total,
+                               Extras = grouped.FirstOrDefault().Extras,
+                               ExtrasCost = grouped.FirstOrDefault().ExtrasCost,
+                               Method = grouped.FirstOrDefault().Method,
+                               CD_Time = grouped.FirstOrDefault().Time_CD,
+                               Payment_Status = grouped.FirstOrDefault().Payment_Status,
 
+                               ExtraInfo = grouped.Select(info => new InvoiceVM.Info
+                               {
+                                   Item = info.P_Name,
+                                   Qty = info.Qty,
+                                   Unit = info.Unit,
+                                   Amount = info.Total,
+                                   Extras = info.Extras,
+                                   ExtrasCost = info.ExtrasCost
 
+                               }).ToList()
                            }).ToList();
 
 
 
-
-            foreach (var pro in invList)
-            {
-
-                if (pro.InvoiceId == id)
-                {
-                    //count += 1;
-                    InvoiceVM objVM = new InvoiceVM();
-                    objVM.InvoiceID = pro.InvoiceId;
-                    objVM.InvoiceDate = pro.InvoiceDate;
-                    objVM.Name = pro.Name;
-                    objVM.Address = pro.Address;
-                    objVM.Contact = pro.Contact;
-                    objVM.Item = pro.P_Name;
-                    objVM.Qty = pro.Qty;
-                    objVM.Unit = pro.Unit;
-                    objVM.Amount = pro.Total;
-                    objVM.Extras = pro.Extras;
-                    objVM.ExtrasCost = pro.ExtrasCost;
-                    objVM.Method = pro.Method;
-                    objVM.CD_Time = pro.Time_CD;
-                    objVM.Payment_Status = pro.Payment_Status;
-                    objVM.TotalAmount = pro.Total;
-                    InvceVMList.Add(objVM);
-                }
-            }
-
-            return View(InvceVMList);
+            return View(invList);
 
         }
 
@@ -1076,6 +1031,60 @@ namespace ShoppingCartMVC.Controllers
             }
 
             db.Entry(tblOrder).State = EntityState.Modified;
+
+            //update stock qty
+            var ingPro = db.IngredientProducts.Where(ip => ip.ProID == tblOrder.ProID).ToList();
+
+            foreach (var i in ingPro)
+            {
+                var ingID = i.Ing_ID;
+
+                var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+                var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+
+                int qtyToReduce = 0;
+                if (ingr != null)
+                {
+                    qtyToReduce = ingr.Ing_UnitsUsed * (int)tblOrder.Qty;
+                    ingr.Ing_StockyQty -= qtyToReduce;
+
+                    if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
+                    {
+                        ingr.StockStatus = "Low Stock";
+                        //send qty alert email 
+                        string ing = ingr.Ing_Name;
+                        string qty = Convert.ToString(ingr.Ing_StockyQty);
+                        string suppl = supplIngr.TblSupplier.SupplName;
+                        //test for link redirect
+                        int supID = supplIngr.SupplierId;
+
+                        string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+                        string url = Url.Action("Index", "AdminHome", new { id = supID });
+                        string link = $"{baseUrl}{url}";
+
+                        var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
+                        content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: " + link; ;
+
+
+
+                        var email = new MailMessage();
+                        email.To.Add(new MailAddress("turbostaff786@gmail.com"));
+                        email.From = new MailAddress("turbomeals123@gmail.com");
+                        email.Subject = "Low Stock Alert!";
+                        email.Body = content;
+                        email.IsBodyHtml = true;
+
+                        using (var smtp = new SmtpClient())
+                        {
+                            smtp.Send(email);
+                        }
+
+                    }
+
+                }
+                db.Entry(ingr).State = EntityState.Modified;
+            }//foreach ingr
+
             db.SaveChanges();
             return RedirectToAction("PrepStaff", "Home", new { id = @Session["uid"] });
         }
@@ -1304,6 +1313,7 @@ namespace ShoppingCartMVC.Controllers
         }
 
         #endregion
+
         #region POSDashboard
         public ActionResult POSDashboard()
         {
@@ -1740,7 +1750,7 @@ namespace ShoppingCartMVC.Controllers
                 {
                     relatedOrder.Status = "Ready";
                 }
-
+                
                 db.SaveChanges();
             }
 

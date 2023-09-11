@@ -28,6 +28,21 @@ namespace ShoppingCartMVC.Models
         public string Method { get; set; }
         public DateTime? CD_Time { get; set; }
         public string Payment_Status { get; set; }
-        public int? TotalAmount { get; set; }
+
+        public List<Info> ExtraInfo { get; set; }
+
+        [NotMapped]
+        public class Info
+        {
+            public string Item { get; set; }
+            public int? Qty { get; set; }
+            public int? Unit { get; set; }
+            public int? Amount { get; set; }
+            public string Extras { get; set; }
+            public int ExtrasCost { get; set; }
+           
+
+        }
+
     }
 }
