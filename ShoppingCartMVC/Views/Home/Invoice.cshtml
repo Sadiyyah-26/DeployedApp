@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShoppingCartMVC.Models.InvoiceVM>
+﻿@model List<ShoppingCartMVC.Models.InvoiceVM>
 
 
 <head>
@@ -21,11 +21,15 @@
             display: none;
         }
 
-        .footer{
-            display:none;
+        .footer {
+            display: none;
         }
     }
 </style>
+
+@{
+    double grandTotal = 0;
+}
 
 @foreach (var item in Model)
 {
@@ -58,7 +62,7 @@
                                 <li class="text-muted">To: <span style="color:#5d9fc5 ;"> @Html.DisplayFor(modelItem => item.Name) </span></li>
                                 <li class="text-muted">@Html.DisplayFor(modelItem => item.Address)</li>
                                 @*<li class="text-muted">State, Country</li>*@
-                            <li class="text-muted"><i class="fas fa-phone"></i> @Html.DisplayFor(modelItem => item.Contact)</li>
+                                <li class="text-muted"><i class="fas fa-phone"></i> @Html.DisplayFor(modelItem => item.Contact)</li>
                             </ul>
                         </div>
                         <div class="col-xl-4">
@@ -125,8 +129,8 @@
                                     </li>
                                 }
                                 @*<li class="text-muted">
-            <i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">Order Status: </span>@Html.DisplayFor(modelItem => item.TblInvoice.Status)
-        </li>*@
+                                        <i class="fas fa-circle" style="color:#84B0CA ;"></i> <span class="fw-bold">Order Status: </span>@Html.DisplayFor(modelItem => item.TblInvoice.Status)
+                                    </li>*@
                             </ul>
                         </div>
                     </div>
@@ -154,39 +158,32 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @for (int rowIndex = 0; rowIndex < item.ExtraInfo.Count; rowIndex++)
+                                {
+                                    var info = item.ExtraInfo[rowIndex];
+                                    <tr>
+                                        <th scope="row">@{ var rowNumber = rowIndex + 1; @rowNumber }</th>
+                                        <td>@info.Item </td>
+                                        <td> @info.Qty</td>
+                                        <td>R @info.Unit.00 </td>
 
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>@Html.DisplayFor(modelItem => item.Item) </td>
-                                    <td> @Html.DisplayFor(modelItem => item.Qty)</td>
-                                    <td>R @Html.DisplayFor(modelItem => item.Unit).00 </td>
-
-                                    @if (item.Extras == "None")
+                                        @if (item.Extras == "None")
+                                        {
+                                            <td>R @info.Amount.00 </td>
+                                        }
+                                        else
+                                        {
+                                            <td>@info.Extras</td>
+                                            <td>R @info.ExtrasCost</td>
+                                            <td>R @info.Amount.00 </td>
+                                        }
+                                    </tr>
                                     {
-                                        <td>R @Html.DisplayFor(modelItem => item.Amount).00 </td>
-                                    }
-                                    else
-                                    {
-                                        <td>@Html.DisplayFor(modelItem => item.Extras)</td>
-                                        <td>R @Html.DisplayFor(modelItem => item.ExtrasCost)</td>
-                                        <td>R @Html.DisplayFor(modelItem => item.Amount).00 </td>
-                                    }
-                                </tr>
 
-                                @*<tr>
-            <th scope="row">2</th>
-            <td></td>
-            <td></td>
-            <td>R </td>
-            <td>R </td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td> </td>
-            <td> </td>
-            <td>R </td>
-            <td>R </td>
-        </tr>*@
+                                        grandTotal += (double)info.Amount;
+                                    }
+                                }
+
                             </tbody>
 
                         </table>
@@ -200,7 +197,7 @@
                                     <li class="text-muted ms-3 mt-2"><span class="text-black me-4">VAT(15%)</span> R </li>
                                 </ul>*@
                             <p class="text-black float-start">
-                                <span class="text-black me-3" style="font-size: 20px;"> Total Amount  </span><span style="font-size: 20px;">R @Html.DisplayFor(modelItem => item.Amount).00</span>
+                                <span class="text-black me-3" style="font-size: 20px;"> Total Amount  </span><span style="font-size: 20px;">R @grandTotal.00</span>
                             </p>
                         </div>
                     </div>
