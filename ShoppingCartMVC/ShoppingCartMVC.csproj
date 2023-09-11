@@ -396,6 +396,10 @@
     <Content Include="Views\Home\DineIn.cshtml" />
     <Content Include="Views\Home\InStoreSuccess.cshtml" />
     <Content Include="Views\Home\InStoreSuccessCash.cshtml" />
+    <Content Include="Views\Home\ReserveTable.cshtml" />
+    <Content Include="Views\Home\ReadyOrders.cshtml" />
+    <Content Include="Views\Home\PrepInStoreOrder.cshtml" />
+    <Content Include="Views\Home\PrepInStoreOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

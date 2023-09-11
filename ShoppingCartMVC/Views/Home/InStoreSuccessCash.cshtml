@@ -1,7 +1,58 @@
-﻿
-@{
-    ViewBag.Title = "InStoreSuccessCash";
-}
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>In-Store Success (Cash)</title>
+    <style>
+        /* Add your CSS styles for the receipt here */
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-<h2>InStoreSuccessCash</h2>
+        .receipt {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            border: 1px solid #000;
+            padding: 10px;
+        }
+
+        .header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .item {
+            text-align: left;
+            margin: 5px 0;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <p class="header">Receipt</p>
+        <p class="item">Order Number: @Model.OrderNumber</p>
+        <p class="item">Order Date: @Model.OrderDateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+        <hr />
+        <p class="item">Products:</p>
+        <ul>
+            @foreach (var item in Model.Products)
+            {
+                <li>@item.ProductName x @item.Qty - R @item.Total</li>
+            }
+        </ul>
+        <hr />
+        <p class="total">Total Amount: R @Model.TotalAmount</p>
+
+        <button onclick="window.print()">Print Receipt</button>
+        <br />
+        <br />
+        <br />
+        <br />
+    </div>
+</body>
+</html>
 
