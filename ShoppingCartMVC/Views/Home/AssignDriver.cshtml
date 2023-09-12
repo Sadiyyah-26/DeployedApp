@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.Drivers
+﻿@model ShoppingCartMVC.Models.AssignDriverVM
 
 <head>
     <title>Driver Delivery Assignment</title>
@@ -17,10 +17,11 @@
             <div class="card-body">
                 <h4 class="card-title" style="text-align:center"><u> Assign Driver </u></h4>
                 <br />
-                <p style="text-align:center;">Order No. : #@TempData["OrderID"]</p>
-                <p style="text-align:center">Delivery Address : @TempData["Address"] </p>
-                <p style="text-align:center;">Order Date : @TempData["OrderDate"]</p>
-                <p style="text-align:center;">Select Driver :  @Html.DropDownListFor(m => m.UserId, @ViewData["UserId"] as IEnumerable<SelectListItem>, "--Choose Driver--") </p>
+                <p style="text-align:center;">Invoice No. : #@Model.InvoiceId</p>
+                <p style="text-align:center">Delivery Address : @Model.Address </p>
+                <p style="text-align:center;">Order Date : @Model.OrderDate</p>
+                <p style="text-align:center;">Select Driver : @Html.DropDownListFor(m => m.SelectedUserId, Model.DriverSelectList, "--Choose Driver--")</p>
+
                 <br>
                 <p style="text-align:center;"><input type="submit" value="Dispatch Driver" class="btn btn-success" /></p>
                 <br />

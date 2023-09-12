@@ -37,15 +37,23 @@ namespace ShoppingCartMVC.Controllers
                 {
                     u.Name = t.Name;
                     u.Email = t.Email;
-                    u.Image = Image.FileName.ToString();
+                    if(Image!=null)
+                    {
+                        u.Image = Image.FileName.ToString();
+                    }
+                  
                     u.Rating = t.Rating;
                     u.Tips = t.Tips;
                     u.Password = t.Password;
                     u.RoleType = 2;
 
+                    if(Image!=null)
+                    {
+                        var folder = Server.MapPath("~/Uploads/");
+                        Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                    }
                     //image upload
-                    var folder = Server.MapPath("~/Uploads/");
-                    Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                   
 
                     db.tblUsers.Add(u);
                     db.SaveChanges();

@@ -246,7 +246,7 @@
                         {
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
                             <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link">My Account</a></li>
-                            <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link">New Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link">Online Orders</a></li>
                             <li class="nav-item"><a href="@Url.Action("PrepInStoreOrders", "Home", new { id = @Session["uid"] })" class="nav-link">InStore Orders</a></li>
                             <li class="nav-item"><a href="@Url.Action("ReadyOrders", "Home", new { id = @Session["uid"] })" class="nav-link">OrdersReady</a></li>
 

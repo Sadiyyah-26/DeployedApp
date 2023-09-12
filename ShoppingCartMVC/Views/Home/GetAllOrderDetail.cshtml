@@ -18,7 +18,7 @@
 
         <tr>
             <th>
-                Order ID
+                Invoice ID
             </th>
             <th>
                 Customer
@@ -50,7 +50,7 @@
             {
                 <tr>
                     <td>
-                        #@Html.DisplayFor(modelItem => item.OrderId)
+                        #@Html.DisplayFor(modelItem => item.InvoiceId)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TblInvoice.TblUser.Name)
@@ -85,7 +85,7 @@
                         @if (item.TblInvoice.Status == "Order Placed")
                         {
 
-                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-dark">Order Ready</a>
+                            <a href="@Url.Action("ConfirmOrder","Home", new { InvoiceId = item.InvoiceId })" class="btn btn-dark">Order Ready</a>
                         }
                         else if (item.TblInvoice.Status == "Out for Delivery")
                         {
@@ -97,7 +97,7 @@
                         }
                         else if (item.TblInvoice.Status == "Ready for Collection")
                         {
-                            <a href="@Url.Action("ConfirmOrder","Home", new { OrderId = item.OrderId })" class="btn btn-warning">Ready for Collection</a>
+                            <a href="@Url.Action("ConfirmOrder","Home", new { InvoiceId = item.InvoiceId })" class="btn btn-warning">Ready for Collection</a>
                         }
                         else if (item.TblInvoice.Status == "Order Collected")
                         {
@@ -114,7 +114,7 @@
                     <td>
                         @if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Order Placed"))
                         {
-                            <a href="@Url.Action("AssignDriver","Home", new { OrderId = item.OrderId })" class="btn btn-info">Assign Driver</a>
+                            <a href="@Url.Action("AssignDriver","Home", new { InvId = item.InvoiceId })" class="btn btn-info">Assign Driver</a>
 
 
                         }

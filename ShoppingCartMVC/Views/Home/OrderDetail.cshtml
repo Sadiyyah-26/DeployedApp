@@ -13,7 +13,7 @@
     <table class="table">
         <tr>
             <th>
-                Invoice Num
+                Invoice Num #
             </th>
             <th>
                 Total
@@ -84,7 +84,7 @@
                     }
                     else
                     {
-                        <a href="@Url.Action("CancelOrder", "Home", new { OrderId = item.OrderId })" class="btn btn-info">View Order Placed</a>
+                        <a href="@Url.Action("CancelOrder", "Home", new { InvoiceId = item.InvoiceId })" class="btn btn-info">View Order Placed</a>
                     }
 
                 </td>

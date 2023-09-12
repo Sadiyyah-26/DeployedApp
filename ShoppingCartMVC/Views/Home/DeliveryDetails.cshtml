@@ -1,7 +1,7 @@
 ﻿@*@{
-    Layout = null;
-}*@
-@model ShoppingCartMVC.Models.Drivers
+        Layout = null;
+    }*@
+@model List<IGrouping<int?, ShoppingCartMVC.Models.Drivers>>
 
 
 <head>
@@ -125,86 +125,111 @@
         document.getElementById("sign-popup").classList.toggle("active");
     }
 </script>
-
+@{
+    double grandTotal = 0;
+}
 <body>
     @using (Html.BeginForm("DeliveryDetails", "Home", FormMethod.Post))
     {
+        foreach (var group in Model)
+        {
 
-        <div class="page-content page-container" id="page-content">
-            <div class="padding">
+            var firstOrder = group.FirstOrDefault(); // Declare the variable outside the if block
 
-                <div class="row container d-flex">
+            <div class="page-content page-container" id="page-content">
+                <div class="padding">
 
-                    <div class="col-lg-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title" style="text-align:center">Delivery Details</h4>
-                                <p class="card-description">
-                                    Customer Order No : <b>#@Html.DisplayFor(m => Model.OrderId) </b>
-                                    <br />
-                                    Delivery Address : @Html.DisplayFor(m=>Model.DeliveryAddress)
-                                </p>
-                                <br />
+                    <div class="row container d-flex">
 
-                                @*table for showing order details*@
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Item</th>
-                                                <th>Unit Price</th>
-                                                <th>Qty</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
 
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(m => Model.TblOrder.TblProduct.P_Name)
-                                                </td>
-                                                <td>
-                                                    R  @Html.DisplayFor(m => Model.TblOrder.Unit).00
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(m => Model.TblOrder.Qty)
-                                                </td>
-                                                <td>
-                                                    R @Html.DisplayFor(m => Model.TblOrder.Total).00
-                                                </td>
-
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <p>Customer Name  : @Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name)</p>
-                                <p>Payment Method : @Html.DisplayFor(m => Model.TblOrder.TblInvoice.Payment)</p>
-
-                                <p>
-                                    Payment Status :
-                                    @if (Model.TblOrder.TblInvoice.Payment_Status == "Paid")
+                                    @if (group.Any())
                                     {
-                                        <span class="badge badge-success   text-black fw-bold">
-                                            Paid
-                                        </span>
-                                        <input type="checkbox" id="CashPaid" name="CashPaid" value="true" checked hidden />
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-warning   text-black fw-bold">
-                                            Pending
-                                        </span>
+                                        firstOrder = group.First();
+
+                                        <h4 class="card-title" style="text-align:center">Delivery Details</h4>
+                                        <p class="card-description">
+                                            Customer Order with Invoice No : <b>#@(firstOrder.TblOrder.InvoiceId)</b>
+                                            <br />
+                                            Delivery Address : @(firstOrder.DeliveryAddress)
+                                        </p>
                                         <br />
-                                    <p>  <input type="checkbox" id="CashPaid" name="CashPaid" value="true" required/> Payment Received</p>
-                                }
-                                    </p>
+                                        @*table for showing order details*@
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order No</th>
+                                                        <th>Item</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Qty</th>
+                                                        <th>Sub-Total</th>
+                                                    </tr>
+                                                </thead>
+
+                                                @foreach (var orderInfo in group)
+                                                {
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td>
+                                                                @orderInfo.OrderId
+                                                            </td>
+                                                            <td>
+                                                                @orderInfo.TblOrder.TblProduct.P_Name
+                                                            </td>
+                                                            <td>
+                                                                R  @orderInfo.TblOrder.Unit.00
+                                                            </td>
+                                                            <td>
+                                                                @orderInfo.TblOrder.Qty
+                                                            </td>
+                                                            <td>
+                                                                R @orderInfo.TblOrder.Total.00
+                                                            </td>
+
+                                                        </tr>
+
+                                                    </tbody>
+                                                    {
+                                                        grandTotal += (double)orderInfo.TblOrder.Total;
+                                                    }
+
+                                                }
+                                            </table>
+                                        </div>
+                                    } @*if for group any*@
+
+
+                                    @if (group.Any() && firstOrder.TblOrder.TblInvoice != null)
+                                    {
+                                        <p>Customer Name: @(firstOrder.TblOrder.TblInvoice.TblUser.Name)</p>
+                                        <p>Payment Method: @(firstOrder.TblOrder.TblInvoice.Payment)</p>
+                                        <p>
+                                            <span class="text-black me-3"> Total Amount  </span><span>R @grandTotal.00</span>
+                                        </p>
+                                        <p>
+                                            Payment Status:
+                                            @if (firstOrder.TblOrder.TblInvoice.Payment_Status == "Paid")
+                                            {
+                                                <span class="badge badge-success text-black fw-bold">Paid</span>
+                                                <input type="checkbox" id="CashPaid" name="CashPaid" value="true" checked hidden />
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-warning text-black fw-bold">Pending</span>
+                                                <br />
+                                            <p><input type="checkbox" id="CashPaid" name="CashPaid" value="true" required /> Payment Received</p>
+                                        }
+                                            </p>
+                                        }
 
 
 
 
-                                    @*pop-up for customer signature*@
+                                        @*pop-up for customer signature*@
                                     <div class="popup" id="sign-popup">
                                         <div class="overlay"></div>
                                         <div class="content">
@@ -224,9 +249,9 @@
                                                     </div>
                                                 </div>
                                             </p>
-                                            <p> Signed by customer (@Html.DisplayFor(m => Model.TblOrder.TblInvoice.TblUser.Name))</p>
+                                            <p> Signed by customer (@firstOrder.TblOrder.TblInvoice.TblUser.Name)</p>
                                             <br />
-                                            <p><input type="checkbox" id="driverCheck" checked /> Driver E-sign (@Html.DisplayFor(m => Model.DriverName)) </p>
+                                            <p><input type="checkbox" id="driverCheck" checked /> Driver E-sign (@firstOrder.DriverName) </p>
 
                                             <br />
 
@@ -235,15 +260,17 @@
 
                                     </div>
 
-                                    @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
+                                    @if (group.Any() && firstOrder.TblOrder.TblInvoice != null)
                                     {
-                                        <span class="btn btn-success">Customer Signed</span>
+                                        if (firstOrder.TblOrder.TblInvoice.Status == "Order Delivered")
+                                        {
+                                            <span class="btn btn-success">Customer Signed</span>
+                                        }
+                                        else
+                                        {
+                                            <input type="button" onclick="signPopup()" value=" Customer Signature " class="btn btn-info" />
+                                        }
                                     }
-                                    else
-                                    {
-                                        <input type="button" onclick="signPopup()" value=" Customer Signature " class="btn btn-info" /> 
-                                    }
-
                                     <br />
 
 
@@ -254,18 +281,21 @@
                                     <br />
                                 </div>
 
-                                @if (Model.TblOrder.TblInvoice.Status == "Order Delivered")
+                                @if (group.Any() && firstOrder.TblOrder.TblInvoice != null)
                                 {
-                                    <a href="@Url.Action("DriverDeliveries","Home", new { id = Model.UserId })" class="btn btn-success">Delivery Completed</a>
-                                }
-                                else
-                                {
-                                    <input type="submit" value="Delivery Confirmation" class="btn btn-info" />
-                                }
+                                    if (firstOrder.TblOrder.TblInvoice.Status == "Order Delivered")
+                                    {
+                                        <a href="@Url.Action("DriverDeliveries", "Home", new { id = firstOrder.UserId })" class="btn btn-success">Delivery Completed</a>
+                                    }
+                                    else
+                                    {
+                                        <input type="submit" value="Delivery Confirmation" class="btn btn-info" />
+                                    }
 
-
+                                }
                             </div>
                         </div> <!--card for delivery details-->
+
                         <br />
                         <br />
 
@@ -277,12 +307,13 @@
                 </div>
 
             </div><!--page container-->
-
-
-
         }
 
-    
+
+    }
+
+
+
     <br />
     <br />
 

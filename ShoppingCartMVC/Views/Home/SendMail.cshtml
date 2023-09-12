@@ -33,12 +33,12 @@
                     </div>
                     <br />
                     <div class="inputbox">
-                        <p style="text-align:center;"> License Number :    &ensp; &ensp;&ensp;&ensp;&ensp;&ensp;    <input type="text" id="licenseNum" name="licenseNum" required="required" /></p>
+                        <p style="text-align:center;"> License Number :    &ensp; &ensp;&ensp;&ensp;&ensp;&ensp;    <input type="text" id="licenseNum" name="licenseNum" required="required" value="ND 176-873" /></p>
                     </div>
                     <br />
 
                     <br />
-                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> &ensp;<a href="@Url.Action("DeliveryDetails","Home", new { OrderId = Model.OrderId })" class="btn btn-info">Complete Delivery</a></p>
+                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> &ensp;<a href="@Url.Action("DeliveryDetails","Home", new { InvoiceID = Model.TblOrder.InvoiceId })" class="btn btn-info">Complete Delivery</a></p>
                 </form>
 
 
