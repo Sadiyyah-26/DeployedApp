@@ -839,6 +839,7 @@ namespace ShoppingCartMVC.Controllers
             return View(query);
         }
         //this not working
+        //this not working for more than one order
         [HttpPost]
         public ActionResult NotifyCustomer(tblOrder o, bool orderReady)
         {
