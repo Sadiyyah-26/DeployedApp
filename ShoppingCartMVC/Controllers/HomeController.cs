@@ -1852,19 +1852,21 @@ namespace ShoppingCartMVC.Controllers
         [HttpPost]
         public ActionResult MarkAsReady(int OrderId)
         {
-
             var order = db.TblInStoreOrders.Find(OrderId);
+
 
             if (order != null)
             {
-
                 var relatedOrders = db.TblInStoreOrders.Where(o => o.OrderNumber == order.OrderNumber);
                 foreach (var relatedOrder in relatedOrders)
                 {
                     relatedOrder.Status = "Ready";
                 }
-                
+
                 db.SaveChanges();
+
+                // Send the order ready confirmation email
+                SendOrderReadyEmail(order.OrderNumber);
             }
 
             return RedirectToAction("PrepInStoreOrders");
