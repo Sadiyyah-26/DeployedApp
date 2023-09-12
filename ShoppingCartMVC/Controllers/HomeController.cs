@@ -1857,10 +1857,64 @@ namespace ShoppingCartMVC.Controllers
 
             if (order != null)
             {
-                var relatedOrders = db.TblInStoreOrders.Where(o => o.OrderNumber == order.OrderNumber);
+                var relatedOrders = db.TblInStoreOrders.Where(o => o.OrderNumber == order.OrderNumber).ToList();
                 foreach (var relatedOrder in relatedOrders)
                 {
                     relatedOrder.Status = "Ready";
+
+                    //update stock qty
+                    var ingPro = db.IngredientProducts.Where(ip => ip.TblProduct.P_Name == relatedOrder.ProductName).ToList();
+
+                    foreach (var i in ingPro)
+                    {
+                        var ingID = i.Ing_ID;
+
+                        var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+                        var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+
+                        int qtyToReduce = 0;
+                        if (ingr != null)
+                        {
+                            qtyToReduce = ingr.Ing_UnitsUsed * (int)relatedOrder.Qty;
+                            ingr.Ing_StockyQty -= qtyToReduce;
+
+                            if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
+                            {
+                                ingr.StockStatus = "Low Stock";
+                                //send qty alert email 
+                                string ing = ingr.Ing_Name;
+                                string qty = Convert.ToString(ingr.Ing_StockyQty);
+                                string suppl = supplIngr.TblSupplier.SupplName;
+                                //test for link redirect
+                                int supID = supplIngr.SupplierId;
+
+                                string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+                                string url = Url.Action("Index", "AdminHome", new { id = supID });
+                                string link = $"{baseUrl}{url}";
+
+                                var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
+                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: " + link; ;
+
+
+
+                                var email = new MailMessage();
+                                email.To.Add(new MailAddress("turbostaff786@gmail.com"));
+                                email.From = new MailAddress("turbomeals123@gmail.com");
+                                email.Subject = "Low Stock Alert!";
+                                email.Body = content;
+                                email.IsBodyHtml = true;
+
+                                using (var smtp = new SmtpClient())
+                                {
+                                    smtp.Send(email);
+                                }
+
+                            }
+
+                        }
+                        db.Entry(ingr).State = EntityState.Modified;
+                    }//foreach ingr
+
                 }
 
                 db.SaveChanges();
