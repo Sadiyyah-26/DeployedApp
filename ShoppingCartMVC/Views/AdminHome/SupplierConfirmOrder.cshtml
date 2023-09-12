@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.tblAdminOrder
+﻿@model  List<IGrouping<int?, ShoppingCartMVC.Models.tblAdminOrder>>
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.3.5/signature_pad.min.js" integrity="sha512-kw/nRM/BMR2XGArXnOoxKOO5VBHLdITAW00aG8qK4zBzcLVZ4nzg7/oYCaoiwc8U9zrnsO9UHqpyljJ8+iqYiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -6,8 +6,6 @@
         .card {
             border: 2px solid #00ff90;
         }
-
-       
     </style>
 </head>
 
@@ -16,47 +14,58 @@
     <div class="card">
         <div class="card-body">
 
-            @using (Html.BeginForm("SupplierConfirmOrder","AdminHome",FormMethod.Post))
+            @using (Html.BeginForm("SupplierConfirmOrder", "AdminHome", FormMethod.Post))
             {
-                <div>
-                    <h3 style="text-align:center;">Invoice ID: @Html.DisplayFor(model => Model.TblAdminInvoice.InvoiceId)</h3>
+                foreach (var group in Model)
+                {
 
-                    <p>Supplier: @Html.DisplayFor(model => model.TblSupplier.SupplName)</p>
-                    <p>Total Paid: R @Html.DisplayFor(model => model.TblAdminInvoice.Bill).00</p>
-                    <p>Order Date: @Html.DisplayFor(model => model.TblAdminInvoice.InvoiceDate)</p>
-                    <br />
-                    <br />
+                    var firstOrder = group.FirstOrDefault();
+                    <div>
+                        @if (group.Any())
+                        {
+                            firstOrder = group.First();
+                            <h3 style="text-align:center;">Invoice ID: @(firstOrder.TblAdminInvoice.InvoiceId)</h3>
 
-                    <div class="card col-lg-12 grid-margin mx-auto">
-                        <div class="card-body">
-                            <h4 class="card-title" style="text-align:center"><u>Receiving Checklist </u></h4>
-
-                            <p>By accepting the terms below, I assume full accountability for the inspection process of received ingredients and certify that I have diligently examined and completed all necessary checks in all relevant aspects.</p>
-                            <input type="checkbox" name="inOrder[]" value="Condition1" /><label>&ensp; I confirm that this order has arrived </label>
+                            <p>Supplier: @(firstOrder.TblSupplier.SupplName)</p>
+                            <p>Total Paid: R @(firstOrder.TblAdminInvoice.Bill).00</p>
+                            <p>Order Date: @(firstOrder.TblAdminInvoice.InvoiceDate)</p>
                             <br />
-                            <input type="checkbox" name="inOrder[]" value="Condition2" /><label>&ensp; I confirm that no inventory is damaged </label>
                             <br />
-                            <input type="checkbox" name="inOrder[]" value="Condition3" /><label>&ensp; I confirm that the quantity received corresponds to invoice </label>
+                            foreach (var orderInfo in group)
+                            {
+                                <div class="card col-lg-12 grid-margin mx-auto">
+                                    <div class="card-body">
+                                        <h4 class="card-title" style="text-align:center"><u>Receiving Checklist </u></h4>
+                                        <h3>Order No # @orderInfo.OrderId</h3>
+                                        <p>By accepting the terms below, I assume full accountability for the inspection process of received ingredients and certify that I have diligently examined and completed all necessary checks in all relevant aspects.</p>
+                                        <input type="checkbox" name="inOrder[]" value="Condition1" /><label>&ensp; I confirm that this order has arrived </label>
+                                        <br />
+                                        <input type="checkbox" name="inOrder[]" value="Condition2" /><label>&ensp; I confirm that no inventory is damaged </label>
+                                        <br />
+                                        <input type="checkbox" name="inOrder[]" value="Condition3" /><label>&ensp; I confirm that the quantity received corresponds to invoice </label>
 
-                            <p><b>Upon completing this procedure, the stock inventory will be automatically updated.</b> </p>
-
-                        </div>
+                                        <p><b>Upon completing this procedure, the stock inventory will be automatically updated.</b> </p>
+                                        
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                            }
+                            <br />
+                            <p style="text-align:center"><input type="submit" value="Confirm" class="btn btn-success" /> </p>
+                            <br />
+                        }
                     </div>
+                }
+            }
 
-                    <br />
-                   <p style="text-align:center"><input type="submit" value="Confirm" class="btn btn-success" /> </p> 
-                    <br />
-                </div>
 
-              }
 
-                       
-                      
 
-                       
-                       
+
+
         </div>
-     </div>
+    </div>
 </div>
 
 <br />

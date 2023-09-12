@@ -274,74 +274,102 @@ namespace ShoppingCartMVC.Controllers
         public ActionResult SupplierConfirmOrder(int InvoiceID)
         {
             TempData["Inv"] = InvoiceID;
-            var query = db.tblAdminOrders.FirstOrDefault(m => m.InvoiceId == InvoiceID);
-            return View(query);
+            var query = db.tblAdminOrders.Where(m => m.InvoiceId == InvoiceID).ToList();
+
+            var groupedOrders = query.GroupBy(m => m.InvoiceId).ToList();
+            return View(groupedOrders);
         }
 
         [HttpPost]
         public ActionResult SupplierConfirmOrder(tblAdminOrder o, string[] inOrder)
         {
-            int InvoiceId = (int)TempData["Inv"];
-
-
-            var ordersSameInvoiceId = db.tblAdminOrders.Where(order => order.InvoiceId == InvoiceId).ToList();
-
-            if (ordersSameInvoiceId.Any())
+            try
             {
-                if (inOrder != null && inOrder.Contains("Condition1") && inOrder.Contains("Condition2") && inOrder.Contains("Condition3"))
+                int InvoiceId = (int)TempData["Inv"];
+
+                var ordersSameInvoiceId = db.tblAdminOrders.Where(order => order.InvoiceId == InvoiceId).ToList();
+
+                if (ordersSameInvoiceId.Any())
                 {
-
-                    foreach (var orderToUpdate in ordersSameInvoiceId)
+                    if (ChecklistConditionsMet(inOrder))
                     {
-                        orderToUpdate.OrderStatus = "Received";
-                        int qty = (int)orderToUpdate.Qty;
-                        db.Entry(orderToUpdate).State = EntityState.Modified;
-
-                        int ingredientId = (int)orderToUpdate.IngrID;
-
-
-                        var ingredient = db.tblIngredients.FirstOrDefault(i => i.Ing_ID == ingredientId);
-
-                        if (ingredient != null)
-                        {
-                            ingredient.Ing_StockyQty += qty;
-                            ingredient.StockStatus = "In Stock";
-                            // Handle the found Ingredient record
-                        }
-
-
-                    }
-                }
-                else
-                {
-                    string returnReason = "";
-                    if ((!inOrder.Contains("Condition2")) && (!inOrder.Contains("Condition3")))
-                    {
-                        returnReason = "Inventory recieved is damaged and quantity discrepancies";
-                    }
-                    else
-                    if (!inOrder.Contains("Condition2"))
-                    {
-                        returnReason = "Inventory received is damaged/not fresh";
+                        UpdateOrdersReceived(ordersSameInvoiceId);
+                        UpdateIngredientsStock(ordersSameInvoiceId);
                     }
                     else
                     {
-                        returnReason = "Quantity discrepancies";
+                        UpdateOrdersReturned(ordersSameInvoiceId, inOrder);
                     }
-                    // Conditions are not met, update the status for each order
-                    foreach (var orderToUpdate in ordersSameInvoiceId)
-                    {
-                        orderToUpdate.OrderStatus = "Returned";
-                        orderToUpdate.ReturnReason = returnReason;
-                        db.Entry(orderToUpdate).State = EntityState.Modified;
-                    }
+
+                    db.SaveChanges();
                 }
 
-                db.SaveChanges();
+                return RedirectToAction("AdminGetAllOrderDetail");
             }
+            catch (Exception ex)
+            {
 
+                return View("Error");
+            }
+        }
 
-            return RedirectToAction("AdminGetAllOrderDetail");
+        private bool ChecklistConditionsMet(string[] inOrder)
+        {
+            return inOrder != null && inOrder.Contains("Condition1") && inOrder.Contains("Condition2") && inOrder.Contains("Condition3");
+        }
+
+        private void UpdateOrdersReceived(List<tblAdminOrder> orders)
+        {
+            foreach (var orderToUpdate in orders)
+            {
+                orderToUpdate.OrderStatus = "Received";
+                db.Entry(orderToUpdate).State = EntityState.Modified;
+            }
+        }
+
+        private void UpdateIngredientsStock(List<tblAdminOrder> orders)
+        {
+            foreach (var orderToUpdate in orders)
+            {
+                int qty = (int)orderToUpdate.Qty;
+                int ingredientId = (int)orderToUpdate.IngrID;
+                var ingredient = db.tblIngredients.FirstOrDefault(i => i.Ing_ID == ingredientId);
+
+                if (ingredient != null)
+                {
+                    ingredient.Ing_StockyQty += qty;
+                    ingredient.StockStatus = "In Stock";
+                    db.Entry(ingredient).State = EntityState.Modified;
+                }
+            }
+        }
+
+        private void UpdateOrdersReturned(List<tblAdminOrder> orders, string[] inOrder)
+        {
+            string returnReason = GetReturnReason(inOrder);
+
+            foreach (var orderToUpdate in orders)
+            {
+                orderToUpdate.OrderStatus = "Returned";
+                orderToUpdate.ReturnReason = returnReason;
+                db.Entry(orderToUpdate).State = EntityState.Modified;
+            }
+        }
+
+        private string GetReturnReason(string[] inOrder)
+        {
+            if ((!inOrder.Contains("Condition2")) && (!inOrder.Contains("Condition3")))
+            {
+                return "Inventory received is damaged and quantity discrepancies";
+            }
+            else if (!inOrder.Contains("Condition2"))
+            {
+                return "Inventory received is damaged/not fresh";
+            }
+            else
+            {
+                return "Quantity discrepancies";
+            }
         }
 
 
