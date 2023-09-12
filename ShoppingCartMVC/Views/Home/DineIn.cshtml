@@ -29,12 +29,27 @@
                     <tr>
                         <td>@order.ProductName</td>
                         <td>@order.Method</td>
-                        <td>@order.PayMethod</td>
+                        <td>
+                            @if (string.IsNullOrWhiteSpace(order.PayMethod))
+                            {
+                                <span class="badge badge-warning">Pending</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">@order.PayMethod</span>
+                            }
+                        </td>
                         <td>@order.TableNumber</td>
                         <td>@order.Status</td> <!-- Display Status -->
                         <td>
-                            <a href="@Url.Action("GenerateBill", "Home", new { orderNumber = order.OrderNumber })" class="btn btn-primary">Generate Bill</a>
-                            <a href="@Url.Action("CompleteOrder", "Home", new { orderNumber = order.OrderNumber })" class="btn btn-success">Complete</a>
+                            @if (orderGroup.First() == order)
+                            {
+                                <a href="@Url.Action("GenerateBill", "Home", new { orderNumber = order.OrderNumber })" class="btn btn-primary">Generate Bill</a>
+                            }
+                            @if (orderGroup.First() == order)
+                            {
+                                <a href="@Url.Action("CompleteOrder", "Home", new { orderNumber = order.OrderNumber })" class="btn btn-success">Complete</a>
+                            }
                         </td>
                     </tr>
                 }
@@ -71,3 +86,4 @@ else
 <br />
 <br />
 <br />
+

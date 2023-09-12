@@ -1520,11 +1520,18 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Track Reservation
-        public ActionResult TrackReservations()
+        public ActionResult TrackReservations(DateTime? selectedDate)
         {
             using (var db = new dbOnlineStoreEntities())
             {
-                var reservations = db.tblReservations.ToList();
+                // Retrieve all reservations
+                var allReservations = db.tblReservations.ToList();
+
+                // Filter by selected date on the client side
+                var reservations = selectedDate.HasValue
+                    ? allReservations.Where(r => r.Date.HasValue && r.Date.Value.Date == selectedDate.Value.Date).ToList()
+                    : allReservations;
+
                 return View(reservations);
             }
         }
@@ -1534,16 +1541,8 @@ namespace ShoppingCartMVC.Controllers
         [HttpPost]
         public ActionResult GenerateOutput(DateTime date)
         {
-            using (var db = new dbOnlineStoreEntities())
-            {
-                // Retrieve reservations for the selected date
-                ViewBag.SelectedDateReservations = db.tblReservations
-                    .Where(r => r.Date == date.Date)
-                    .ToList();
-
-                // Return to the TrackReservations view
-                return View("TrackReservations", db.tblReservations.ToList());
-            }
+            // Redirect to TrackReservations action with the selected date as a parameter
+            return RedirectToAction("TrackReservations", new { selectedDate = date });
         }
         #endregion
 
@@ -1700,6 +1699,7 @@ namespace ShoppingCartMVC.Controllers
             return View(reservation);
         }
         #endregion
+
 
 
         #region Staff In Store Order 
@@ -2037,5 +2037,162 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
+        #region ReserveOrder
+        private List<Cart> FetchCartItems()
+        {
+            // Retrieve the cart items from TempData
+            List<Cart> cartItems = TempData["cart"] as List<Cart>;
+
+            if (cartItems == null)
+            {
+                // Handle the case where cart items are not found in TempData
+                // You can return an empty list, throw an exception, or handle it as needed.
+                cartItems = new List<Cart>(); // For example, return an empty list
+            }
+
+            return cartItems;
+        }
+
+        [HttpGet]
+        public ActionResult ReserveOrder()
+        {
+            // Fetch cart items (you need to implement this logic based on your setup)
+            var cartItems = FetchCartItems(); // Implement this method
+
+            var reservation = new tblReservation();
+            reservation.SeatNumberList = GetSeatOptions();
+
+            var model = new ReserveOrderViewModel
+            {
+                CartItems = cartItems,
+                Reservation = reservation,
+            };
+
+            ViewBag.Submitted = false;
+
+            return View(model);
+        }
+
+
+        private string Generate()
+        {
+            Random rand = new Random();
+            string orderNumber;
+
+            // Generate a random 3-digit order number and ensure it's unique
+            do
+            {
+                orderNumber = rand.Next(100, 1000).ToString();
+            } while (db.TblInStoreOrders.Any(o => o.OrderNumber == orderNumber));
+
+            return orderNumber;
+        }
+
+        [HttpPost]
+        public ActionResult ReserveOrder(ReserveOrderViewModel model, string PaymentMethod)
+        {
+            bool reservationSuccessful = true; // Flag to track if the reservation was successful
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Save reservation details to tblReservation
+                    var reservation = new tblReservation
+                    {
+                        Customer_Name = model.Reservation.Customer_Name,
+                        Mail = model.Reservation.Mail,
+                        Number = model.Reservation.Number,
+                        Date = model.Reservation.Date,
+                        Time = model.Reservation.Time,
+                        Seating = model.Reservation.Seating,
+                        // Populate other reservation fields as needed
+                    };
+
+                    // Make sure to populate SeatNumberList again here
+                    reservation.SeatNumberList = GetSeatOptions();
+
+                    // Save the reservation to the database
+                    db.tblReservations.Add(reservation);
+                    db.SaveChanges();
+
+                    // Access and process dynamically generated cart items
+                    foreach (var cartItem in model.CartItems)
+                    {
+                        // Save each item's details to tblInStoreOrder or process as needed
+                        var order = new tblInStoreOrder
+                        {
+                            BookingId = reservation.BookingId, // Use the BookingId from the saved reservation
+                            OrderNumber = Generate(),
+                            OrderDateTime = DateTime.Now,
+                            ProductName = cartItem.proname,
+                            Unit = cartItem.price,
+                            Qty = cartItem.qty,
+                            Total = cartItem.price,
+                            Method = "Dine-in",
+                            PayMethod = PaymentMethod,
+                            TableNumber = reservation.Seating,
+                            ReservedDate = reservation.Date,
+                            ReservedTime = reservation.Time
+                        };
+
+                        // Save the order to the database
+                        db.TblInStoreOrders.Add(order);
+                    }
+
+                    db.SaveChanges();
+                    var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Table Number {reservation.Seating} is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals";
+
+                    // Add cart items to the email body
+                    body += "<br /><br />Your Order Details:<br />";
+                    foreach (var cartItem in model.CartItems)
+                    {
+                        body += $"<strong>Item: </strong>{cartItem.proname}<br />";
+                        body += $"<strong>Quantity: </strong>{cartItem.qty}<br />";
+                        body += $"<strong>Price: </strong>R {cartItem.price}<br />";
+                        body += $"<strong>Total: </strong>R {cartItem.bill}<br /><br />";
+                    }
+
+                    body += "If you have any queries, drop us an email (turbomeals123@gmail.com)";
+
+                    var message = new MailMessage();
+                    message.To.Add(new MailAddress(reservation.Mail));
+                    message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                    message.Subject = "Reservation Confirmation";
+                    message.Body = string.Format(body);
+                    message.IsBodyHtml = true;
+
+                    using (var smtp = new SmtpClient())
+                    {
+                        smtp.Send(message);
+                    }
+
+                }
+                catch (Exception)
+                {
+                    // Handle the exception (e.g., log it)
+                    reservationSuccessful = false;
+                }
+            }
+
+            // Continue with the normal functionality
+            if (reservationSuccessful)
+            {
+                // Reservation was successful, show a success message
+                return RedirectToAction("ReserveSuccess_Cash");
+            }
+            else
+            {
+                // Reservation was not successful due to an exception, you can handle it accordingly
+                // For example, you can display an error message to the user
+                ViewBag.ErrorMessage = "An error occurred while making the reservation. Please try again later.";
+            }
+
+            // If there are validation errors, return the view with errors
+            return View(model);
+        }
+        #endregion
+
+     
     }
 }

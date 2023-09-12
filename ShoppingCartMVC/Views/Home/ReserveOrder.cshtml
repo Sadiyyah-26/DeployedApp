@@ -1,0 +1,268 @@
+﻿@model ShoppingCartMVC.Models.ReserveOrderViewModel
+
+<head>
+    <title>Checkout</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .card {
+            border: 1px solid;
+        }
+
+        span.word-with-space {
+            /* This rule appears in your code */
+            /* It adds spacing between labels and text boxes */
+            margin-left: 50px; /* You can adjust this value to control the spacing */
+        }
+        /* Custom CSS to add spacing between label and radio options */
+        .form-group.row .col-sm-2.col-form-label.mt-2 {
+            padding-top: 50px; /* Adjust the padding as needed */
+        }
+
+        /* Adjust the margin between radio options if necessary */
+        .form-group.row .form-check {
+            margin-bottom: 5px; /* Adjust the margin as needed */
+        }
+    </style>
+</head>
+
+<div class="container">
+    @if (Model.CartItems == null || Model.CartItems.Count == 0)
+    {
+        <h1>Cart is empty</h1>
+        <a href="@Url.Action("Index", "Home")">Go Back</a>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12 ftco-animate fadeInUp ftco-animated">
+                <div class="cart-list">
+                    <h3>Total Item: @Model.CartItems.Count</h3>
+                    <table class="table">
+                        <thead class="thead-primary">
+                            <tr class="text-center">
+                                <th></th>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Extras</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CartItems)
+                            {
+                                <tr class="text-center">
+                                    <td class="product-remove">
+                                        <a href="@Url.Action("remove", "Home", new { id = item.proid })">
+                                            <span class="fa fa-remove fa-1x"></span>
+                                        </a>
+                                    </td>
+                                    <td class="product-name">
+                                        <h3>@item.proname</h3>
+                                    </td>
+                                    <td class="price">R @item.price</td>
+                                    <td class="quantity">@item.qty</td>
+                                    <td class="ex">@item.extras</td>
+                                    <td class="exC">R @item.extrasCost</td>
+                                    <td class="total">R @item.bill</td>
+                                </tr><!-- END TR-->
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-end">
+            <div class="col-lg-4 mt-5 cart-wrap ftco-animate fadeInUp ftco-animated">
+                <div class="cart-total mb-3">
+                    <h3>Cart Total</h3>
+                    <hr>
+                    <p class="d-flex total-price">
+                        <span>Total</span>
+                        <span>R @TempData["total"]</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @* Show checkout button as per user rights *@
+        if (!User.Identity.IsAuthenticated)
+        {
+            <a href="@Url.Action("Login","Account")" class="btn btn-primary py-3 px-4"><span class="fa fa-sign-in"></span> Login</a>
+            <a href="@Url.Action("Register","Account")" class="btn btn-primary py-3 px-4"><span class="fa fa-registered"></span> Register</a>
+        }
+
+        if (User.Identity.IsAuthenticated)
+        {
+            if (User.IsInRole("2"))
+            {
+                using (Html.BeginForm("ReserveOrder", "Home", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="container">
+                        <div class="col-lg-4">
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Reservation.Customer_Name, new { @class = "col-sm-2 col-form-label" })
+                                <span class="word-with-space"></span>
+                                <br />
+                                <br />
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Reservation.Customer_Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Reservation.Customer_Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Reservation.Mail, new { @class = "col-sm-2 col-form-label" })
+                                <span class="word-with-space"></span>
+                                <br />
+                                <br />
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Reservation.Mail, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Reservation.Mail, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Reservation.Number, new { @class = "col-sm-2 col-form-label" })
+                                <span class="word-with-space"></span>
+                                <br />
+                                <br />
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Reservation.Number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Reservation.Number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Reservation.Seating, new { @class = "col-sm-2 col-form-label" })
+                                &ensp;
+                                <span class="word-with-space"></span>
+                                <br />
+                                <br />
+                                <div class="col-sm-10">
+                                    @foreach (var seatOption in Model.Reservation.SeatNumberList ?? new List<SelectListItem>())
+                                    {
+                                        <div class="form-check">
+                                            <input type="radio" id="seatOption-@seatOption.Value" name="Reservation.Seating" value="@seatOption.Value" class="form-check-input" />
+                                            <label for="seatOption-@seatOption.Value" class="form-check-label">@seatOption.Text</label>
+                                        </div>
+                                    }
+
+                                    @Html.ValidationMessageFor(model => model.Reservation.Seating, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Reservation.Date, new { @class = "col-sm-2 col-form-label" })
+                                { Open from Monday to Friday's }
+                                <span class="word-with-space"></span>
+                                <br />
+                                <br />
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Reservation.Date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                                    @Html.ValidationMessageFor(model => model.Reservation.Date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Reservation.Time, new { @class = "col-sm-2 col-form-label" })
+                                { Restaurant open from 8am-7pm }
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Reservation.Time, new { @class = "form-control", @type = "time", @id = "timeInput", @value = "08:00" }) <!-- Set an initial value in "HH:mm" format -->
+                                    @Html.ValidationMessageFor(model => model.Reservation.Time, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Payment Method</h5>
+                                    <div class="form-group row">
+                                        @*<label class="col-sm-2 col-form-label mt-2">Payment Method</label>*@
+                                        <div class="col-sm-10">
+                                            <div class="form-check">
+                                                <input type="radio" id="paymentCash" name="PaymentMethod" value="Cash" class="form-check-input" />
+                                                <label for="paymentCash" class="form-check-label">Cash</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="radio" id="paymentCard" name="PaymentMethod" value="Card" class="form-check-input" />
+                                                <label for="paymentCard" class="form-check-label">Card</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            @for (var i = 0; i < Model.CartItems.Count; i++)
+                            {
+                                <input type="hidden" name="CartItems[@i].proid" value="@Model.CartItems[i].proid" />
+                                <input type="hidden" name="CartItems[@i].proname" value="@Model.CartItems[i].proname" />
+                                <input type="hidden" name="CartItems[@i].price" value="@Model.CartItems[i].price" />
+                                <input type="hidden" name="CartItems[@i].qty" value="@Model.CartItems[i].qty" />
+                                <input type="hidden" name="CartItems[@i].extras" value="@Model.CartItems[i].extras" />
+                                <input type="hidden" name="CartItems[@i].extrasCost" value="@Model.CartItems[i].extrasCost" />
+                                <input type="hidden" name="CartItems[@i].bill" value="@Model.CartItems[i].bill" />
+                            }
+
+                            <br />
+                            <br />
+
+                            <!-- Submit Button -->
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <input type="submit" value="Reserve Order" class="btn btn-primary" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="displayInfo"></div>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+        $(document).ready(function () {
+            // Handle the click event of the "Display Information" button
+            $("#displayInfoButton").click(function () {
+                // Retrieve values from reservation form
+                var customerName = $("#Reservation_Customer_Name").val();
+                var mail = $("#Reservation_Mail").val();
+                var number = $("#Reservation_Number").val();
+                var seating = $("#Reservation_Seating option:selected").text();
+                var date = $("#Reservation_Date").val();
+                var time = $("#Reservation_Time").val();
+                var time = "08:00 AM";
+                // Retrieve cart items information
+                var cartInfo = "";
+                $(".quantity").each(function () {
+                    var qty = $(this).text();
+                    var productName = $(this).closest("tr").find(".product-name").text();
+                    var price = $(this).closest("tr").find(".price").text();
+                    cartInfo += "Quantity: " + qty + "<br>" + productName + price;
+
+                });
+
+                // Display the information
+                var displayInfo = "Customer Name: " + customerName + "<br>" +
+                    "Mail: " + mail + "<br>" +
+                    "Number: " + number + "<br>" +
+                    "Seating: " + seating + "<br>" +
+                    "Date: " + date + "<br>" +
+                    "Time: " + time + "<br>" +
+                    "<h3>Cart Items:</h3>" +
+                    cartInfo;
+
+                // Update the displayInfo div
+                $("#displayInfo").html(displayInfo);
+            });
+        });
+                        </script>
+                    </div>
+                }
+            }
+
+        }
+    }
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />

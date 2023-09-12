@@ -15,10 +15,7 @@
                 <h1 class="card-title">Reservation made successfully!</h1>
                 <h3 class="card-text"> The process of checking in:</h3>
                 <p class="card-text">
-                    Please <b> @Html.ActionLink("Click Here", "Reservations", "Home")</b>  to be directed back to the main page where you can check in with your Booking ID.
-                    Please take note that you can only check-in within 20 minutes of reservation and you have to be present at the restaurant. Make sure you notify the waiter at the restaurant before checking in. If you forget your reservation
-                    details, no need to worry as you will recieve an email with all information regarding your booking details that will be checked by the waiter. A qr code will be scanned once checked-in
-                    confirming your reservation
+                    Please <b> @Html.ActionLink("Click Here", "Reservations", "Home")</b>
                 </p>
 
                 @if (!string.IsNullOrEmpty(Request.QueryString["bookingId"]))

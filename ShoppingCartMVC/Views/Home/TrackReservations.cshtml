@@ -4,7 +4,6 @@
     ViewBag.Title = "TrackReservations";
 }
 
-<h2>Track Reservations</h2>
 
 <style>
     /* Style for the parent container */
@@ -17,65 +16,62 @@
     /* Style for the left container */
     .left-container {
         flex: 1;
-        margin-right: 20px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
     }
 
     /* Style for the right container */
     .right-container {
         flex: 1;
-        padding: 20px;
         background-color: #f2f2f2;
+        padding: 20px; /* Adjust padding as needed */
         border: 1px solid #ddd;
-        border-radius: 5px;
+        border-radius: 15px;
+        margin-left: -50px;
     }
 
-    /* Style for the "Generate Output" form */
-    form {
-        margin-bottom: 20px;
+
+    /* Style for the table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
     }
 
-    /* Style for the "Reservations for Selected Date" box */
-    .output-box {
-        background-color: #fff;
+    /* Style for table headers */
+    th {
+        background-color: #ddd;
+        text-align: left;
+    }
+
+    /* Style for table cells */
+    td {
         border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 8px;
     }
 
-        /* Style for the list inside the "Reservations for Selected Date" box */
-        .output-box ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        /* Style for list items in the "Reservations for Selected Date" box */
-        .output-box li {
-            margin-bottom: 5px;
-        }
+    .card {
+        border: 2px solid green;
+    }
 </style>
 
 <div class="container">
-    <!-- Left Container -->
-    <div class="left-container">
-        <h3>All Reservations</h3>
-        <ul>
-            @foreach (var reservation in Model)
-            {
-                <li>@(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : "N/A")</li>
-            }
-        </ul>
-    </div>
-
     <!-- Right Container -->
-    <div class="right-container">
+    <div class="right-container" style="order: 1; width: 200%; margin-right: 80px;">
         <h3>Generate Output</h3>
         <form action="@Url.Action("GenerateOutput", "Home")" method="post">
             <label for="date">Select Date:</label>
             <input type="date" id="date" name="date" required>
             <br>
-            <input type="submit" value="Display Reservations for Date">
+            <br />
+            <br />
+            <button type="submit" class="btn btn-success" style="width: 100%;">Display</button>
         </form>
-
+        <br />
+        <form action="/Home/OpenTable" method="post">
+            <button type="submit" class="btn btn-success" style="width: 100%;">Reserve Table</button>
+        </form>
         <!-- Display reservations for the selected date here -->
         <div class="output-box">
             @if (ViewBag.SelectedDateReservations != null)
@@ -90,5 +86,104 @@
             }
         </div>
     </div>
+
+    <!-- Left Container -->
+    <div class="left-container" style="order: 2;">
+        <h3>All Reservations</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>BookingID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Customer Name</th>
+                    <th>Email</th>
+                    <th>Number</th>
+                    <th>Seating</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reservation in Model)
+                {
+                    <tr>
+                        <td>@reservation.BookingId</td>
+                        <td>
+
+                            @if (reservation.Date.HasValue)
+                            {
+                                @reservation.Date.Value.ToShortDateString()
+                            }
+                        </td>
+                        <td>
+                            @(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : string.Empty)
+                        </td>
+                        <td>@reservation.Customer_Name</td>
+                        <td>@reservation.Mail</td>
+                        <td>@reservation.Number</td>
+                        <td>@reservation.Seating</td>
+                        <td>
+                            <a href="@Url.Action("CompleteReservation", "Home", new { bookingId = reservation.BookingId })" class="btn btn-danger">Complete</a>
+
+
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 

@@ -47,6 +47,7 @@
             text-align: center;
         }
     </style>
+
 </head>
 <body>
     <div class="dashboard-container">
@@ -59,7 +60,7 @@
             </div>
         </div>
 
-        <div class="dashboard-box" onclick="navigateTo('WaiterMenu')">
+        <div class="dashboard-box" onclick="navigateTo('@Url.Action("WaiterMenu", "Home")')">
             <div class="dashboard-icon">
                 <i class="fas fa-book fa-4x"></i>
             </div>
@@ -68,16 +69,16 @@
             </div>
         </div>
 
-        <div class="dashboard-box" onclick="navigateTo('TrackReservations')">
+        <div class="dashboard-box" onclick="navigateTo('@Url.Action("TrackReservations", "Home")')">
             <div class="dashboard-icon">
                 <i class="fas fa-table fa-4x"></i>
             </div>
             <div class="dashboard-text">
-                Reservations
+                Reserve & Track Reservations
             </div>
         </div>
 
-        <div class="dashboard-box" onclick="navigateTo('DineIn')">
+        <div class="dashboard-box" onclick="navigateTo('@Url.Action("DineIn", "Home")')">
             <div class="dashboard-icon">
                 <i class="fas fa-receipt fa-4x"></i>
             </div>
@@ -86,7 +87,7 @@
             </div>
         </div>
 
-        <div class="dashboard-box" onclick="navigateTo('InstoreOrders')">
+        <div class="dashboard-box" onclick="navigateTo('@Url.Action("ReadyOrders", "Home")')">
             <div class="dashboard-icon">
                 <i class="fas fa-utensils fa-4x"></i>
             </div>
@@ -102,6 +103,7 @@
             }
         </script>
     </div>
+
 </body>
 </html>
 
