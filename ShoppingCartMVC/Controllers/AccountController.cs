@@ -197,12 +197,10 @@ namespace ShoppingCartMVC.Controllers
                     u.Image = Image.FileName.ToString();
                     var folder = Server.MapPath("~/Uploads/");
                     Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+
                 }
 
-                // Attach the entity to the context and mark only the Image property as modified
-                db.tblUsers.Attach(u);
-                db.Entry(u).Property(x => x.Image).IsModified = true;
-                db.SaveChanges();
+
             }
             catch (Exception ex)
             {
@@ -216,20 +214,83 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Rate And Tip
-        public ActionResult RateAndTip(int OrderId)
+        public ActionResult RateAndTip(int InvoiceId)
         {
-            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
-
+            var query = db.tblDrivers.SingleOrDefault(m => m.TblOrder.InvoiceId == InvoiceId);
+            TempData["i"] = InvoiceId;
             if (query == null)
             {
-                // Handle case where driver is not found
                 return HttpNotFound();
             }
 
-            return View(query);
+            var driverUser = query.User;
+
+            string driverName = driverUser.Name;
+            string driverEmail = driverUser.Email;
+            string driverImage = driverUser.Image; 
+            double driverRating = driverUser.Rating; 
+            double driverTips = driverUser.Tips;
+
+            var vmodel = new RateAndTipVM
+            {
+                DriverName = driverName,
+                DriverEmail = driverEmail,
+                DriverImage = driverImage,
+                DriverRating = driverRating,
+                DriverTips = driverTips
+            };
+            return View(vmodel);
+        }
+        [HttpPost]
+        public ActionResult RateAndTip(RateAndTipVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                int inv = (int)TempData["i"];
+                var query = db.tblDrivers.SingleOrDefault(m => m.TblOrder.InvoiceId == inv);
+
+                var user = db.tblUsers.SingleOrDefault(u => u.UserId == query.UserId);
+
+                if (user != null)
+                {
+                    
+                    if (model.IsCustomTip)
+                    {
+                        
+                        user.Tips += model.CustomTip;
+                    }
+                    else
+                    {
+                        
+                        user.Tips += 0; 
+                    }
+                  
+                    user.Rating = model.DriverRating;
+                  
+                    db.SaveChanges();
+
+                    return Content("<script>" +
+                       "function callPayPal() {" +
+                       "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + model.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/Thanks';" +
+                       "}" +
+                       "callPayPal();" +
+                       "</script>");
+                }
+                else
+                {               
+                    return HttpNotFound();
+                }
+            }           
+            return View(model);
         }
 
 
         #endregion
+
+
+        public ActionResult Thanks()
+        {
+            return View();
+        }
     }
 }

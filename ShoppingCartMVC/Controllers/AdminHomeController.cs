@@ -190,7 +190,7 @@ namespace ShoppingCartMVC.Controllers
                     return Content("<script>" +
                 "function callPayPal() {" +
                 "var InvID = " + (int)TempData["id"] + ";" +
-                "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + aiv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377/AdminHome/AdminInvoice?InvID=' + InvID;" +
+                "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + aiv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=SupplierOrder&return=https://2023grp01a.azurewebsites.net/AdminHome/AdminInvoice?InvID=' + InvID;" +
                 "}" +
                 "callPayPal();" +
              "</script>");

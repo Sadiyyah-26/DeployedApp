@@ -1,10 +1,10 @@
-﻿@model ShoppingCartMVC.Models.Drivers
+﻿@model ShoppingCartMVC.Models.RateAndTipVM
 
 <head>
     <title>Rate & Tip</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 3px solid #04d47a;
         }
 
         .form-group {
@@ -25,12 +25,11 @@
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-            @using (Html.BeginForm("RateAndTip", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("RateAndTip", "Account", FormMethod.Post))
             {
                 <div class="form-horizontal">
                     <hr />
-                    <div class="col-lg-6">
-                        <input type="hidden" name="id" value="@Model.DriverName" />
+                    <div class="col-lg-6 mx-auto">
                         <img src="~/Uploads/@Model.DriverImage" style="height:250px;width:100%" />
                     </div>
 
@@ -41,22 +40,36 @@
                         <p>Current Rating: <h2><strong>@Model.DriverRating</strong></h2></p>
                     </div>
 
-
                     <div class="form-group">
-                        <span>Your Rating: <p>@Html.RadioButtonFor(rat => rat.DriverRating, 1) 1 @Html.RadioButtonFor(rat => rat.DriverRating, 2) 2 @Html.RadioButtonFor(rat => rat.DriverRating, 3) 3 @Html.RadioButtonFor(rat => rat.DriverRating, 4) 4 @Html.RadioButtonFor(rat => rat.DriverRating, 5) 5</p></span>
+                        <span>Your Rating:</span>
+                        <div class="radio-group">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label>
+                                    @Html.RadioButtonFor(model => model.DriverRating, i) &ensp;
+                                    @i
+                                    &ensp; &ensp;
+                                </label>
+
+                            }
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <span>Your Tip: <p>@Html.RadioButtonFor(tip => tip.DriverTips, 10 / 100) 10% @Html.RadioButtonFor(tip => tip.DriverTips, 15 / 100) 15% @Html.RadioButtonFor(tip => tip.DriverTips, 20 / 100) 20% @Html.RadioButtonFor(tip => tip.DriverTips, 25 / 100) 25% @Html.RadioButtonFor(tip => tip.DriverTips, 30 / 100) 30%</p></span>
+                        <span>Your Tip:</span>
+                        <div class="radio-group">
+                            @Html.RadioButtonFor(model => model.IsCustomTip, true) Custom Amount
+                            <br />
+                            @Html.RadioButtonFor(model => model.IsCustomTip, false) No Tip
+                            @Html.TextBoxFor(model => model.CustomTip, new { @class = "form-control" })
+                        </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="display: flex;">
                         <input type="submit" value="Proceed" class="btn btn-success" />
-                    </div>
-
-                    <p style="text-align:center">
+                        &ensp;
                         <a href="@Url.Action("Index", "Home")" class="btn btn-dark">Home</a>
-                    </p>
+                    </div>
                 </div>
                 <p>@TempData["msg"]</p>
             }

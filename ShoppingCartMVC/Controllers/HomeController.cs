@@ -426,7 +426,7 @@ namespace ShoppingCartMVC.Controllers
                 {
                     return Content("<script>" +
                         "function callPayPal() {" +
-                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://localhost:44377//Home/Success';" +
+                        "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + iv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=FoodOrder&return=https://2023grp01a.azurewebsites.net/Home/Success';" +
                         "}" +
                         "callPayPal();" +
                         "</script>");
@@ -800,11 +800,10 @@ namespace ShoppingCartMVC.Controllers
 
 
             string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
-            string url = Url.Action("RateAndTip", "Account", new { OrderId = TempData["oId"] });
+            string url = Url.Action("RateAndTip", "Account", new { InvoiceId = TempData["oId"] });
             string link = $"{baseUrl}{url}";
 
-            //var urlHelper = new UrlHelper(ControllerContext.RequestContext);
-            //var rateAndTipUrl = urlHelper.Action("RateAndTip", "Account", new { OrderId = orderId }, Request.Url.Scheme);
+          
             var body = "Dear " + name + ",<br><br>" +
                 "Your Order with Invoice #" + oId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
                 "Thank you for choosing Turbo Meals!<br>" +
