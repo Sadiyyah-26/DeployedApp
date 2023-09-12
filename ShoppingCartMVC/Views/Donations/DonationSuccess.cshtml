@@ -1,7 +1,28 @@
-﻿
-@{
-    ViewBag.Title = "DonationSuccess";
-}
+﻿<head>
+    <title>Donation Successful</title>
+    <style>
+        .card {
+            border: 3px solid #04d47a;
+        }
+    </style>
+</head>
 
-<h2>DonationSuccess</h2>
+<br />
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="card-title">Donation Made Successfully!</h1>
+                <h3 class="card-text"> Thank you for your contribution.</h3>
+                <p class="card-text">Please <b> @Html.ActionLink("Click Here", "Index", "Home")</b>  to return back to Turbo Meals Home.  </p>
 
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <img src="~/Images/donate8.jpg" class="card-img" alt="..." />
+        </div>
+    </div>
+</div>
+
+<br />
