@@ -172,6 +172,7 @@
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\LowStockVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
+    <Compile Include="Models\RateAndTipVM.cs" />
     <Compile Include="Models\ReserveOrderViewModel.cs" />
     <Compile Include="Models\SelectedProductModel.cs" />
     <Compile Include="Models\SupplierIngredients.cs" />
@@ -259,6 +260,7 @@
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
     <Content Include="Images\order-success.jpg" />
     <Content Include="Images\p.jpg" />
+    <Content Include="Images\rateDriver.jpg" />
     <Content Include="Images\Reg.png" />
     <Content Include="Images\res.jpg" />
     <Content Include="Images\ReserveSuccess.png" />
@@ -408,6 +410,7 @@
     <Content Include="Views\Account\UserDetails.cshtml" />
     <Content Include="Views\Home\ReserveOrder.cshtml" />
     <Content Include="Views\Home\OpenTable.cshtml" />
+    <Content Include="Views\Account\Thanks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
