@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.Drivers
+﻿@model List<IGrouping<int?, ShoppingCartMVC.Models.Drivers>>
 
 <head>
     <title>Driver Order Collection</title>
@@ -14,58 +14,60 @@
 @using (Html.BeginForm("DriverGetOrder", "Home", FormMethod.Post))
 {
 
-    <div class="col-lg-10 grid-margin stretch-card mx-auto">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title" style="text-align:center"><u>Order Collection For Delivery</u></h4>
-                <br />
-                <p class="card-description">
-                    Customer Order No : <b>#@Html.DisplayFor(m => Model.OrderId) </b>
-                </p>
-                <br />
+    foreach (var group in Model)
+    {
+        <div class="col-lg-10 grid-margin stretch-card mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title" style="text-align:center"><u>Order Collection For Delivery</u></h4>
+                    <br />
+                    <p class="card-description">
+                        Customer Orders with Invoice No : <b>#@group.Key </b>
+                    </p>
+                    <br />
 
-                @*table for showing order details*@
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Unit Price</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    @*table for showing order details*@
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Order No.</th>
+                                    <th>Item</th>     
+                                    <th>Qty</th>
+                                </tr>
+                            </thead>
+                            @foreach (var orderInfo in group)
+                            {
+                                <tbody>
 
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(m => Model.TblOrder.TblProduct.P_Name)
-                                </td>
-                                <td>
-                                    R  @Html.DisplayFor(m => Model.TblOrder.Unit).00
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(m => Model.TblOrder.Qty)
-                                </td>
-                                <td>
-                                    R @Html.DisplayFor(m => Model.TblOrder.Total).00
-                                </td>
+                                    <tr>
+                                        <td>
+                                            @orderInfo.OrderId
+                                        </td>
+                                        <td>
+                                            @orderInfo.TblOrder.TblProduct.P_Name
+                                        </td>
+                                        <td>
+                                            @orderInfo.TblOrder.Qty
+                                        </td>
+                                    </tr>
 
-                            </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
 
-                        </tbody>
-                    </table>
+                    <br />
+                    <p><input type="checkbox" id="OrderCollected" name="OrderCollected" value="true" required /> Order Collected</p>
+
+
+                    <br />
+                    <input type="submit" value="Directions" class="btn btn-info" />
+
                 </div>
-                <br />
-                <p><input type="checkbox" id="OrderCollected" name="OrderCollected" value="true" required /> Order Collected</p>
-
-
-                <br />
-                <input type="submit" value="Directions" class="btn btn-info" />
-               
             </div>
         </div>
-    </div>
+    }
 }
 <br />
 <br />

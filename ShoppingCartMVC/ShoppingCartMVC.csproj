@@ -160,6 +160,7 @@
     <Compile Include="Models\AccountPoints.cs" />
     <Compile Include="Models\AdminCart.cs" />
     <Compile Include="Models\AdminInv_VM.cs" />
+    <Compile Include="Models\AssignDriverVM.cs" />
     <Compile Include="Models\BillViewModel.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
@@ -350,7 +351,6 @@
     <Content Include="Views\tblRefunds\Edit.cshtml" />
     <Content Include="Views\tblRefunds\Index.cshtml" />
     <Content Include="Views\Home\PrepStaff.cshtml" />
-    <Content Include="Views\Home\PrepOrder.cshtml" />
     <Content Include="Views\Home\CheckIn.cshtml" />
     <Content Include="Views\Home\CheckInCustomers.cshtml" />
     <Content Include="Views\Home\CheckoutReservation.cshtml" />

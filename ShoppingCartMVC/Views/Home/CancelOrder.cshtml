@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.tblOrder
+﻿@model List<IGrouping<int?,ShoppingCartMVC.Models.tblOrder>>
 @{
     ViewBag.Title = "CancelOrder";
 }
@@ -31,17 +31,30 @@
         <div class="col-lg-5 grid-margin stretch-card mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title" style="text-align:center"><u>Order #@Html.DisplayFor(m => Model.OrderId) Details</u></h4>
+                    <h4 class="card-title" style="text-align:center"><u>Order Details</u></h4>
                     <br />
-                    <p class="cncl"> Order          : @Html.DisplayFor(m => m.TblProduct.P_Name) x @Html.DisplayFor(m => m.Qty) </p>
-                    <p class="cncl"> Total Amount   :  R @Html.DisplayFor(m => m.TblInvoice.Bill).00 </p>
-                    <p class="cncl"> Payment Method : @Html.DisplayFor(m => m.TblInvoice.Payment) </p>
-                    <p class="cncl"> Payment Status : @Html.DisplayFor(m => m.TblInvoice.Payment_Status) </p>
 
-                    <br />
-                    
-                    <p class="cncl"><a href="@Url.Action("OrderDetail","Home", new { id=Model.TblInvoice.TblUser.UserId })" class="btn btn-dark">Back</a> &ensp;<input type="submit" id="cancelButton" value="Cancel Order" class="btn btn-danger" /> </p>
-                    
+                    @foreach (var group in Model)
+                    {
+                        <h5 style="text-align:center">Invoice ID: @group.Key</h5>
+
+                        foreach (var order in group)
+                        {
+                            <p class="cncl"> Order Item: @order.TblProduct.P_Name - R @order.TblProduct.Unit.00 x @order.Qty </p>
+
+                        }
+                        if (group.Any())
+                        {
+
+                            var firstOrder = group.First();
+                            <p class="cncl"> Total Amount: R @firstOrder.TblInvoice.Bill.00 </p>
+                            <p class="cncl"> Payment Method: @firstOrder.TblInvoice.Payment </p>
+                            <p class="cncl"> Payment Status: @firstOrder.TblInvoice.Payment_Status </p>
+                        }
+                    }
+
+                    <p class="cncl"><a href="@Url.Action("OrderDetail","Home", new { id = Model.FirstOrDefault()?.First()?.TblInvoice.TblUser.UserId ?? 0 })" class="btn btn-dark">Back</a> &ensp;<input type="submit" id="cancelButton" value="Cancel Order" class="btn btn-danger" /> </p>
+
                 </div>
             </div>
         </div>

@@ -62,7 +62,7 @@
         <input type="text" id="txtDestination" placeholder="Enter Destination...." size="35" />
         <br />*@
                     <br />
-                    <input type="button" value="Get Route" onclick="GetRoute()" /> &ensp; <a href="@Url.Action("SendMail","Home", new { OrderId = Model.OrderId })" class="nextPage"> Notify Customer</a>
+                    <input type="button" value="Get Route" onclick="GetRoute()" /> &ensp; <a href="@Url.Action("SendMail","Home", new { InvoiceId = Model.TblOrder.InvoiceId })" class="nextPage"> Notify Customer</a>
                     <br />
                     <br />
 

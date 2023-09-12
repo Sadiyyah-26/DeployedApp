@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.tblOrder
+﻿@model List<IGrouping<int?,ShoppingCartMVC.Models.tblOrder>>
 
 <head>
     <title>Update Customer Order Status</title>
@@ -17,34 +17,48 @@
             <h4 class="card-title" style="text-align:center"><u> Order Information </u></h4>
             @using (Html.BeginForm("ConfirmOrder", "Home", FormMethod.Post))
             {
-                <br />
-                <p style="text-align:center;"><b>Order No. : #@Html.DisplayFor(model => Model.OrderId)</b></p>
-
-                <p style="text-align:center;">Customer : @Html.DisplayFor(model => Model.TblInvoice.TblUser.Name)</p>
-                <p style="text-align:center;">Payment Method : @Html.DisplayFor(model => model.TblInvoice.Payment)</p>
-                <p style="text-align:center;"> Order : @Html.DisplayFor(model => model.TblProduct.P_Name) x @Html.DisplayFor(model => model.Qty)</p>
-                <p style="text-align:center;">Total : R @Html.DisplayFor(model => model.TblInvoice.Bill).00</p>
-                <p style="text-align:center;">Order Date: @Html.DisplayFor(model => model.OrderDate)</p>
-
-                if (Model.Method == "Collection")
+                foreach (var group in Model)
                 {
-                    <div class="card col-lg-5 grid-margin mx-auto">
-                        <div class="card-body">
-                            <p style="text-align:center;"><b>Update Order Status: </b></p>
-                            <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
-                            <br />
-                            <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
-                            <br />
-                        </div>
-                    </div>
                     <br />
-                    <p style="text-align:center;"><input type="submit" value="Update" class="btn btn-success" /></p>
+                    <p style="text-align:center;"><b>Invoice ID: @group.Key</b></p>
+                    foreach (var order in group)
+                    {
+                        <p style="text-align:center;"> Order : @order.TblProduct.P_Name </p>
+                        <p style="text-align:center;">        R @order.TblProduct.Unit.00 x @order.Qty</p>
+
+                    }
+                    if (group.Any())
+                    {
+
+                        var firstOrder = group.First();
+                        <p style="text-align:center;">Customer : @firstOrder.TblInvoice.TblUser.Name</p>
+                        <p style="text-align:center;">Payment Method : @firstOrder.TblInvoice.Payment</p>
+                        <p style="text-align:center;">Total : R @firstOrder.TblInvoice.Bill.00</p>
+                        <p style="text-align:center;">Order Date: @firstOrder.OrderDate</p>
+
+                        if (firstOrder.Method == "Collection")
+                        {
+                            <div class="card col-lg-5 grid-margin mx-auto">
+                                <div class="card-body">
+                                    <p style="text-align:center;"><b>Update Order Status: </b></p>
+                                    <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
+                                    <br />
+                                    <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
+                                    <br />
+                                </div>
+                            </div>
+                            <br />
+                            <p style="text-align:center;"><input type="submit" value="Update" class="btn btn-success" /></p>
+                        }
+                    }
+
+                    <p style="text-align:center"> <a href="@Url.Action("GetAllOrderDetail", "Home")" class="btn btn-dark">Back</a></p>
                 }
-
-
-               <p style="text-align:center"> <a href="@Url.Action("GetAllOrderDetail", "Home")" class="btn btn-dark">Back</a></p>
             }
         </div>
+
+
+
     </div>
 </div>
 <br />

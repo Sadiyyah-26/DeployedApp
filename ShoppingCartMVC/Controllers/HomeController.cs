@@ -451,7 +451,9 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult GetAllOrderDetail()
         {
-            var query = db.tblOrders.Where(m => m.OrderReady == "Ready").ToList();
+            var query = db.tblOrders.Where(m => m.OrderReady == "Ready")
+                .GroupBy(m => m.InvoiceId)
+                .Select(m => m.FirstOrDefault()).ToList();
             return View(query);
         }
 
@@ -459,10 +461,11 @@ namespace ShoppingCartMVC.Controllers
 
         #region  Confirm Order by Admin
 
-        public ActionResult ConfirmOrder(int OrderId)
+        public ActionResult ConfirmOrder(int? InvoiceId)
         {
-            TempData["orderNum"] = OrderId;
-            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
+            TempData["orderNum"] = InvoiceId;
+            var query = db.tblOrders.Where(m => m.InvoiceId == InvoiceId)
+                .GroupBy(m => m.InvoiceId).ToList();
             return View(query);
         }
 
@@ -488,7 +491,7 @@ namespace ShoppingCartMVC.Controllers
 
 
             var body = "Dear " + name + ",<br><br>" +
-           "Your Order #" + oId + " has been collected from Turbo Meals.<br><br>Payment Status: Paid.<br><br>Thank you for choosing Turbo Meals!";
+           "Your Order with Invoice #" + oId + " has been collected from Turbo Meals.<br><br>Payment Status: Paid.<br><br>Thank you for choosing Turbo Meals!";
 
 
 
@@ -525,7 +528,9 @@ namespace ShoppingCartMVC.Controllers
         #region Deliveries for Driver
         public ActionResult DriverDeliveries(int id)
         {
-            var query = db.tblDrivers.Where(m => m.UserId == id).ToList();
+            var query = db.tblDrivers.Where(m => m.UserId == id)
+                .GroupBy(m => m.TblOrder.InvoiceId)
+                .Select(m => m.FirstOrDefault()).ToList();
             return View(query);
 
         }
@@ -554,152 +559,92 @@ namespace ShoppingCartMVC.Controllers
 
         #region Admin Assigns Driver
 
-        public ActionResult AssignDriver(int OrderId, tblOrder o)
+        public ActionResult AssignDriver(int? InvId, tblOrder o)
         {
-                var dr = db.tblUsers.Where(u => u.RoleType == 3).ToList();
-
-                var driverSelectList = dr.Select(u => new SelectListItem
+            var drivers = db.tblUsers
+                .Where(u => u.RoleType == 3)
+                .Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.UserId.ToString()
-                });
+                })
+                .ToList();
 
-                ViewData["UserId"] = driverSelectList;
-            
-
-            if (o.OrderId == OrderId)
+            var viewModel = new AssignDriverVM
             {
-                TempData["OrderID"] = o.OrderId;
+                DriverSelectList = drivers,
+                InvoiceId = InvId
+            };
+
+           
+            var firstMatchingOrder = db.tblOrders
+                .Where(t => t.InvoiceId == InvId)
+                .FirstOrDefault();
+
+            if (firstMatchingOrder != null)
+            {
+                viewModel.OrderDate = firstMatchingOrder.OrderDate;
+                viewModel.Address = firstMatchingOrder.Address;
             }
-       
-                var match1 = db.tblOrders.Any(n => n.OrderId == OrderId);
-                var match2 = db.tblOrders.Any(m => m.OrderId == OrderId);
 
-                if (match1)
-                {
+            viewModel.SelectedUserId = int.Parse(drivers.FirstOrDefault()?.Value);
 
-                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.OrderDate).FirstOrDefault();
-                    if (value != null)
-                    {
-                        TempData["OrderDate"] = value;
-                    }
-                    else
-                    {
-                        TempData["OrderDate"] = "";
-                    }
-
-                }
-
-                if (match2)
-                {
-                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.Address).FirstOrDefault();
-                    if (value != null)
-                    {
-                        TempData["Address"] = value;
-                    }
-                    else
-                    {
-                        TempData["Address"] = "";
-                    }
-                }
-
-            
-
-            return View();
+            return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult AssignDriver(Drivers d, tblUser u, int OrderId, tblOrder o)
+        public ActionResult AssignDriver(int? InvId, AssignDriverVM vm)
         {
+            if (ModelState.IsValid)
+            {
+                
+                int selectedDriverId = vm.SelectedUserId;
 
-            
-                var dri = db.tblUsers.Where(ut => ut.RoleType == 3).ToList();
+                string selectedName = "";
 
-                var driverSelectList = dri.Select(ut => new SelectListItem
+                if (vm.SelectedUserId != 0) 
                 {
-                    Text = ut.Name,
-                    Value = ut.UserId.ToString()
-                });
+                    int selectedUserId = vm.SelectedUserId; // Get the selected driver's ID
 
-                ViewData["UserId"] = driverSelectList;
-            
+                    
+                    var selectedDriver = db.tblUsers.SingleOrDefault(u => u.UserId == selectedUserId);
 
-            Drivers dr = new Drivers();
-
-            
-                var match = db.tblUsers.Any(n => n.UserId == d.UserId);
-
-                if (match)
-                {
-
-                var user = db.tblUsers.FirstOrDefault(t => t.UserId == d.UserId);
-
-                if (user != null)
-                {
-                    dr.DriverName = user.Name;
-                    dr.DriverImage = user.Image;
-                    dr.DriverRating = user.Rating;
-                    dr.DriverTips = user.Tips;
-                    dr.DriverEmail = user.Email; // Add this line
-                }
-                else
-                {
-                    dr.DriverName = "";
-                    dr.DriverImage = ""; // Set default values if needed
-                    dr.DriverRating = 0; // Set default values if needed
-                    dr.DriverTips = 0;   // Set default values if needed
-                    dr.DriverEmail = ""; // Set default values if needed
+                    if (selectedDriver != null)
+                    {
+                        selectedName = selectedDriver.Name; // Get the name of the selected driver
+                    }
                 }
 
+               // Retrieve all order records with the same InvoiceId
+                var ordersWithSameInvoice = db.tblOrders
+                    .Where(o => o.InvoiceId == InvId)
+                    .ToList();
+
+                foreach (var order in ordersWithSameInvoice)
+                {
+                    // Create a new driver record and associate it with the order
+                    var driver = new Drivers
+                    {
+                        UserId = selectedDriverId,
+                        OrderId = order.OrderId,
+                        DriverName = selectedName, 
+                        OrderDate = (DateTime)order.OrderDate, 
+                        DeliveryAddress = order.Address 
+                    };
+
+                    db.tblDrivers.Add(driver);
+
+                   
+                    order.TblInvoice.Status = "Out for Delivery";
+                }
+
+               
+                db.SaveChanges();
+
+                
+                return RedirectToAction("GetAllOrderDetail");
             }
-            
-
-
-
-            dr.OrderId = OrderId;
-            dr.UserId = d.UserId;
-
-           
-                var match1 = db.tblOrders.Any(n => n.OrderId == OrderId);
-                var match2 = db.tblOrders.Any(m => m.OrderId == OrderId);
-
-                if (match1)
-                {
-
-                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.OrderDate).FirstOrDefault();
-                    if (value != null)
-                    {
-                        dr.OrderDate = (DateTime)value;
-                    }
-
-                }
-
-                if (match2)
-                {
-                    var value = db.tblOrders.Where(t => t.OrderId == o.OrderId).Select(t => t.Address).FirstOrDefault();
-                    if (value != null)
-                    {
-                        dr.DeliveryAddress = value;
-                    }
-                    else
-                    {
-                        dr.DeliveryAddress = "";
-                    }
-                }
-
-            
-
-
-            db.tblDrivers.Add(dr);
-            db.SaveChanges();
-
-            tblOrder tblOrder = db.tblOrders.Find(OrderId);
-            tblOrder.TblInvoice.Status = "Out for Delivery";
-
-            db.Entry(tblOrder).State = EntityState.Modified;
-            db.SaveChanges();
-
-            return RedirectToAction("GetAllOrderDetail");
+            return View(vm);
         }
         #endregion
 
@@ -792,47 +737,67 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Driver Views Individual Delivery Details
-        public ActionResult DeliveryDetails(int OrderId)
+        public ActionResult DeliveryDetails(int InvoiceID)
         {
-            TempData["oId"] = OrderId;
-            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
-            return View(query);
+            TempData["oId"] = InvoiceID;
+            var driverOrdersSameInv = db.tblDrivers
+       .Where(driver => driver.TblOrder.InvoiceId == InvoiceID)
+       .ToList();
+
+
+            var groupedOrders = driverOrdersSameInv
+                .GroupBy(driver => driver.TblOrder.InvoiceId)
+                .ToList();
+
+            return View(groupedOrders);
         }
 
         [HttpPost]
         public ActionResult DeliveryDetails(Drivers drivers, bool CashPaid)
         {
 
-            int orderId = (int)TempData["oId"];
-            tblOrder tblOrder = db.tblOrders.Find(orderId);
-            tblOrder.TblInvoice.Status = "Order Delivered";
+            int invoiceId = (int)TempData["oId"];
+            var qry = db.tblOrders.Where(m => m.InvoiceId == invoiceId).ToList();
 
             string payment = "";
-            tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
-            if (tblInvoice.Payment_Status == "Pending")
+            string userEmail = "";
+            string userName = "";
+            string userAddress = "";
+            if (qry.Any())
             {
-                if (CashPaid)
-                {
-                    tblInvoice.Payment_Status = "Paid";
-                }
-                else
-                {
-                    tblInvoice.Payment_Status = "NPaid";
-                }
-                payment = "Please note, your Payment Status has now been updated to Paid.<br><br>";
+                var firstOrder = qry.First();
 
+                userEmail = firstOrder.TblInvoice.TblUser.Email;
+                userName = firstOrder.TblInvoice.TblUser.Name;
+                userAddress = firstOrder.Address;
+                foreach (var i in qry)
+                {
+                    i.TblInvoice.Status = "Order Delivered";
+                    i.TblInvoice.Time_CD = System.DateTime.Now;
+
+                    if (i.TblInvoice.Payment_Status == "Pending")
+                    {
+                        if (CashPaid)
+                        {
+                            i.TblInvoice.Payment_Status = "Paid";
+                        }
+                        else
+                        {
+                            i.TblInvoice.Payment_Status = "NPaid";
+                        }
+
+                        payment = "Please note, your Payment Status has now been updated to Paid.<br><br>";
+                    }
+                    payment = "Payment Status: Paid<br><br>";
+                }
+
+                db.SaveChanges();
             }
-            payment = "Payment Status: Paid<br><br>";
+            string oId = invoiceId.ToString();
+            string toEmail = userEmail;
+            string name = userName;
+            string address = userAddress;
 
-            db.Entry(tblOrder).State = EntityState.Modified;
-            db.SaveChanges();
-            db.Entry(tblInvoice).State = EntityState.Modified;
-            db.SaveChanges();
-
-            string oId = orderId.ToString();
-            string toEmail = tblOrder.TblInvoice.TblUser.Email;
-            string name = tblOrder.TblInvoice.TblUser.Name;
-            string address = tblOrder.Address;
 
             string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
             string url = Url.Action("RateAndTip", "Account", new { OrderId = TempData["oId"] });
@@ -841,7 +806,7 @@ namespace ShoppingCartMVC.Controllers
             //var urlHelper = new UrlHelper(ControllerContext.RequestContext);
             //var rateAndTipUrl = urlHelper.Action("RateAndTip", "Account", new { OrderId = orderId }, Request.Url.Scheme);
             var body = "Dear " + name + ",<br><br>" +
-                "Your Order #" + orderId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
+                "Your Order with Invoice #" + oId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
                 "Thank you for choosing Turbo Meals!<br>" +
                 "Click here to rate and tip your driver: " + link;
 
@@ -858,12 +823,13 @@ namespace ShoppingCartMVC.Controllers
                 smtp.Send(message);
             }
 
-            return RedirectToAction("DeliveryDetails", new { OrderId = orderId });
+            return RedirectToAction("DeliveryDetails", new { InvoiceID = invoiceId });
 
         }
 
         #endregion
 
+        //this not working for more than one order
         #region Admin Notify Customer for Collection
 
         public ActionResult NotifyCustomer(int OrderId)
@@ -872,7 +838,7 @@ namespace ShoppingCartMVC.Controllers
             var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
             return View(query);
         }
-
+        //this not working
         [HttpPost]
         public ActionResult NotifyCustomer(tblOrder o, bool orderReady)
         {
@@ -916,19 +882,26 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Directions for Driver
-        public ActionResult Map(int OrderId)
+        public ActionResult Map(int InvoiceID)
         {
+            var firstDriverOrder = db.tblDrivers
+        .Where(driver => driver.TblOrder.InvoiceId == InvoiceID)
+        .FirstOrDefault();
+
             
-            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
-            return View(query);
+            if (firstDriverOrder != null)
+            {               
+                return View(firstDriverOrder);
+            }
+            return View();         
         }
         #endregion
 
         #region Sending Delivery Notification
-        public ActionResult SendMail(int OrderId)
+        public ActionResult SendMail(int InvoiceId)
         {
-            TempData["oId2"] = OrderId;
-            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
+            TempData["oId2"] = InvoiceId;
+            var query = db.tblDrivers.Where(m => m.TblOrder.InvoiceId == InvoiceId).FirstOrDefault();
             return View(query);
         }
 
@@ -937,7 +910,7 @@ namespace ShoppingCartMVC.Controllers
         {
             int orderId = (int)TempData["oId2"];
             tblOrder tblOrder = db.tblOrders.Find(orderId);
-            //TempData["id"] = new { id = @Session["uid"] };
+           
             int id;
 
 
@@ -991,27 +964,35 @@ namespace ShoppingCartMVC.Controllers
             }
 
 
-            return RedirectToAction("Map", new { OrderId = orderId });
+            return RedirectToAction("DeliveryDetails", new { InvoiceID = orderId });
         }
         #endregion
 
         #region Driver Collects Order
-        public ActionResult DriverGetOrder(int OrderId)
+        public ActionResult DriverGetOrder(int InvoiceID)
         {
-            TempData["oId"] = OrderId;
-            var query = db.tblDrivers.SingleOrDefault(m => m.OrderId == OrderId);
-            return View(query);
+            TempData["oId"] = InvoiceID;
+
+            var driverOrdersSameInv = db.tblDrivers
+        .Where(driver => driver.TblOrder.InvoiceId == InvoiceID)
+        .ToList();
+
+
+            var groupedOrders = driverOrdersSameInv
+                .GroupBy(driver => driver.TblOrder.InvoiceId)
+                .ToList();
+           
+            return View(groupedOrders);
         }
 
         [HttpPost]
         public ActionResult DriverGetOrder(bool OrderCollected)
         {
-            int orderId = (int)TempData["oId"];
+            int invID = (int)TempData["oId"];
 
             if (OrderCollected)
             {
-
-                return RedirectToAction("Map", new { OrderId = orderId });
+                return RedirectToAction("Map", new { InvoiceID = invID });
             }
             return View();
         }
@@ -1019,7 +1000,7 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region New Orders Go to Staff for Prep
-        public ActionResult PrepStaff(int id)
+        public ActionResult PrepStaff()
         {
             var query = db.tblOrders.Where(m => m.OrderReady == "Being Prepared").ToList();
             return View(query);
@@ -1029,100 +1010,98 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Staff Makes Order Ready
-        public ActionResult PrepOrder(int OrderId)
-        {
-            TempData["cusOrder"] = OrderId;
-            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
-            return View(query);
-        }
-
         [HttpPost]
-        public ActionResult PrepOrder(bool Ready)
+        public ActionResult PrepOrder(int InvoiceId)
         {
-            int order = (int)TempData["cusOrder"];
-            tblOrder tblOrder = db.tblOrders.Find(order);
-            if (Ready)
+            var Order = db.tblOrders.Where(m => m.InvoiceId == InvoiceId);
+            if (Order != null)
             {
-                tblOrder.OrderReady = "Ready";
-            }
 
-            db.Entry(tblOrder).State = EntityState.Modified;
-
-            //update stock qty
-            var ingPro = db.IngredientProducts.Where(ip => ip.ProID == tblOrder.ProID).ToList();
-
-            foreach (var i in ingPro)
-            {
-                var ingID = i.Ing_ID;
-
-                var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-                var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-
-                int qtyToReduce = 0;
-                if (ingr != null)
+                var relatedOrders = db.tblOrders.Where(o => o.InvoiceId == InvoiceId).ToList();
+                foreach (var rec in relatedOrders)
                 {
-                    qtyToReduce = ingr.Ing_UnitsUsed * (int)tblOrder.Qty;
-                    ingr.Ing_StockyQty -= qtyToReduce;
+                    rec.OrderReady = "Ready";
 
-                    if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
+                    //update stock qty
+                    var ingPro = db.IngredientProducts.Where(ip => ip.ProID == rec.ProID).ToList();
+
+                    foreach (var i in ingPro)
                     {
-                        ingr.StockStatus = "Low Stock";
-                        //send qty alert email 
-                        string ing = ingr.Ing_Name;
-                        string qty = Convert.ToString(ingr.Ing_StockyQty);
-                        string suppl = supplIngr.TblSupplier.SupplName;
-                        //test for link redirect
-                        int supID = supplIngr.SupplierId;
+                        var ingID = i.Ing_ID;
 
-                        string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
-                        string url = Url.Action("Index", "AdminHome", new { id = supID });
-                        string link = $"{baseUrl}{url}";
+                        var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+                        var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
 
-                        var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
-                        content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: " + link; ;
-
-
-
-                        var email = new MailMessage();
-                        email.To.Add(new MailAddress("turbostaff786@gmail.com"));
-                        email.From = new MailAddress("turbomeals123@gmail.com");
-                        email.Subject = "Low Stock Alert!";
-                        email.Body = content;
-                        email.IsBodyHtml = true;
-
-                        using (var smtp = new SmtpClient())
+                        int qtyToReduce = 0;
+                        if (ingr != null)
                         {
-                            smtp.Send(email);
-                        }
+                            qtyToReduce = ingr.Ing_UnitsUsed * (int)rec.Qty;
+                            ingr.Ing_StockyQty -= qtyToReduce;
 
-                    }
+                            if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
+                            {
+                                ingr.StockStatus = "Low Stock";
+                                //send qty alert email 
+                                string ing = ingr.Ing_Name;
+                                string qty = Convert.ToString(ingr.Ing_StockyQty);
+                                string suppl = supplIngr.TblSupplier.SupplName;
+                                //test for link redirect
+                                int supID = supplIngr.SupplierId;
+
+                                string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+                                string url = Url.Action("Index", "AdminHome", new { id = supID });
+                                string link = $"{baseUrl}{url}";
+
+                                var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
+                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: " + link; ;
+
+
+
+                                var email = new MailMessage();
+                                email.To.Add(new MailAddress("turbostaff786@gmail.com"));
+                                email.From = new MailAddress("turbomeals123@gmail.com");
+                                email.Subject = "Low Stock Alert!";
+                                email.Body = content;
+                                email.IsBodyHtml = true;
+
+                                using (var smtp = new SmtpClient())
+                                {
+                                    smtp.Send(email);
+                                }
+
+                            }
+
+                        }
+                        db.Entry(ingr).State = EntityState.Modified;
+                    }//foreach ingr
+
 
                 }
-                db.Entry(ingr).State = EntityState.Modified;
-            }//foreach ingr
 
+                db.SaveChanges();
+            }
             db.SaveChanges();
             return RedirectToAction("PrepStaff", "Home", new { id = @Session["uid"] });
         }
         #endregion
 
         #region Customer Cancels Order
-        public ActionResult CancelOrder(int OrderId)
+        public ActionResult CancelOrder(int? InvoiceId)
         {
-            TempData["o"] = OrderId;
-            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
-
+            TempData["o"] = InvoiceId;
+            var query = db.tblOrders.Where(m => m.InvoiceId == InvoiceId)
+                .GroupBy(m => m.InvoiceId).ToList();
             return View(query);
         }
 
         [HttpPost]
         public ActionResult CancelOrder()
         {
-            int orderId = (int)TempData["o"];
-            tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
+            int invID = (int)TempData["o"];
+            tblInvoice tblInvoice = db.tblInvoices.Find(invID);
             tblInvoice.Status = "Cancelled";
 
-            string oId = orderId.ToString();
+            string oId = invID.ToString();
             string toEmail = tblInvoice.TblUser.Email;
             string name = tblInvoice.TblUser.Name;
             string total = tblInvoice.Bill.ToString();
@@ -1140,7 +1119,7 @@ namespace ShoppingCartMVC.Controllers
             }
 
             var body = "Dear " + name + ",<br><br>" +
-           "Your Order #" + orderId + " has successfully been cancelled as per your request.<br><br>" +
+           "Your Order with Invoice #" + invID + " has successfully been cancelled as per your request.<br><br>" +
             refund;
 
 
