@@ -1,0 +1,27 @@
+﻿<head>
+    <title>Order Complete</title>
+    <style>
+        .card {
+            border: 3px solid #04d47a;
+        }
+    </style>
+</head>
+
+<br />
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="card-title">Payment Complete!</h1>
+                @*<h3 class="card-text"> Please view your Order History to access your Invoice and track Order Status.</h3>*@
+                <p class="card-text">Please <b> @Html.ActionLink("Click Here", "POSDashboard", "Home")</b>  to return back to the dashboard.</p>
+            </div>
+        </div>
+        <div class="col-md-5">
+
+            <img src="~/Images/order-success.jpg" class="card-img" alt="..." />
+        </div>
+    </div>
+</div>
+
+<br />

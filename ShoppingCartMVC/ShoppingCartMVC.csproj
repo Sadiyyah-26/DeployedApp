@@ -264,6 +264,7 @@
     <Content Include="Images\Reg.png" />
     <Content Include="Images\res.jpg" />
     <Content Include="Images\ReserveSuccess.png" />
+    <Content Include="Images\sales-receipt %281%29.png" />
     <Content Include="Images\Vop-logo-retina.png" />
     <Content Include="Images\WFPLogo.png" />
     <Content Include="js\aos.js" />
@@ -411,6 +412,7 @@
     <Content Include="Views\Home\ReserveOrder.cshtml" />
     <Content Include="Views\Home\OpenTable.cshtml" />
     <Content Include="Views\Account\Thanks.cshtml" />
+    <Content Include="Views\Home\SuccessBill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

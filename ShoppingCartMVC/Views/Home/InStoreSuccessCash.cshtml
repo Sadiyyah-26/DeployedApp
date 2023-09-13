@@ -6,14 +6,34 @@
         /* Add your CSS styles for the receipt here */
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
         }
 
         .receipt {
+            flex: 1;
             width: 300px;
             margin: 0 auto;
             text-align: center;
             border: 1px solid #000;
             padding: 10px;
+        }
+
+        .image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .receipt-content {
+            width: 100%;
         }
 
         .header {
@@ -62,42 +82,70 @@
         .thank-you {
             margin-top: 20px;
         }
+
+        .green-button {
+            background-color: #4CAF50; /* Green color */
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px; /* Adjust the width and height as needed */
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+            .green-button:hover {
+                background-color: #45a049; /* Darker green color on hover */
+            }
     </style>
 </head>
 <body>
-    <div class="receipt">
-        <p class="restaurant-name">Turbo Meals</p>
-        <p class="address">123 Main Street, City, Country</p>
-        <p class="contact-details">Email: info@turbomeals.com | Phone: +123-456-7890</p>
-        <hr />
-        <p class="header">Receipt</p>
-        <p class="waiter-name">Waiter: @Session["User"]</p>
-        <p class="item">Order Number: @Model.OrderNumber</p>
-        <p class="item">Order Date: @Model.OrderDateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
-        <hr />
-        <p class="item">Products:</p>
-        <div class="products">
-            @foreach (var item in Model.Products)
-            {
-                <div class="product-item">
-                    <span>@item.ProductName</span>
-                    <span>@item.Qty - R @item.Total</span>
-                </div>
-            }
+    <div class="container">
+        <div class="receipt">
+            <p class="restaurant-name">Turbo Meals</p>
+            <p class="address"> 165 Bayview Road,Park Avenue,Durban,4087</p>
+            <p class="contact-details">
+                Email: turbomeals123@gmail.com | Phone: 031-456-2547
+            </p>
+            <hr />
+            <p class="header">Receipt</p>
+            <p class="waiter-name">Waiter: @Session["User"]</p>
+            <p class="item">Order Number: @Model.OrderNumber</p>
+            <p class="item">Order Date: @Model.OrderDateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            <hr />
+            <p class="item">Products:</p>
+            <div class="products">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="product-item">
+                        <span>@item.ProductName</span>
+                        <span>@item.Qty - R @item.Total</span>
+                    </div>
+                }
+            </div>
+            <hr />
+            <p class="total">Total Amount: R @Model.TotalAmount</p>
+            <p class="thank-you">Thank you for dining with us!</p>
+            <button onclick="window.print()">Print Receipt</button>
         </div>
-        <hr />
-        <p class="total">Total Amount: R @Model.TotalAmount</p>
-        <p class="thank-you">Thank you for dining with us!</p>
-        <button onclick="window.print()">Print Receipt</button>
+
+        <div class="image-container">
+            <img src="~/Images/sales-receipt (1).png" />
+        </div>
     </div>
+
+
+    &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+    &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+    &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<a href="@Url.Action("POSDashboard", "Home")" class="green-button">Back to POS</a>
+
 </body>
 </html>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
 
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
