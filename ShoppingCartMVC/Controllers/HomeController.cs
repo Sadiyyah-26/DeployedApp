@@ -1173,6 +1173,12 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
+
+        public ActionResult SuccessBill()
+        {
+            return View();
+        }
+
         public ActionResult Refund(int id)
         {
             var query = db.tblOrders.Where(m => m.TblInvoice.UserId == id).ToList();
@@ -1187,10 +1193,21 @@ namespace ShoppingCartMVC.Controllers
             int posCount = GetTotalPOSsales();// Get total order count
             int productCount = GetTotalProducts();
             decimal totalSales = GetTotalSalesAmount();
+            int deliveryInvoiceCount = GetDeliveryCount();
             decimal totalInStore = GetTotalInStoreSalesAmount();
             decimal totalOnline = GetTotalOnlineSalesAmount();
-            int deliveryInvoiceCount = GetDeliveryInvoiceCount();
             int takeawayCount = GetTakeawayCount();
+            int driverCount = GetDriverCountFromDatabase();
+            int roleType5Count = GetRoleType5CountFromDatabase();
+            int roleType4Count = GetRoleType4CountFromDatabase();
+            int roleType1Count = GetRoleType1CountFromDatabase();
+            int roleType2Count = GetRoleType2CountFromDatabase();
+            int supplierCount = GetSupplierCountFromDatabase();
+            decimal totalDonationAmount = GetTotalDonationAmount();
+            decimal totalOrderAmount = GetTotalOrderAmount();
+            decimal netTotalSales = GetNetTotalSalesAmount();
+            int reservationCount = GetReservationCount();
+
 
             ViewBag.UserCount = userCount;
             ViewBag.OrderCount = orderCount;
@@ -1201,6 +1218,17 @@ namespace ShoppingCartMVC.Controllers
             ViewBag.TotalOnline = totalOnline;
             ViewBag.DeliveryInvoiceCount = deliveryInvoiceCount;
             ViewBag.TakeawayCount = takeawayCount;
+            ViewBag.DriverCount =driverCount;
+            ViewBag.RoleType5Count = roleType5Count;
+            ViewBag.RoleType4Count = roleType4Count;
+            ViewBag.RoleType1Count = roleType1Count;
+            ViewBag.RoleType2Count = roleType2Count;
+            ViewBag.SupplierInvoice = supplierCount;
+            ViewBag.Donations = totalDonationAmount;
+            ViewBag.TotalOrder = totalOrderAmount;
+            ViewBag.Profit = netTotalSales;
+            ViewBag.Reservation = reservationCount;
+
 
             return View();
         }
@@ -1278,7 +1306,7 @@ namespace ShoppingCartMVC.Controllers
             }
         }
 
-        public int GetDeliveryInvoiceCount()
+        public int GetDeliveryCount()
         {
             using (var context = new dbOnlineStoreEntities())
             {
@@ -1292,18 +1320,113 @@ namespace ShoppingCartMVC.Controllers
         {
             using (var context = new dbOnlineStoreEntities())
             {
+                // Count all orders with DC_Method as "Collection" from tblInvoice
                 int takeawayCount = context.tblInvoices
-                    .Count(i => i.DC_Method == "Collection" && i.TblOrders.Any(o => o.Method == "Takeaway"));
+                    .Count(i => i.DC_Method == "Collection");
 
-                // To count unique order numbers for takeaway records
-                var takeawayOrderNumbers = context.TblInStoreOrders
-                    .Where(o => o.Method == "Takeaway")
-                    .Select(o => o.OrderNumber)
-                    .Distinct();
+                // Count all Takeaway orders from InstoreOrders
+                int instoreTakeawayCount = context.TblInStoreOrders
+                    .Count(o => o.Method == "Takeaway");
 
-                int uniqueTakeawayCount = takeawayOrderNumbers.Count();
+                return takeawayCount + instoreTakeawayCount;
+            }
+        }
 
-                return takeawayCount + uniqueTakeawayCount;
+        public int GetDriverCountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int driverCount = context.tblUsers.Where(u => u.RoleType == 3).Count();
+                return driverCount;
+            }
+        }
+
+
+        public int GetRoleType5CountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int roleType5Count = context.tblUsers.Where(u => u.RoleType == 5).Count();
+                return roleType5Count;
+            }
+        }
+
+
+        public int GetRoleType4CountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int roleType4Count = context.tblUsers.Where(u => u.RoleType == 4).Count();
+                return roleType4Count;
+            }
+        }
+
+        public int GetRoleType1CountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int roleType1Count = context.tblUsers.Where(u => u.RoleType == 1).Count();
+                return roleType1Count;
+            }
+        }
+
+        public int GetRoleType2CountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                int roleType2Count = context.tblUsers.Where(u => u.RoleType == 2).Count();
+                return roleType2Count;
+            }
+        }
+
+        public int GetSupplierCountFromDatabase()
+        {
+            using (var context = new dbOnlineStoreEntities()) // Replace YourDbContext with the actual name of your DbContext class
+            {
+                int supplierCount = context.tblSuppliers.Count();
+                return supplierCount;
+            }
+        }
+
+        public decimal GetTotalDonationAmount()
+        {
+            using (var context = new dbOnlineStoreEntities()) // Replace YourDbContext with your actual DbContext class
+            {
+                decimal totalDonationAmount = context.tblDonations.Sum(d => d.DonationAmount);
+                return totalDonationAmount;
+            }
+        }
+
+        public decimal GetTotalOrderAmount()
+        {
+            using (var context = new dbOnlineStoreEntities()) // Replace YourDbContext with your actual DbContext class
+            {
+                decimal totalOrderAmount = context.tblAdminOrders
+                    .Where(o => o.Total.HasValue)
+                    .Sum(o => o.Total.Value);
+
+                return totalOrderAmount;
+            }
+        }
+
+
+        public decimal GetNetTotalSalesAmount()
+        {
+            decimal totalSales = GetTotalSalesAmount();
+            decimal totalStockExpenses = GetTotalOrderAmount();
+
+            decimal netTotalSales = totalSales - totalStockExpenses;
+
+            return netTotalSales;
+        }
+
+        public int GetReservationCount()
+        {
+            using (var context = new dbOnlineStoreEntities()) // Replace with your actual DbContext class
+            {
+                int reservationCount = context.tblReservations.Count();
+
+                return reservationCount;
             }
         }
 
@@ -1426,7 +1549,7 @@ namespace ShoppingCartMVC.Controllers
             if (!isDineIn && paymentMethod == "Card")
             {
 
-                string returnURL = "https://localhost:44377/Home/InStoreSuccess"; // Change this URL to match your actual URL
+                string returnURL = "https://2023grp01a.azurewebsites.net/Home/InStoreSuccess"; // Change this URL to match your actual URL
 
                 // Redirect to PayPal with the calculated total amount and return URL
                 return Content("<script>" +
@@ -1833,10 +1956,10 @@ namespace ShoppingCartMVC.Controllers
 
         private void SendOrderReadyEmail(string orderNumber)
         {
-            var body = $"Dear Customer,<br /><br />Your order : {orderNumber} is now ready... We hope you enjoy your meal!<br /><br />";
+            var body = $"Dear Customer,<br /><br />Your order : {orderNumber} is now ready... We hope you enjoy your meal soon! Please note that your payment is pending. Kindly complete payment at the restaurant<br /><br />";
 
             var message = new MailMessage();
-            message.To.Add(new MailAddress("viyoshag@gmail.com"));
+            message.To.Add(new MailAddress("sadiyyah002@gmail.com"));
             message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
             message.Subject = "Order Ready Confirmation";
             message.Body = body;
@@ -1954,7 +2077,7 @@ namespace ShoppingCartMVC.Controllers
 
                     if (paymentMethod.Equals("Card", StringComparison.OrdinalIgnoreCase))
                     {
-                        string returnURL = "https://localhost:44377/Home/POSDashboard"; // Change this URL to match your actual URL
+                        string returnURL = "https://2023grp01a.azurewebsites.net/Home/SuccessBill"; // Change this URL to match your actual URL
 
                         // Redirect to PayPal with the calculated total amount and return URL
                         return Content("<script>" +

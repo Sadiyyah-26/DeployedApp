@@ -6,6 +6,13 @@
 
 <h2>Dine-In Orders</h2>
 
+
+<a href="@Url.Action("POSDashboard", "Home")" class="success-button">Back to POS</a>
+
+<div class="form-group">
+    <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+</div>
+
 @if (Model.Any())
 {
     foreach (var orderGroup in Model.GroupBy(o => o.OrderNumber))
@@ -19,6 +26,8 @@
                     <th>Method</th>
                     <th>Pay Method</th>
                     <th>Table Number</th>
+                    <th>ReservedTime</th>
+                    <th>ReserveDate</th>
                     <th>Status</th> <!-- Added Status column -->
                     <th>Generate Bill</th>
                 </tr>
@@ -40,6 +49,16 @@
                             }
                         </td>
                         <td>@order.TableNumber</td>
+                        <td>
+                            <button class="success-button">
+                                @(order.ReservedTime != null ? order.ReservedTime.Value.ToString("HH:mm") : string.Empty)
+                            </button>
+                        </td>
+                        <td>
+                            <button class="success-button">
+                                @(order.ReservedDate != null ? order.ReservedDate.Value.ToShortDateString() : string.Empty)
+                            </button>
+                        </td>
                         <td>@order.Status</td> <!-- Display Status -->
                         <td>
                             @if (orderGroup.First() == order)
@@ -62,28 +81,40 @@ else
     <p>No Dine-In orders found.</p>
 }
 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
 
+@*<script>
+        function searchOrder() {
+            var orderNumber = document.getElementById("orderNumberInput").value;
+
+            // Perform a search using the order number (you can make an AJAX request to your server)
+            // Replace this with your actual search logic
+            if (orderNumber.trim() !== "") {
+                // Redirect or display the found order based on your application's requirements
+                window.location.href = "@Url.Action("SearchOrder", "Home")?orderNumber=" + orderNumber;
+            }
+        }
+    </script>*@
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

@@ -50,7 +50,6 @@
             margin-top: 10px; /* Add some spacing between the texts */
         }
     </style>
-
     <script>
         function generatePDF() {
             // Get selected time period
@@ -72,7 +71,25 @@
             var customersRegistered = document.querySelector(".dashboard-block.blue .dashboard-big-text").textContent;
             var totalOnlineOrders = document.querySelector(".dashboard-block.orange .dashboard-big-text").textContent;
             var totalPosSales = document.querySelector(".dashboard-block.green .dashboard-big-text").textContent;
-            // Collect more text from other containers as needed
+
+            // Add more variables for the new containers
+            var productsForSale = document.querySelector(".dashboard-block.blue:nth-child(4) .dashboard-big-text").textContent;
+            var totalIncome = document.querySelector(".dashboard-block.blue:nth-child(5) .dashboard-big-text").textContent;
+            var posIncome = document.querySelector(".dashboard-block.green:nth-child(6) .dashboard-big-text").textContent;
+            var onlineIncome = document.querySelector(".dashboard-block.blue:nth-child(7) .dashboard-big-text").textContent;
+            var totalDeliveries = document.querySelector(".dashboard-block.orange:nth-child(8) .dashboard-big-text").textContent;
+            var totalTakeaways = document.querySelector(".dashboard-block.green:nth-child(9) .dashboard-big-text").textContent;
+
+            // Add more variables for the new containers
+            var drivers = document.querySelector(".dashboard-block.blue:nth-child(10) .dashboard-big-text").textContent;
+            var waiters = document.querySelector(".dashboard-block.orange:nth-child(11) .dashboard-big-text").textContent;
+            var kitchenStaff = document.querySelector(".dashboard-block.green:nth-child(12) .dashboard-big-text").textContent;
+            var admin = document.querySelector(".dashboard-block.blue:nth-child(13) .dashboard-big-text").textContent;
+            var customers = document.querySelector(".dashboard-block.blue:nth-child(14) .dashboard-big-text").textContent;
+            var stockExpenses = document.querySelector(".dashboard-block.green:nth-child(15) .dashboard-big-text").textContent;
+            var totalDonations = document.querySelector(".dashboard-block.blue:nth-child(16) .dashboard-big-text").textContent;
+            var profit = document.querySelector(".dashboard-block.orange:nth-child(17) .dashboard-big-text").textContent;
+            var onlineReservations = document.querySelector(".dashboard-block.green:nth-child(18) .dashboard-big-text").textContent;
 
             // Define your document content with the collected text
             var docDefinition = {
@@ -85,7 +102,23 @@
                     'Customers Registered: ' + customersRegistered,
                     'Total Online Orders: ' + totalOnlineOrders,
                     'Total POS Sales: ' + totalPosSales,
-                    // Add more content using the collected text
+                    // Add new content
+                    'Products for Sale: ' + productsForSale,
+                    'Total Income: ' + totalIncome,
+                    'POS Income: ' + posIncome,
+                    'Online Income: ' + onlineIncome,
+                    'Total Deliveries: ' + totalDeliveries,
+                    'Total Takeaways: ' + totalTakeaways,
+                    // Add more content for the new containers
+                    'Drivers: ' + drivers,
+                    'Waiters: ' + waiters,
+                    'Kitchen Staff: ' + kitchenStaff,
+                    'Admin: ' + admin,
+                    'Customers: ' + customers,
+                    'Stock Expenses: ' + stockExpenses,
+                    'Total Donations: ' + totalDonations,
+                    'Profit: ' + profit,
+                    'Online Reservations: ' + onlineReservations,
                     '--------------',
                     // Add more content as needed
                 ],
@@ -191,7 +224,7 @@
             <div class="dashboard-big-text">
                 R @string.Format("{0:n2}", ViewBag.TotalInStore)
             </div>
-            <div class="dashboard-icon"><i class="fas fa-cash-register"></i></div>
+            <div class="dashboard-icon"><i class="fa fa-coins"></i></div>
         </div>
 
         <div class="dashboard-block blue">
@@ -202,7 +235,7 @@
             <div class="dashboard-big-text">
                 R @string.Format("{0:n2}", ViewBag.TotalOnline)
             </div>
-            <div class="dashboard-icon"><i class="fas fa-box-open"></i></div>
+            <div class="dashboard-icon"><i class="fa fa-credit-card"></i></div>
         </div>
 
         <div class="dashboard-block orange">
@@ -213,7 +246,7 @@
             <div class="dashboard-big-text">
                 @ViewBag.DeliveryInvoiceCount
             </div>
-            <div class="dashboard-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div class="dashboard-icon"><i class="fa fa-truck"></i></div>
         </div>
 
         <div class="dashboard-block green">
@@ -224,7 +257,116 @@
             <div class="dashboard-big-text">
                 @ViewBag.TakeawayCount
             </div>
+            <div class="dashboard-icon"><i class="fa fa-shopping-bag"></i></div>
+        </div>
+        <!-- Add more blocks with different colors as needed -->
+        <!-- End of Dashboard Blocks -->
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Start of Dashboard Blocks -->
+        <!-- Block 1 with blue border -->
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Drivers</div>
+            <div class="dashboard-big-text">
+                @ViewBag.DriverCount <!-- Insert user count here -->
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-car"></i></div>
+        </div>
+
+        <!-- Block 2 with orange border -->
+        <div class="dashboard-block orange">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Waiters </div>
+            <div class="dashboard-big-text">
+                @ViewBag.RoleType5Count <!-- Display the total order count here -->
+            </div>
+            <div class="dashboard-icon"><i class="fa fa-user-tie"></i></div>
+        </div>
+
+        <!-- Block 3 with green border -->
+        <div class="dashboard-block green">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Kitchen Staff</div>
+            <div class="dashboard-big-text">
+                @ViewBag.RoleType4Count
+            </div>
+            <div class="dashboard-icon"><i class="fa fa-utensils"></i></div>
+        </div>
+
+        <!-- Block 4 with blue border -->
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Admin</div>
+            <div class="dashboard-big-text">
+                @ViewBag.RoleType1Count
+            </div>
+            <div class="dashboard-icon"><i class="fa fa-user-shield"></i></div>
+        </div>
+
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Customers</div>
+            <div class="dashboard-big-text">
+                @ViewBag.RoleType2Count
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-money"></i></div>
+        </div>
+
+
+        <div class="dashboard-block green">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Stock Expenses</div>
+            <div class="dashboard-big-text">
+                R @string.Format("{0:n2}", ViewBag.TotalOrder)
+            </div>
             <div class="dashboard-icon"><i class="fas fa-shopping-cart"></i></div>
+        </div>
+
+        <div class="dashboard-block blue">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Total Donations</div>
+            <div class="dashboard-big-text">
+                R @string.Format("{0:n2}", ViewBag.Donations)
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-credit-card"></i></div>
+        </div>
+
+        <div class="dashboard-block orange">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Profit</div>
+            <div class="dashboard-big-text">
+                R @string.Format("{0:n2}", ViewBag.Profit)
+            </div>
+            <div class="dashboard-icon"><i class="fas fa-clipboard-list"></i></div>
+        </div>
+
+        <div class="dashboard-block green">
+            <div>
+                <!--<span class="dashboard-icon">&#x1F354;</span>--> <!-- Emoji icon -->
+            </div>
+            <div>Online Reservations</div>
+            <div class="dashboard-big-text">
+                @ViewBag.Reservation
+            </div>
+            <div class="dashboard-icon"><i class="fa fa-clock-o"></i></div>
         </div>
         <!-- Add more blocks with different colors as needed -->
         <!-- End of Dashboard Blocks -->
@@ -232,5 +374,6 @@
 
 </body>
 </html>
+
 
 

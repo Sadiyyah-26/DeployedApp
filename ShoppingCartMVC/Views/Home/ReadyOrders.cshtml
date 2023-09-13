@@ -2,6 +2,10 @@
 
 <h2>Ready Orders</h2>
 
+
+<div class="form-group">
+    <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+</div>
 <table class="table">
     <tr>
         <th>
@@ -15,6 +19,9 @@
         </th>
         <th>
             Order Status + Table Number
+        </th>
+        <th>
+            Method
         </th>
     </tr>
 
@@ -46,11 +53,13 @@
                         <span class="additional-status">@order.TableNumber</span>
                     }
                 </td>
+                <td>
+                    <button class="btn btn-primary">@Html.DisplayFor(m => order.Method)</button>
+
+                </td>
             </tr>
         }
 
         previousOrderNumber = order.OrderNumber;
     }
 </table>
-
-

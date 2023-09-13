@@ -232,7 +232,8 @@
 
                             }
 
-                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" class="nav-link"><span class="fa fa-info-circle fa-1x"></span>R @ViewBag.TotalPoints</a></li>
+                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" title="Current Point Balance" class="nav-link"><span class="fa fa-info-circle fa-1x"></span> @ViewBag.TotalPoints</a></li>
+                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link">My Account</a></li>
                             <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link">My Account</a></li>
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
                         }

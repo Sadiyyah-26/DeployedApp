@@ -13,7 +13,7 @@
         .container {
             display: flex;
             justify-content: space-between;
-            width: 80%; /* Adjust the width as needed */
+            width: 100%; /* Adjust the width as needed */
             margin: 0 auto;
         }
 
@@ -118,23 +118,31 @@
 
     <div class="container">
         <div class="receipt">
-            <div class="header">Restaurant Receipt</div>
-
+            @*<div class="header">*@
+            <h2>Restaurant Receipt</h2>
+            <p class="restaurant-name">Turbo Meals</p>
+            <p class="address"> 165 Bayview Road,Park Avenue,Durban,4087</p>
+            <p class="contact-details">
+                Email: turbomeals123@gmail.com | Phone: 031-456-2547
+            </p>
+            <hr />
+            <p class="header">Receipt</p>
+            <p class="waiter-name">Waiter: @Session["User"]</p>
             <div class="order-number">Order Number: @Model.OrderNumber</div>
 
             @foreach (var product in Model.Products)
             {
                 <div class="item">
-                    <span>@product.ProductName</span>
+                    <span>@product.ProductName</span> &ensp;<span>Quantity: @product.Qty</span>
                     <span style="float:right;">@product.Total</span>
                     <br />
-                    <span>Quantity: @product.Qty</span>
+                    @*<span>Quantity: @product.Qty</span>*@
+                    <!--<span style="float:right;">@product.UnitPrice</span>--> <!-- Unit Price -->
                 </div>
             }
 
             <div class="total">Total: @Model.TotalAmount</div>
             <div class="item">Payment Method: @Model.PaymentMethod</div>
-
 
             <div class="receipt-info">
                 <p>Thank you for dining with us!</p>
@@ -154,6 +162,8 @@
                 <button type="submit" class="success-button">Submit Payment</button>
             </form>
             <button type="button" onclick="printBill()" class="success-button">Print Bill</button>
+            <br />
+            <a href="@Url.Action("DineIn", "Home")" class="success-button">Back</a>
         </div>
     </div>
     <script>
@@ -169,6 +179,7 @@
 </body>
 </html>
 
+
 <br />
 <br />
 <br />
@@ -187,3 +198,14 @@
 <br />
 <br />
 <br />
+
+
+@*<div>
+        <h4>Payment Method</h4>
+        <form action="/Home/UpdatePaymentMethod" method="post">
+            @Html.HiddenFor(model => model.BillId)
+            <input type="radio" name="PaymentMethod" value="card" /> Card
+            <input type="radio" name="PaymentMethod" value="cash" /> Cash
+            <input type="submit" value="Finish Pay" />
+        </form>
+    </div>*@

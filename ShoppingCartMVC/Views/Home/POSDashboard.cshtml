@@ -32,7 +32,7 @@
         }
 
             .dashboard-box:hover {
-                background-color: #8bd3e1;
+                background-color: #f2f2f2;
             }
 
         .dashboard-icon img {
@@ -62,7 +62,7 @@
 
         <div class="dashboard-box" onclick="navigateTo('@Url.Action("WaiterMenu", "Home")')">
             <div class="dashboard-icon">
-                <i class="fas fa-book fa-4x"></i>
+                <i class="fa fa-user-tie fa-4x"></i>
             </div>
             <div class="dashboard-text">
                 Waiter Menu
@@ -71,7 +71,7 @@
 
         <div class="dashboard-box" onclick="navigateTo('@Url.Action("TrackReservations", "Home")')">
             <div class="dashboard-icon">
-                <i class="fas fa-table fa-4x"></i>
+                <i class="fa fa-clock-o fa-4x"></i>
             </div>
             <div class="dashboard-text">
                 Reserve & Track Reservations
@@ -84,6 +84,15 @@
             </div>
             <div class="dashboard-text">
                 Generate Bill
+            </div>
+        </div>
+
+        <div class="dashboard-box" onclick="navigateTo('@Url.Action("POSDashboard", "Home")')">
+            <div class="dashboard-icon">
+                <i class="fas fa-file-invoice fa-4x"></i>
+            </div>
+            <div class="dashboard-text">
+                POS SYSTEM
             </div>
         </div>
 
