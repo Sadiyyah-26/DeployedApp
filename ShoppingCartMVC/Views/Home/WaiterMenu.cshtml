@@ -6,10 +6,91 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
     <style>
+
+
+        /* Style for the order options container */
+        #orderOptions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px; /* Adjust the margin as needed */
+        }
+
+        /* Style for the Dine-in button */
+        .order-button.dine-in {
+            background-color: lightblue;
+            color: black;
+            padding: 15px 33px; /* Adjust the padding for button size */
+            border: none;
+            cursor: pointer;
+            font-size: 16px; /* Adjust font size as needed */
+        }
+
+        /* Style for the Takeaway button */
+        .order-button.takeaway {
+            background-color: lightblue; /* Use the same color as Dine-in */
+            color: black;
+            padding: 15px 33px; /* Adjust the padding for button size */
+            border: none;
+            cursor: pointer;
+            font-size: 16px; /* Adjust font size as needed */
+        }
+
+        /* Style for the Generate button */
+        .generate-button {
+            background-color: #4CAF50; /* Green color for Generate button */
+            color: white;
+            padding: 15px 30px; /* Adjust the padding for button size */
+            border: none;
+            cursor: pointer;
+            font-size: 16px; /* Adjust font size as needed */
+        }
+
+            /* Hover effect for buttons */
+            .order-button:hover, .generate-button:hover {
+                background-color: lightgreen; /* Dark blue color on hover */
+            }
 
         .category-tabs {
             flex: 0 0 20%;
+        }
+
+        #undoButton {
+            background-color: #ccc; /* Grey background color */
+            color: black; /* White text color */
+            padding: 15px 15px; /* Adjust padding for button size */
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            top: 400px;
+            left: 1200px; /* Adjust font size as needed */
+        }
+
+        /* Style for the Redo button */
+        #redoButton {
+            background-color: #ccc; /* Grey background color */
+            color: black; /* White text color */
+            padding: 15px 15px; /* Adjust padding for button size */
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            top: 500px;
+            left: 1200px; /* Adjust font size as needed */
+        }
+
+        #backButton {
+            background-color: #ccc; /* Grey background color */
+            color: black; /* White text color */
+            padding: 15px 15px; /* Adjust padding for button size */
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            top: 300px;
+            left: 1200px; /* Adjust font size as needed */
         }
 
         .product-groups {
@@ -72,6 +153,16 @@
             flex-wrap: wrap;
         }
 
+        /*.category-tab {
+            border: 1px solid #ddd;
+            padding: 60px;
+            margin: 0 10px 10px 0;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            flex-grow: 1;
+            text-align: center;
+        }*/
+
         .category-tab {
             border: 1px solid #ddd;
             padding: 60px;
@@ -80,6 +171,10 @@
             background-color: #f0f0f0;
             flex-grow: 1;
             text-align: center;
+            background-color: lightblue; /* Set the background color to light blue */
+            color: black;
+            font-size: 18px;
+            /* Set the font color to black */
         }
 
         .product-group {
@@ -125,6 +220,7 @@
             padding: 20px;
             background-color: #f0f0f0;
             height: 600px;
+            font-size: 18px;
         }
 
         #content-container {
@@ -144,11 +240,29 @@
             max-width: 100px; /* Adjust the image size as needed */
             margin-right: 10px; /* Add space between image and product details */
         }
+
+        #movableText {
+            position: absolute; /* Position the text absolutely */
+            top: 100px; /* Adjust the top position as needed */
+            left: 50px; /* Adjust the left position as needed */
+            font-size: 18px; /* Adjust the font size as needed */
+            color: #333; /* Text color */
+        }
     </style>
 </head>
 <body>
+    <p id="movableText">Waiter Name : @Session["User"]</p>
+    <button id="undoButton" class="generate-button">
+        <i class="fas fa-undo"></i> Undo
+    </button>
 
-    @*<p>Welcome, @Session["User"]</p>*@
+    <button id="redoButton" class="generate-button">
+        <i class="fas fa-redo"></i> Redo
+    </button>
+
+    <button id="backButton" class="generate-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
     <div id="content-container">
         <div class="category-tabs" id="categoryTabs">
             @foreach (var category in ViewBag.Categories)
@@ -178,13 +292,29 @@
                 </div>
             }
         </div>
+        @*<button id="undoButton" class="generate-button">Undo</button>
+            <button id="redoButton" class="generate-button">Redo</button>*@
         <div class="selected-products" id="selectedProducts">
             <h2>Selected Products</h2>
             <ul id="selectedList"></ul>
             <p>Total Price: <span id="totalPrice">R 0</span></p>
-            <button id="dineInButton">Dine-in</button>
-            <button id="takeAwayButton">Takeaway</button>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
 
+            <div id="orderOptions">
+                <div class="order-option">
+                    <button id="dineInButton" class="order-button dine-in">Dine-in</button>
+                </div>
+                <div class="order-option">
+                    <button id="takeAwayButton" class="order-button takeaway">Takeaway</button>
+                </div>
+            </div>
+            <br />
+            <br />
+            <br />
             <!-- Add container for table number selection -->
             <div id="tableNumberContainer" style="display: none;">
                 <label for="tableNumber">Table Number:</label>
@@ -215,15 +345,23 @@
                 <label>Change Due:</label>
                 <span id="changeDue">0.00</span>
             </div>
+            <br />
+
+            <div class="form-group">
+                <label for="inputEmail">Email Address:</label>
+                <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+            <button id="generateButton" class="generate-button">Generate</button>
+            @*<button id="generateButton">Generate</button>*@
         </div>
-        <button id="generateButton">Generate</button>
+
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $('.category-tab').click(function () {
                 var category = $(this).data('category');
-               // console.log('Selected category:', category); // Add this line for debugging
+                // console.log('Selected category:', category); // Add this line for debugging
                 $('.product-group').hide();
                 $('#' + category).show();
                 $('.category-tab').removeClass('active');

@@ -37,7 +37,14 @@
                     <a href="@Url.Action("PrepInStoreOrder", "Home", new { OrderId = order.OrderId })" class="btn btn-primary">Order Details</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(m => order.Status)
+                    @if (order.Status == "Ready")
+                    {
+                        <span>@order.Status</span>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(order.TableNumber))
+                    {
+                        <span class="additional-status">@order.TableNumber</span>
+                    }
                 </td>
             </tr>
         }
