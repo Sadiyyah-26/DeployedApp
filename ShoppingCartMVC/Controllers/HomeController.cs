@@ -1832,6 +1832,23 @@ namespace ShoppingCartMVC.Controllers
             return View(ordersWithSameOrderNumber);
         }
 
+        private void SendOrderReadyEmail(string orderNumber)
+        {
+            var body = $"Dear Customer,<br /><br />Your order : {orderNumber} is now ready... We hope you enjoy your meal!<br /><br />";
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress("viyoshag@gmail.com"));
+            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+            message.Subject = "Order Ready Confirmation";
+            message.Body = body;
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(message);
+            }
+        }
+
         [HttpPost]
         public ActionResult MarkAsReady(int OrderId)
         {
@@ -2148,6 +2165,38 @@ namespace ShoppingCartMVC.Controllers
     };
         }
         #endregion
+
+        #region CompleteReservation
+        public ActionResult CompleteReservation(int bookingId)
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                try
+                {
+                    // Find and delete all occurrences of the bookingId in the tblReservations table
+                    var reservationsToDelete = dbContext.tblReservations.Where(r => r.BookingId == bookingId).ToList();
+                    dbContext.tblReservations.RemoveRange(reservationsToDelete);
+
+                    // Find and delete all occurrences of the bookingId in the TblInStoreOrders table
+                    var ordersToDelete = dbContext.TblInStoreOrders.Where(o => o.BookingId == bookingId).ToList();
+                    dbContext.TblInStoreOrders.RemoveRange(ordersToDelete);
+
+                    // Save changes to the database
+                    dbContext.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions
+                    ViewBag.ErrorMessage = "An error occurred while completing the reservation: " + ex.Message;
+                    // You might want to log the error or take other actions here
+                }
+            }
+
+            // Redirect back to the Dine-In page
+            return RedirectToAction("TrackReservations");
+        }
+        #endregion
+
 
         #region ReserveOrder
         private List<Cart> FetchCartItems()
