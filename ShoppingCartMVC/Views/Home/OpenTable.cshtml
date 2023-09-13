@@ -1,0 +1,156 @@
+﻿@model ShoppingCartMVC.Models.tblReservation
+
+<style>
+    .word-with-space {
+        margin-right: 10px; /* Adjust the value to increase or decrease the space */
+    }
+
+    .image {
+        position: absolute;
+        top: 400px; /* Adjust the top position as needed */
+        left: 1000px; /* Adjust the left position as needed */ /* Adjust the font size as needed */ /* Adjust the icon color as needed */
+    }
+
+
+    .btn-primary {
+        position: absolute;
+        top: 100px; /* Adjust the top position as needed */
+        left: 950px;
+        height: 90px;
+        width: 200px; /* Adjust the left position as needed */ /* Adjust the font size as needed */ /* Adjust the icon color as needed */
+    }
+
+    .fa-utensils {
+        position: absolute;
+        top: 200px; /* Adjust the top position as needed */
+        left: 200px; /* Adjust the left position as needed */ /* Adjust the font size as needed */ /* Adjust the icon color as needed */
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var modelStateValue in ViewData.ModelState.Values)
+        {
+            foreach (var error in modelStateValue.Errors)
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        }
+    </div>
+}
+<img src="~/Images/ReserveSuccess.png" alt="Image" class="image" />
+@*<i class="fas fa-utensils fa-5x food-icon"></i>*@
+<br />
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="col-lg-4">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Customer_Name, new { @class = "col-sm-2 col-form-label" })
+                <span class="word-with-space"></span>
+                <br />
+                <br />
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Customer_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Customer_Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Mail, new { @class = "col-sm-2 col-form-label" })
+                <span class="word-with-space"></span>
+                <br />
+                <br />
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Number, new { @class = "col-sm-2 col-form-label" })
+                <span class="word-with-space"></span>
+                <br />
+                <br />
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Seating, new { @class = "col-sm-2 col-form-label" })
+                &ensp;
+                <span class="word-with-space"></span>
+                <br />
+                <br />
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Seating, Model.SeatNumberList, "Select Seats", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Seating, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Date, new { @class = "col-sm-2 col-form-label" })
+                { Open from Monday to Friday's }
+                <span class="word-with-space"></span>
+                <br />
+                <br />
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Time, new { @class = "col-sm-2 co- form - label" })
+                { Restaurant open from 8am-7pm }
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Time, new { @class = "form-control", @type = "time", @id = "timeInput" })
+                    @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Make Reservation" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<script>
+    $(document).ready(function () {
+        $('#timeInput').on('change', function () {
+            var inputValue = $(this).val();
+            if (inputValue) {
+                var formattedTime = inputValue.substr(0, 5);
+                $(this).val(formattedTime);
+            }
+        });
+
+        // Set the initial value of the time input if it exists
+        var initialTimeValue = $('#timeInput').val();
+        if (initialTimeValue) {
+            var formattedInitialTime = initialTimeValue.substr(0, 5);
+            $('#timeInput').val(formattedInitialTime);
+        }
+    });
+</script>

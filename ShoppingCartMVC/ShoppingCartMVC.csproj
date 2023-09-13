@@ -407,6 +407,7 @@
     <Content Include="Views\Account\RateAndTip.cshtml" />
     <Content Include="Views\Account\UserDetails.cshtml" />
     <Content Include="Views\Home\ReserveOrder.cshtml" />
+    <Content Include="Views\Home\OpenTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
