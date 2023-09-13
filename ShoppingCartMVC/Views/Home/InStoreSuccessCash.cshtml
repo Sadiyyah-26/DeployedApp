@@ -21,38 +21,82 @@
             font-weight: bold;
         }
 
+        .restaurant-name {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        .address {
+            margin-top: 5px;
+        }
+
+        .contact-details {
+            margin-top: 5px;
+        }
+
+        .waiter-name {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
         .item {
             text-align: left;
             margin: 5px 0;
         }
 
+        .products {
+            margin-top: 10px;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
         .total {
             font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .thank-you {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="receipt">
+        <p class="restaurant-name">Turbo Meals</p>
+        <p class="address">123 Main Street, City, Country</p>
+        <p class="contact-details">Email: info@turbomeals.com | Phone: +123-456-7890</p>
+        <hr />
         <p class="header">Receipt</p>
+        <p class="waiter-name">Waiter: @Session["User"]</p>
         <p class="item">Order Number: @Model.OrderNumber</p>
         <p class="item">Order Date: @Model.OrderDateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
         <hr />
         <p class="item">Products:</p>
-        <ul>
+        <div class="products">
             @foreach (var item in Model.Products)
             {
-                <li>@item.ProductName x @item.Qty - R @item.Total</li>
+                <div class="product-item">
+                    <span>@item.ProductName</span>
+                    <span>@item.Qty - R @item.Total</span>
+                </div>
             }
-        </ul>
+        </div>
         <hr />
         <p class="total">Total Amount: R @Model.TotalAmount</p>
-
+        <p class="thank-you">Thank you for dining with us!</p>
         <button onclick="window.print()">Print Receipt</button>
-        <br />
-        <br />
-        <br />
-        <br />
     </div>
 </body>
 </html>
-
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

@@ -172,6 +172,7 @@
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\LowStockVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
+    <Compile Include="Models\ReserveOrderViewModel.cs" />
     <Compile Include="Models\SelectedProductModel.cs" />
     <Compile Include="Models\SupplierIngredients.cs" />
     <Compile Include="Models\tblAdminInvoice.cs" />
@@ -404,6 +405,8 @@
     <Content Include="Views\Account\EditAccount.cshtml" />
     <Content Include="Views\Account\RateAndTip.cshtml" />
     <Content Include="Views\Account\UserDetails.cshtml" />
+    <Content Include="Views\Home\ReserveOrder.cshtml" />
+    <Content Include="Views\Home\OpenTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

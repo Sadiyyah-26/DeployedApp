@@ -1530,6 +1530,37 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
+        #region CompleteReservation
+        public ActionResult CompleteReservation(int bookingId)
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                try
+                {
+                    // Find and delete all occurrences of the bookingId in the tblReservations table
+                    var reservationsToDelete = dbContext.tblReservations.Where(r => r.BookingId == bookingId).ToList();
+                    dbContext.tblReservations.RemoveRange(reservationsToDelete);
+
+                    // Find and delete all occurrences of the bookingId in the TblInStoreOrders table
+                    var ordersToDelete = dbContext.TblInStoreOrders.Where(o => o.BookingId == bookingId).ToList();
+                    dbContext.TblInStoreOrders.RemoveRange(ordersToDelete);
+
+                    // Save changes to the database
+                    dbContext.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions
+                    ViewBag.ErrorMessage = "An error occurred while completing the reservation: " + ex.Message;
+                    // You might want to log the error or take other actions here
+                }
+            }
+
+            // Redirect back to the Dine-In page
+            return RedirectToAction("TrackReservations");
+        }
+
+        #endregion
         #region Generate Output
         [HttpPost]
         public ActionResult GenerateOutput(DateTime date)
@@ -1731,26 +1762,46 @@ namespace ShoppingCartMVC.Controllers
             return View(ordersWithSameOrderNumber);
         }
 
+        private void SendOrderReadyEmail(string orderNumber)
+        {
+            var body = $"Dear Customer,<br /><br />Your order : {orderNumber} is now ready... We hope you enjoy your meal!<br /><br />";
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress("viyoshag@gmail.com"));
+            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+            message.Subject = "Order Ready Confirmation";
+            message.Body = body;
+            message.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(message);
+            }
+        }
+
         [HttpPost]
         public ActionResult MarkAsReady(int OrderId)
         {
-
             var order = db.TblInStoreOrders.Find(OrderId);
+
 
             if (order != null)
             {
-
                 var relatedOrders = db.TblInStoreOrders.Where(o => o.OrderNumber == order.OrderNumber);
                 foreach (var relatedOrder in relatedOrders)
                 {
                     relatedOrder.Status = "Ready";
                 }
-                
+
                 db.SaveChanges();
+
+                // Send the order ready confirmation email
+                SendOrderReadyEmail(order.OrderNumber);
             }
 
             return RedirectToAction("PrepInStoreOrders");
         }
+
         #endregion
 
         #region Update Payment Method
@@ -2028,14 +2079,125 @@ namespace ShoppingCartMVC.Controllers
         {
             return new List<SelectListItem>
     {
-        new SelectListItem { Value = "1-2", Text = "1-2 seats" },
-        new SelectListItem { Value = "3-4", Text = "3-4 seats" },
-        new SelectListItem { Value = "5-6", Text = "5-6 seats" },
-        new SelectListItem { Value = "6-8", Text = "6-8 seats" }
+        new SelectListItem { Value = "1", Text = "TableNum 1 ( 2 seats)" },
+        new SelectListItem { Value = "2", Text = "TableNum 2 ( 4 seats)" },
+        new SelectListItem { Value = "3", Text = "TableNum 3 ( 4 seats)" },
+        new SelectListItem { Value = "4", Text = "TableNum 4 ( 4 seats)" },
+        new SelectListItem { Value = "5", Text = "TableNum 5 ( 2 seats)" },
+        new SelectListItem { Value = "6", Text = "TableNum 6 ( 5 seats)" },
+        new SelectListItem { Value = "7", Text = "TableNum 7 ( 2 seats)" },
+        new SelectListItem { Value = "8", Text = "TableNum 8 ( 6 seats)" },
+        new SelectListItem { Value = "9", Text = "TableNum 9 ( 2 seats)" },
+        new SelectListItem { Value = "10", Text = "TableNum 10 ( 2 seats)" },
+        new SelectListItem { Value = "11", Text = "TableNum 11 ( 8 seats)" },
+        new SelectListItem { Value = "12", Text = "TableNum 12 ( 2 seats)" },
+        new SelectListItem { Value = "13", Text = "TableNum 13 ( 4 seats)" },
+        new SelectListItem { Value = "14", Text = "TableNum 14 ( 2 seats)" },
+        new SelectListItem { Value = "15", Text = "TableNum 15 ( 4 seats)" }
 
     };
         }
         #endregion
 
+        #region OpenTable
+        public ActionResult OpenTable()
+        {
+            var model = new tblReservation();
+            model.SeatNumberList = GetSeatOptions();
+            ViewBag.Submitted = false;
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult OpenTable(tblReservation reservation)
+        {
+            tblReservation g = new tblReservation();
+            // Check if the input fields are not blank
+            if (string.IsNullOrWhiteSpace(reservation.Mail) ||
+                string.IsNullOrWhiteSpace(reservation.Number) ||
+                string.IsNullOrWhiteSpace(reservation.Seating))
+            {
+                ModelState.AddModelError("", "Please fill in all the required fields.");
+            }
+            else if (ModelState.IsValid)
+            {
+                // Check if the date is from Monday to Friday
+                if (reservation.Date.HasValue && reservation.Date.Value.DayOfWeek >= DayOfWeek.Monday && reservation.Date.Value.DayOfWeek <= DayOfWeek.Friday)
+                {
+                    // Check if the time is between 9am and 3pm
+                    if (reservation.Time.HasValue && reservation.Time.Value.TimeOfDay >= new TimeSpan(8, 0, 0) && reservation.Time.Value.TimeOfDay <= new TimeSpan(18, 0, 0))
+                    {
+                        using (var context = new dbOnlineStoreEntities())
+                        {
+                            // Check if the seat is available for the chosen date and time
+                            int count = context.tblReservations
+                                .Where(r => r.Date == reservation.Date && r.Time == reservation.Time)
+                                .Count();
+                            if (count >= 2)
+                            {
+                                ModelState.AddModelError("", "Sorry, this seat is already booked twice for the chosen date and time.");
+                                // Re-populate the SeatNumberList dropdown with the updated model
+                                reservation.SeatNumberList = GetSeatOptions();
+                                ViewBag.Submitted = false;
+                                return View(reservation);
+                            }
+
+                            // Check if the seat is available for the chosen date and has not been booked more than twice
+                            count = context.tblReservations
+                                .Where(r => r.Date == reservation.Date && r.Seating == reservation.Seating)
+                                .Count();
+                            if (count >= 2)
+                            {
+                                ModelState.AddModelError("", "Sorry, this seating option is already booked twice for the chosen date.");
+                                // Re-populate the SeatNumberList dropdown with the updated model
+                                reservation.SeatNumberList = GetSeatOptions();
+                                ViewBag.Submitted = false;
+                                return View(reservation);
+                            }
+                            g.BookingId = reservation.BookingId;
+                            g.Customer_Name = reservation.Customer_Name;
+                            g.Mail = reservation.Mail;
+                            g.Number = reservation.Number;
+                            g.Seating = reservation.Seating;
+                            g.Date = reservation.Date;
+                            g.Time = reservation.Time;
+                            context.tblReservations.Add(reservation);
+                            context.SaveChanges();
+                            var body = $"Dear {reservation.Customer_Name},<br /><br />Your reservation was successful. Seating for {reservation.Seating} people is reserved for you on this date {(reservation.Date.HasValue ? reservation.Date.Value.ToShortDateString() : string.Empty)} and time {(reservation.Time.HasValue ? reservation.Time.Value.ToString("hh:mm tt") : "")},<br><br>Your Booking ID is {reservation.BookingId}. We hope you enjoy our services at Turbo Meals" +
+                                $" If you have any queries, drop us an email (turbomeals123@gmail.com)";
+                            var message = new MailMessage();
+                            message.To.Add(new MailAddress(reservation.Mail));
+                            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                            message.Subject = "Reservation Confirmation";
+                            message.Body = string.Format(body);
+                            message.IsBodyHtml = true;
+
+
+                            using (var smtp = new SmtpClient())
+                            {
+                                smtp.Send(message);
+                            }
+                        }
+                        TempData["Submitted"] = true;
+
+                        return RedirectToAction("Reserve_SuccessCard");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid time selection. Reservations are only available between 8am and 6pm.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid date selection. Reservations are only available from Monday to Friday.");
+                }
+            }
+
+            // Re-populate the SeatNumberList dropdown with the updated model
+            reservation.SeatNumberList = GetSeatOptions();
+            ViewBag.Submitted = false;
+            return View(reservation);
+        }
+        #endregion
     }
 }
