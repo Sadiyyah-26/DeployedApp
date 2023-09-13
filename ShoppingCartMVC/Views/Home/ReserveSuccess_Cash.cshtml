@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.tblReservation
+﻿@model List<ShoppingCartMVC.Models.tblReservation>
 <style>
     .card {
         border: 3px solid #04d47a;
@@ -12,13 +12,14 @@
     <div class="row no-gutters">
         <div class="col-md-6">
             <div class="card-body">
+                <br />
+                <br />
                 <h1 class="card-title">Reservation made successfully!</h1>
-                <h3 class="card-text"> The process of checking in:</h3>
                 <p class="card-text">
-                    Please <b> @Html.ActionLink("Click Here", "Reservations", "Home")</b>  to be directed back to the main page where you can check in with your Booking ID.
-                    Please take note that you can only check-in within 20 minutes of reservation and you have to be present at the restaurant. Make sure you notify the waiter at the restaurant before checking in. If you forget your reservation
-                    details, no need to worry as you will recieve an email with all information regarding your booking details that will be checked by the waiter. A qr code will be scanned once checked-in
-                    and the R50 must be handed to the waiter to completely confirm your reservation.
+                    <br />
+                    <br />
+                    Your reservation was made successfully.Please check your reservation confirmation email for your details that have been processed...
+                    Please <b> @Html.ActionLink("Click Here", "Index", "Home")</b>to return back to the home page
                 </p>
 
                 @if (!string.IsNullOrEmpty(Request.QueryString["bookingId"]))
