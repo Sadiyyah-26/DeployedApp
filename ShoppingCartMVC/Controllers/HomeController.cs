@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using ShoppingCartMVC.Models;
 using QRCoder;
+using System.Windows;
 
 namespace ShoppingCartMVC.Controllers
 {
@@ -828,33 +829,33 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        //this not working for more than one order
+
         #region Admin Notify Customer for Collection
 
-        public ActionResult NotifyCustomer(int OrderId)
+        public ActionResult NotifyCustomer(int InvoiceID)
         {
-            TempData["order"] = OrderId;
-            var query = db.tblOrders.SingleOrDefault(m => m.OrderId == OrderId);
+            TempData["order"] = InvoiceID;
+            var query = db.tblOrders.Where(m => m.InvoiceId == InvoiceID)
+                .GroupBy(m => m.InvoiceId).ToList();
             return View(query);
         }
-        //this not working
-        //this not working for more than one order
+
         [HttpPost]
         public ActionResult NotifyCustomer(tblOrder o, bool orderReady)
         {
             int orderId = (int)TempData["order"];
-            tblOrder tblOrder = db.tblOrders.Find(orderId);
+            
             tblInvoice tblInvoice = db.tblInvoices.Find(orderId);
-            tblOrder.TblInvoice.Status = "Ready for Collection";
+            tblInvoice.Status = "Ready for Collection";
 
             if (orderReady)
             {
                 string oId = orderId.ToString();
-                string toEmail = tblOrder.TblInvoice.TblUser.Email;
-                string name = tblOrder.TblInvoice.TblUser.Name;
+                string toEmail = tblInvoice.TblUser.Email;
+                string name = tblInvoice.TblUser.Name;
 
                 var body = "Dear " + name + ",<br><br>" +
-               "I'm contacting you on behalf of Turbo Meals, and I'm glad to inform you that your Order #" + orderId +
+               "I'm contacting you on behalf of Turbo Meals, and I'm glad to inform you that your Order with invoice number #" + orderId +
                " is now ready for collection.<br><br>" + "Please note, any outstanding payments may be made upon collection.<br><br>" +
                 "Once your order is collected your Order Status will automatically be updated.<br><br>" +
                "Thank you for choosing Turbo Meals!";
@@ -1032,10 +1033,12 @@ namespace ShoppingCartMVC.Controllers
                         var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
                         var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
 
-                        int qtyToReduce = 0;
+                        decimal qtyToReduce = 0;
                         if (ingr != null)
                         {
-                            qtyToReduce = ingr.Ing_UnitsUsed * (int)rec.Qty;
+                           
+
+                            qtyToReduce = (decimal)(i.Ing_QtyPerPro * ingr.Ing_StandardQty * rec.Qty);
                             ingr.Ing_StockyQty -= qtyToReduce;
 
                             if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
@@ -1994,11 +1997,13 @@ namespace ShoppingCartMVC.Controllers
                         var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
                         var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
 
-                        int qtyToReduce = 0;
+                        decimal qtyToReduce = 0;
                         if (ingr != null)
                         {
-                            qtyToReduce = ingr.Ing_UnitsUsed * (int)relatedOrder.Qty;
+                            //qtyToReduce = ingr.Ing_UnitsUsed * (int)relatedOrder.Qty;
+                            qtyToReduce = (decimal)(i.Ing_QtyPerPro * ingr.Ing_StandardQty * relatedOrder.Qty);
                             ingr.Ing_StockyQty -= qtyToReduce;
+
 
                             if ((ingr.Ing_StockyQty < 50) && (ingr.StockStatus == "In Stock"))
                             {
@@ -2216,12 +2221,12 @@ namespace ShoppingCartMVC.Controllers
             Bitmap qrCodeImage = qrCode.GetGraphic(10); // Adjust the size of the QR code as needed
 
             // Resize the QR code image
-            Bitmap resizedImage = new Bitmap(qrCodeImage, new Size(200, 200)); // Adjust the size as needed
+            /*Bitmap resizedImage = new Bitmap(qrCodeImage, new Size(200, 200));*/ // Adjust the size as needed
 
             // Convert the resized image to a base64 string
             using (MemoryStream stream = new MemoryStream())
             {
-                resizedImage.Save(stream, ImageFormat.Png);
+                //resizedImage.Save(stream, ImageFormat.Png);
                 byte[] qrCodeBytes = stream.ToArray();
                 string base64Image = Convert.ToBase64String(qrCodeBytes);
                 return "data:image/png;base64," + base64Image;

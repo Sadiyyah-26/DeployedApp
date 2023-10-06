@@ -9,12 +9,12 @@ namespace ShoppingCartMVC.Models
 {
     public class IngrVM
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string IngName { get; internal set; }
         public string Ing_Image { get; set; }
         public double Ing_UnitCost { get; set; }
-        public int Ing_StockyQty { get; set; }
+        public decimal Ing_StockyQty { get; set; }
     }
 }

@@ -166,8 +166,12 @@
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
     <Compile Include="Models\Drivers.cs" />
     <Compile Include="Models\ExtraVM.cs" />
+    <Compile Include="Models\IngChecklist.cs" />
+    <Compile Include="Models\IngProVm.cs" />
+    <Compile Include="Models\IngQtyVM.cs" />
     <Compile Include="Models\IngredientProduct.cs" />
     <Compile Include="Models\IngrVM.cs" />
+    <Compile Include="Models\IngSupplVM.cs" />
     <Compile Include="Models\InStoreSuccessCashViewModel.cs" />
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\LowStockVM.cs" />

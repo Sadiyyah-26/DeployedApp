@@ -124,7 +124,7 @@
                         }
                         else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Order Placed"))
                         {
-                            <a href="@Url.Action("NotifyCustomer","Home", new { OrderId = item.OrderId })" class="btn btn-info"> Notify Customer</a>
+                            <a href="@Url.Action("NotifyCustomer","Home", new { InvoiceID = item.InvoiceId })" class="btn btn-info"> Notify Customer</a>
 
 
                         }

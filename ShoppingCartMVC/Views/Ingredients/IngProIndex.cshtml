@@ -1,50 +1,101 @@
-﻿@model List<System.Linq.IGrouping<int, ShoppingCartMVC.Models.IngredientProduct>>
+﻿@model List<ShoppingCartMVC.Models.IngProVm>
+
+<!DOCTYPE html>
+<html>
 <head>
     <title>Product Ingredients</title>
-</head>
-<script src="~/js/jquery.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $("#searchBox").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("#myTable tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    <script src="~/js/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchBox").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
             });
         });
-    });
-</script>
-
-
-<div class="container">
-    <h2> Ingredients used for Each Product</h2>
-    <div class="form-group">
-        <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
-    </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Ingredients</th>
-            </tr>
-        </thead>
-        <tbody id="myTable">
-            @foreach (var group in Model)
-            {
+    </script>
+    <style>
+        .container {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2> Ingredients used for Each Product</h2>
+        <div class="form-group">
+            <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+        </div>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@group.First().TblProduct.P_Name</td>
-                    <td>
-                        @foreach (var item in group)
-                        {
-                            <p>@item.TblIngredients.Ing_Name</p>
-                        }
-                    </td>
+                    <th>Product</th>
+                    <th>Ingredients</th>
+                    <th>Qty Used Per Product</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="myTable">
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td>
+                            @foreach (var ingredient in product.Ingredients)
+                            {
+                                <p>@ingredient.IngredientName </p>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var ingredient in product.Ingredients)
+                            {
+                                <p>@ingredient.Quantity @ingredient.StdQty_UnitMeaseurement </p>
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#editModal-@product.ProductID">Edit</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
+    @foreach (var product in Model)
+    {
+        <div class="modal fade" id="editModal-@product.ProductID" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Ingredients Qty for @product.ProductName</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @using (Html.BeginForm("UpdateIngredientQuantities", "Ingredients", FormMethod.Post))
+                        {
+                            @Html.Hidden("productId", product.ProductID)
 
-</div>
-<br />
-<br />
+                            foreach (var ingredient in product.Ingredients)
+                            {
+                                <div class="form-group">
+                                    <label>@ingredient.IngredientName</label>
+                                    @Html.Hidden("ingredientId", ingredient.IngredientID)
+                                    @Html.TextBox("quantity", ingredient.Quantity, new { @class = "form-control" })
+                                </div>
+                            }
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</body>
+</html>
