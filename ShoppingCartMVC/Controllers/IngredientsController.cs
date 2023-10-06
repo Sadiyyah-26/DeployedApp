@@ -30,8 +30,64 @@ namespace ShoppingCartMVC.Controllers
         {
             var all = db.IngredientProducts.ToList();
             var groupedIng = all.GroupBy(m => m.ProID).ToList();
-            return View(groupedIng);
+
+            var viewModelList = new List<IngProVm>();
+
+            foreach (var group in groupedIng)
+            {
+                var product = group.First().TblProduct;
+
+                var ingredientViewModels = group.Select(item => new IngQtyVM
+                {
+                    IngredientID = item.TblIngredients.Ing_ID,
+                    IngredientName = item.TblIngredients.Ing_Name,
+                    Quantity = item.Ing_QtyPerPro,
+                    StdQty_UnitMeaseurement = item.TblIngredients.StdQty_UnitMeaseurement
+                }).ToList();
+
+                var viewModel = new IngProVm
+                {
+                    ProductID = product.ProID,
+                    ProductName = product.P_Name,
+                    Ingredients = ingredientViewModels
+                };
+
+                viewModelList.Add(viewModel);
+            }
+
+            return View(viewModelList);
         }
+
+
+        [HttpPost]
+        public ActionResult UpdateIngredientQuantities(int productId, List<int> ingredientId, List<decimal> quantity)
+        {
+            // Retrieve the product and associated ingredients from the database.
+            var product = db.IngredientProducts.Where(m => m.ProID == productId).ToList();
+
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Loop through the posted ingredient quantities and update the database.
+            for (int i = 0; i < ingredientId.Count; i++)
+            {
+                var ingredientProduct = product.FirstOrDefault(item => item.Ing_ID == ingredientId[i]);
+                if (ingredientProduct != null)
+                {
+                    ingredientProduct.Ing_QtyPerPro = quantity[i];
+                }
+            }
+
+            // Save changes to the database.
+            db.SaveChanges();
+
+            // Redirect to a success page or back to the product list.
+            return RedirectToAction("IngProIndex");
+        }
+
+
         #endregion
 
 
@@ -57,17 +113,19 @@ namespace ShoppingCartMVC.Controllers
             {
                 tblIngredients ing = new tblIngredients();
                 ing.Ing_Name = i.Ing_Name;
-                ing.Ing_UnitsUsed = i.Ing_UnitsUsed;
-                if(Image!=null)
+                //ing.Ing_UnitsUsed = i.Ing_UnitsUsed;
+                ing.Ing_StandardQty=i.Ing_StandardQty;
+
+                if (Image!=null)
                 {
                     ing.Ing_Image = Image.FileName.ToString();
                 }
                
                 ing.Ing_StockyQty = i.Ing_StockyQty;
-
+                ing.StdQty_UnitMeaseurement = i.StdQty_UnitMeaseurement;
 
                 //image upload
-                if(Image!=null)
+                if (Image!=null)
                 {
                     var folder = Server.MapPath("~/Uploads/");
                     Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));

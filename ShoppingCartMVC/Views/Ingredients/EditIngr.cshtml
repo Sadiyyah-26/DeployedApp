@@ -36,12 +36,21 @@
                    </div>
 
                    <div class="form-group">
-                       Avg Units used for Product:
+                       Standard Qty of Ingredient:
                        <div class="col-md-10">
-                           @Html.EditorFor(model => model.Ing_UnitsUsed, new { htmlAttributes = new { @class = "form-control" } })
+                           @Html.EditorFor(model => model.Ing_StandardQty, new { htmlAttributes = new { @class = "form-control" } })
 
                        </div>
                    </div>
+
+                   <div class="form-group">
+                       Standard Qty Unit of Measurement for Ingredient:
+                       <div class="col-md-10">
+                           @Html.EditorFor(model => model.StdQty_UnitMeaseurement, new { htmlAttributes = new { @class = "form-control" } })
+
+                       </div>
+                   </div>
+
 
                    <div class="form-group">
                        Ingredient Stock Qty:
