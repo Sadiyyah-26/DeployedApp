@@ -18,14 +18,19 @@ namespace ShoppingCartMVC.Models
         public string OrderNumber { get; set; }
 
         public DateTime? OrderDateTime { get; set; }
+
         public string WaiterName { get; set; } = "None";
 
+        public int WaiterID { get; set; }
+
         public string ProductName { get; set; }
+
         public int? Unit { get; set; }
 
         public int? Qty { get; set; }
 
         public int? Total { get; set; }
+
         public string Method { get; set; }
 
         public string PayMethod { get; set; } = "Pending";
@@ -34,10 +39,18 @@ namespace ShoppingCartMVC.Models
 
         public string TableNumber { get; set; } = "None";
 
+        public string CellNumber { get; set; }
+
+        public string Email { get; set; }
+
+        public bool waiterRated { get; set; } = false;
+
         public DateTime? ReservedDate { get; set; }
 
         public DateTime? ReservedTime { get; set; }
 
         public virtual tblReservation TblReservation { get; set; }
+
+        public virtual tblUser User { get; set; }
     }
 }

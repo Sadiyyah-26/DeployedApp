@@ -294,66 +294,72 @@
         </div>
         @*<button id="undoButton" class="generate-button">Undo</button>
             <button id="redoButton" class="generate-button">Redo</button>*@
-        <div class="selected-products" id="selectedProducts">
-            <h2>Selected Products</h2>
-            <ul id="selectedList"></ul>
-            <p>Total Price: <span id="totalPrice">R 0</span></p>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+    <div class="selected-products" id="selectedProducts">
+        <h2>Selected Products</h2>
+        <ul id="selectedList"></ul>
+        <p>Total Price: <span id="totalPrice">R 0</span></p>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
 
-            <div id="orderOptions">
-                <div class="order-option">
-                    <button id="dineInButton" class="order-button dine-in">Dine-in</button>
-                </div>
-                <div class="order-option">
-                    <button id="takeAwayButton" class="order-button takeaway">Takeaway</button>
-                </div>
+        <div id="orderOptions">
+            <div class="order-option">
+                <button id="dineInButton" class="order-button dine-in">Dine-in</button>
             </div>
-            <br />
-            <br />
-            <br />
-            <!-- Add container for table number selection -->
-            <div id="tableNumberContainer" style="display: none;">
-                <label for="tableNumber">Table Number:</label>
-                <select id="tableNumber">
-                    <option value="">None</option> <!-- Add this line for "None" option -->
-                    @for (int i = 1; i <= 15; i++)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
+            <div class="order-option">
+                <button id="takeAwayButton" class="order-button takeaway">Takeaway</button>
             </div>
-
-            <!-- Add container for payment options -->
-            <div id="paymentOptionsContainer" style="display: none;">
-                <label for="paymentOption">Payment Options:</label>
-                <br />
-                <input type="radio" name="paymentOption" value="Cash"> Cash
-                <input type="radio" name="paymentOption" value="Card"> Card
-            </div>
-            <!-- Add container for cash amount input -->
-            <div id="cashAmountContainer" style="display: none;">
-                <label for="cashAmount">Cash Amount:</label>
-                <input type="text" id="cashAmount" name="cashAmount" />
-            </div>
-
-            <!-- Add container for change due label -->
-            <div id="changeDueLabel" style="display: none;">
-                <label>Change Due:</label>
-                <span id="changeDue">0.00</span>
-            </div>
-            <br />
-
-            <div class="form-group">
-                <label for="inputEmail">Email Address:</label>
-                <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Enter your email" required>
-            </div>
-            <button id="generateButton" class="generate-button">Generate</button>
-            @*<button id="generateButton">Generate</button>*@
         </div>
+        <br />
+        <br />
+        <br />
+        <!-- Add container for table number selection -->
+        <div id="tableNumberContainer" style="display: none;">
+            <label for="tableNumber">Table Number:</label>
+            <select id="tableNumber">
+                <option value="">None</option> <!-- Add this line for "None" option -->
+                @for (int i = 1; i <= 15; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </select>
+        </div>
+
+        <!-- Add container for payment options -->
+        <div id="paymentOptionsContainer" style="display: none;">
+            <label for="paymentOption">Payment Options:</label>
+            <br />
+            <input type="radio" name="paymentOption" value="Cash"> Cash
+            <input type="radio" name="paymentOption" value="Card"> Card
+        </div>
+        <!-- Add container for cash amount input -->
+        <div id="cashAmountContainer" style="display: none;">
+            <label for="cashAmount">Cash Amount:</label>
+            <input type="text" id="cashAmount" name="cashAmount" />
+        </div>
+
+        <!-- Add container for change due label -->
+        <div id="changeDueLabel" style="display: none;">
+            <label>Change Due:</label>
+            <span id="changeDue">0.00</span>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <label for="inputEmail">Email Address:</label>
+            <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Enter email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="inputNumber">Cell Number:</label>
+            <input type="number" id="inputCell" name="inputCell" class="form-control" placeholder="Enter number" required>
+        </div>
+
+        <button id="generateButton" class="generate-button">Generate</button>
+        @*<button id="generateButton">Generate</button>*@
+    </div>
 
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -463,6 +469,8 @@
                 var isDineIn = $('#dineInButton').hasClass('active');
                 var tableNumber = $('#tableNumber').val();
                 var paymentMethod = $('input[name="paymentOption"]:checked').val();
+                var cell = $('#inputCell').val();
+                var email = $('#inputEmail').val();
 
                 var selectedProducts = [];
 
@@ -482,6 +490,8 @@
                 form.append($('<input>').attr('type', 'hidden').attr('name', 'isDineIn').val(isDineIn));
                 form.append($('<input>').attr('type', 'hidden').attr('name', 'tableNumber').val(tableNumber));
                 form.append($('<input>').attr('type', 'hidden').attr('name', 'paymentMethod').val(paymentMethod));
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'inputCell').val(cell));
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'inputEmail').val(email));
 
                 for (var i = 0; i < selectedProducts.length; i++) {
                     form.append($('<input>').attr('type', 'hidden').attr('name', 'selectedProducts[' + i + '].Product').val(selectedProducts[i].Product));

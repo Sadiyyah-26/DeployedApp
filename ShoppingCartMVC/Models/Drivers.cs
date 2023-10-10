@@ -25,7 +25,7 @@ namespace ShoppingCartMVC.Models
 
         [DisplayName("DriverUserID")]
         public int UserId { get; set; }
-        public virtual tblUser User { get; set; }
+        public virtual tblEmployee Employee { get; set; }
 
         public string DeliveryAddress { get; set; }
 

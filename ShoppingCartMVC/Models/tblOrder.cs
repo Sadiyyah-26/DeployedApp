@@ -40,6 +40,8 @@ namespace ShoppingCartMVC.Models
 
         public int? InvoiceId { get; set; }
 
+        public bool Rated { get; set; } = false;
+
         public virtual tblProduct TblProduct { get; set; }
 
         public virtual tblInvoice TblInvoice { get; set; }

@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.tblUser
+﻿@model ShoppingCartMVC.Models.tblEmployee
 @{
     ViewBag.Title = "UserDetails";
 }
@@ -8,23 +8,23 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6">
-            <input type="hidden" name="id" value="@Model.UserId" />
-            <img src="~/Uploads/@Model.Image" style="height:250px;width:100%" />
+            <input type="hidden" name="id" value="@Model.UserID" />
+            <img src="~/Uploads/@Model.EmpImage" style="height:250px;width:100%" />
         </div>
 
         <div class="col-lg-6">
-            <h3>@Model.Name</h3>
-            <p>@Model.Email</p>
+            <h3>@Model.EmpName</h3>
+            <p>@Model.TblUser.Email</p>
 
-            @if (Model.RoleType != 2)
+            @if (Model.TblUser.RoleType != 2)
             {
-                <p><h2><strong>@Model.Rating</strong></h2></p>
+                <p><h2><strong>@Model.avgRating</strong></h2></p>
                 <p>Tips <strong>@Model.Tips</strong></p>
             }
         </div>
 
         <div>
-            <p><a href="@Url.Action("EditAccount", "Account", new { id = Model.UserId})" class="btn btn-primary">Edit</a></p>
+            <p><a href="@Url.Action("EditAccount", "Account", new { id = Model.UserID})" class="btn btn-primary">Edit</a></p>
 
         </div>
     </div>
