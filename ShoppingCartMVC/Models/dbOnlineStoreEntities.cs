@@ -17,13 +17,13 @@ namespace ShoppingCartMVC.Models
         public virtual DbSet<tblOrder> tblOrders { get; set; }
         public virtual DbSet<tblProduct> tblProducts { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
-        //public virtual DbSet<InvoiceVM> tblInvoiceVM { get; set; }
+        
         public virtual DbSet<Drivers> tblDrivers { get; set; }
         public virtual DbSet<tblReservation> tblReservations { get; set; }
         public virtual DbSet<tblRefund> tblRefunds { get; set; }
         public virtual DbSet<tblExtras> tblExtras { get; set; }
         public virtual DbSet<tblSupplier> tblSuppliers { get; set; }
-        //public virtual DbSet<tblSupplierOrder> tblSuppliersOrders { get; set; }
+        
         public virtual DbSet<tblIngredients> tblIngredients { get; set; }
         public virtual DbSet<IngredientProduct> IngredientProducts { get; set; }
         public virtual DbSet<SupplierIngredients> SupplierIngredients { get; set; }
@@ -38,6 +38,8 @@ namespace ShoppingCartMVC.Models
 
         public virtual DbSet<tblInStoreOrder> TblInStoreOrders { get; set; }
         public virtual DbSet<tblBill> TblBills { get; set; }
+
+        public virtual DbSet<tblEmployee> tblEmployees { get; set; }
     }
 }
 

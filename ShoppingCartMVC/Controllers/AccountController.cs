@@ -37,23 +37,8 @@ namespace ShoppingCartMVC.Controllers
                 {
                     u.Name = t.Name;
                     u.Email = t.Email;
-                    if(Image!=null)
-                    {
-                        u.Image = Image.FileName.ToString();
-                    }
-                  
-                    u.Rating = t.Rating;
-                    u.Tips = t.Tips;
                     u.Password = t.Password;
                     u.RoleType = 2;
-
-                    if(Image!=null)
-                    {
-                        var folder = Server.MapPath("~/Uploads/");
-                        Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
-                    }
-                    //image upload
-                   
 
                     db.tblUsers.Add(u);
                     db.SaveChanges();
@@ -122,6 +107,24 @@ namespace ShoppingCartMVC.Controllers
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
+
+                    var emp = db.tblEmployees.FirstOrDefault(m => m.UserID == query.UserId);
+
+                    if (emp == null)
+                    {
+                        // No record with matching UserID found, so we create a new record
+                        tblEmployee e = new tblEmployee();
+
+                        if (ModelState.IsValid)
+                        {
+                            e.EmpName = query.Name;
+                            e.UserID = query.UserId;
+                        }
+
+                        db.tblEmployees.Add(e);
+                        db.SaveChanges();
+                    }
+
                     return RedirectToAction("DriverDeliveries", "Home", new { id = @Session["uid"] });
                 }
                 else if (query.RoleType == 4)
@@ -129,6 +132,7 @@ namespace ShoppingCartMVC.Controllers
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
+
                     return RedirectToAction("PrepStaff", "Home", new { id = @Session["uid"] });
                 }
                 else if (query.RoleType == 5)
@@ -136,6 +140,24 @@ namespace ShoppingCartMVC.Controllers
                     Session["uid"] = query.UserId;
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
+
+                    var emp = db.tblEmployees.FirstOrDefault(m => m.UserID == query.UserId);
+
+                    if (emp == null)
+                    {
+                        // No record with matching UserID found, so we create a new record
+                        tblEmployee e = new tblEmployee();
+
+                        if (ModelState.IsValid)
+                        {
+                            e.EmpName = query.Name;
+                            e.UserID = query.UserId;
+                        }
+
+                        db.tblEmployees.Add(e);
+                        db.SaveChanges();
+                    }
+
                     return RedirectToAction("POSDashboard", "Home", new { id = @Session["uid"] });
                 }
 
@@ -160,11 +182,11 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
-        #region User Details
+        #region Driver and Waiter View Account Details
         public ActionResult UserDetails()
         {
-            string userEmail = User.Identity.Name; // Get the email of the currently logged-in user
-            tblUser currentUser = db.tblUsers.SingleOrDefault(u => u.Email == userEmail);
+            int userID = Convert.ToInt16(Session["uid"]);
+            tblEmployee currentUser = db.tblEmployees.SingleOrDefault(u => u.UserID == userID);
 
             if (currentUser != null)
             {
@@ -178,29 +200,39 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
-        #region Edit Account
+        #region Driver and Waiter Edit Account
 
         public ActionResult EditAccount(int id)
         {
-            var query = db.tblUsers.SingleOrDefault(m => m.UserId == id);
+            TempData["id"] = id;
+            var query = db.tblEmployees.SingleOrDefault(m => m.UserID == id);
             return View(query);
         }
 
 
         [HttpPost]
-        public ActionResult EditAccount(tblUser u, HttpPostedFileBase Image)
+        public ActionResult EditAccount(tblEmployee em, HttpPostedFileBase Image)
         {
+            int uID = Convert.ToInt16(TempData["id"]);
+
             try
             {
-                if (Image != null)
+                // Fetch the current entity from the database
+                var currentEntity = db.tblEmployees.FirstOrDefault(m => m.UserID == uID);
+
+                if (currentEntity != null)
                 {
-                    u.Image = Image.FileName.ToString();
-                    var folder = Server.MapPath("~/Uploads/");
-                    Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                    if (Image != null)
+                    {
+                        // Update the EmpImage field only
+                        currentEntity.EmpImage = Image.FileName.ToString();
+                        var folder = Server.MapPath("~/Uploads/");
+                        Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                    }
 
+                    // Save changes
+                    db.SaveChanges();
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -210,37 +242,62 @@ namespace ShoppingCartMVC.Controllers
             return RedirectToAction("UserDetails");
         }
 
-
         #endregion
 
-        #region Rate And Tip
+        #region Driver Rating
         public ActionResult RateAndTip(int InvoiceId)
         {
-            var query = db.tblDrivers.SingleOrDefault(m => m.TblOrder.InvoiceId == InvoiceId);
-            TempData["i"] = InvoiceId;
-            if (query == null)
+            var completed = db.tblOrders.SingleOrDefault(db => db.InvoiceId == InvoiceId);
+            if (completed.Rated)
             {
-                return HttpNotFound();
+                return View("CompletedRating");
             }
-
-            var driverUser = query.User;
-
-            string driverName = driverUser.Name;
-            string driverEmail = driverUser.Email;
-            string driverImage = driverUser.Image; 
-            double driverRating = driverUser.Rating; 
-            double driverTips = driverUser.Tips;
-
-            var vmodel = new RateAndTipVM
+            else
             {
-                DriverName = driverName,
-                DriverEmail = driverEmail,
-                DriverImage = driverImage,
-                DriverRating = driverRating,
-                DriverTips = driverTips
-            };
-            return View(vmodel);
+
+
+                TempData["i"] = InvoiceId;
+
+
+                var query = from driver in db.tblDrivers
+                            join employee in db.tblEmployees
+                            on driver.UserId equals employee.UserID
+                            where driver.TblOrder.InvoiceId == InvoiceId
+                            select new
+                            {
+                                DriverName = employee.EmpName,
+                                DriverEmail = employee.TblUser.Email,
+                                DriverImage = employee.EmpImage,
+                                DriverAvgRating = employee.avgRating
+                            };
+
+                var result = query.SingleOrDefault();
+
+                if (result == null)
+                {
+                    return HttpNotFound();
+                }
+
+                string driverName = result.DriverName;
+                string driverEmail = result.DriverEmail;
+                string driverImage = result.DriverImage;
+                double driverAvgRating = result.DriverAvgRating;
+                int ratingProvided = 1;
+
+
+                var vmodel = new RateAndTipVM
+                {
+                    DriverName = driverName,
+                    DriverEmail = driverEmail,
+                    DriverImage = driverImage,
+                    DriverAvgRating = driverAvgRating,
+                    rating = ratingProvided
+                };
+                return View(vmodel);
+            }
         }
+
+
         [HttpPost]
         public ActionResult RateAndTip(RateAndTipVM model)
         {
@@ -248,49 +305,207 @@ namespace ShoppingCartMVC.Controllers
             {
                 int inv = (int)TempData["i"];
                 var query = db.tblDrivers.SingleOrDefault(m => m.TblOrder.InvoiceId == inv);
+                var completed = db.tblOrders.SingleOrDefault(db => db.InvoiceId == inv);
+                var emp = db.tblEmployees.SingleOrDefault(u => u.UserID == query.UserId);
 
-                var user = db.tblUsers.SingleOrDefault(u => u.UserId == query.UserId);
-
-                if (user != null)
+                if (emp != null)
                 {
-                    
+
                     if (model.IsCustomTip)
                     {
-                        
-                        user.Tips += model.CustomTip;
+
+                        emp.Tips += model.CustomTip;
                     }
                     else
                     {
-                        
-                        user.Tips += 0; 
+
+                        emp.Tips += 0;
                     }
-                  
-                    user.Rating = model.DriverRating;
-                  
+
+                    //checking rating 
+                    if (model.rating == 1)
+                    {
+                        emp.Rating1 += 1;
+                    }
+                    else
+                    if (model.rating == 2)
+                    {
+                        emp.Rating2 += 1;
+                    }
+                    else
+                    if (model.rating == 3)
+                    {
+                        emp.Rating3 += 1;
+                    }
+                    else
+                        if (model.rating == 4)
+                    {
+                        emp.Rating4 += 1;
+                    }
+                    else
+                    if (model.rating == 5)
+                    {
+                        emp.Rating5 += 1;
+                    }
+
+                    var sum = emp.Rating1 + emp.Rating2 + emp.Rating3 + emp.Rating4 + emp.Rating5;
+                    emp.avgRating = sum / 5.00;
+
+                    completed.Rated = true;
+
                     db.SaveChanges();
 
-                    return Content("<script>" +
-                       "function callPayPal() {" +
-                       "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + model.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/Thanks';" +
-                       "}" +
-                       "callPayPal();" +
-                       "</script>");
+                    if (model.IsCustomTip)
+                    {
+                        return Content("<script>" +
+                                               "function callPayPal() {" +
+                                               "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + model.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/Thanks';" +
+                                               "}" +
+                                               "callPayPal();" +
+                                               "</script>");
+                    }
+
+
                 }
                 else
-                {               
+                {
                     return HttpNotFound();
                 }
-            }           
-            return View(model);
+            }
+            return View("Thanks");
         }
 
 
         #endregion
 
+        #region Waiter Rating
+        public ActionResult WaiterRating(string OrderNo)
+        {
+            TempData["wOrderNo"] = OrderNo;
+            var completedRating = db.TblInStoreOrders.SingleOrDefault(m => m.OrderNumber == OrderNo);
+
+            if (completedRating.waiterRated)
+            {
+                return View("CompletedRating");
+            }
+            else
+            {
+                TempData["OrderNo"] = OrderNo;
+
+                var qry = from inStore in db.TblInStoreOrders
+                          join employee in db.tblEmployees
+                          on inStore.WaiterID equals employee.UserID
+                          where inStore.OrderNumber == OrderNo
+                          select new
+                          {
+                              WaiterName = employee.EmpName,
+                              WaiterEmail = employee.TblUser.Email,
+                              WaiterImage = employee.EmpImage,
+                              WaiterAvgRating = employee.avgRating
+
+                          };
+
+                var result = qry.SingleOrDefault();
+
+                if (result == null)
+                {
+                    return HttpNotFound();
+                }
+
+                string waiterName = result.WaiterName;
+                string waiterEmail = result.WaiterEmail;
+                string waiterImage = result.WaiterImage;
+                double AvgRating = result.WaiterAvgRating;
+                int ratingProvided = 1;
+
+
+
+                var vmodel = new WaiterRatingVM
+                {
+                    WaiterName = waiterName,
+                    WaiterEmail = waiterEmail,
+                    WaiterImage = waiterImage,
+                    WaiterAvgRating = AvgRating,
+                    rating = ratingProvided
+                };
+
+                return View(vmodel);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult WaiterRating(WaiterRatingVM vm)
+        {
+            if (ModelState.IsValid)
+            {
+                string order = (string)TempData["wOrderNo"];
+
+                var qry = from inStore in db.TblInStoreOrders
+                          join employee in db.tblEmployees
+                          on inStore.WaiterID equals employee.UserID
+                          where inStore.OrderNumber == order
+                          select new
+                          {
+                              WaiterName = employee.EmpName,
+                              WaiterEmail = employee.TblUser.Email,
+                              WaiterImage = employee.EmpImage,
+                              WaiterAvgRating = employee.avgRating
+
+                          };
+
+                var result = qry.SingleOrDefault();
+                var emp = db.tblEmployees.FirstOrDefault(m => m.EmpName == result.WaiterName);
+                var completedRating = db.TblInStoreOrders.SingleOrDefault(m => m.OrderNumber == order);
+
+                if (vm.rating == 1)
+                {
+                    emp.Rating1 += 1;
+                }
+                else
+                  if (vm.rating == 2)
+                {
+                    emp.Rating2 += 1;
+                }
+                else
+                  if (vm.rating == 3)
+                {
+                    emp.Rating3 += 1;
+                }
+                else
+                  if (vm.rating == 4)
+                {
+                    emp.Rating4 += 1;
+                }
+                else
+                  if (vm.rating == 5)
+                {
+                    emp.Rating5 += 1;
+                }
+
+                var sum = emp.Rating1 + emp.Rating2 + emp.Rating3 + emp.Rating4 + emp.Rating5;
+                emp.avgRating = sum / 5.00;
+
+                completedRating.waiterRated = true;
+
+                db.SaveChanges();
+
+
+            }
+            return View("Thanks");
+        }
+
+        #endregion
 
         public ActionResult Thanks()
         {
             return View();
         }
+
+        public ActionResult CompletedRating()
+        {
+            return View();
+        }
+
+
     }
 }

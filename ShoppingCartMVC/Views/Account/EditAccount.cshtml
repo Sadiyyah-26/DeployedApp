@@ -1,4 +1,4 @@
-﻿@model ShoppingCartMVC.Models.tblUser
+﻿@model ShoppingCartMVC.Models.tblEmployee
 
 <head>
     <title>Update Account</title>
@@ -29,14 +29,14 @@
             {
                 <div class="form-horizontal">
                     <hr />
-                    @Html.HiddenFor(model => model.UserId)
+                    @Html.HiddenFor(model => model.UserID)
 
 
 
                     <div class="form-group">
                         <span>Select Image:</span>
                         <div class="col-md-10">
-                            <img src="~/Uploads/@Model.Image" style="width:150px; height:100px;" class="img-responsive" />
+                            <img src="~/Uploads/@Model.EmpImage" style="width:150px; height:100px;" class="img-responsive" />
                             <input type="file" name="Image" />
                         </div>
                     </div>

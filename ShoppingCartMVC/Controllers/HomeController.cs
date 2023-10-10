@@ -12,6 +12,12 @@ using System.Web.Mvc;
 using ShoppingCartMVC.Models;
 using QRCoder;
 using System.Windows;
+using System.Net;
+using Vonage;
+using Vonage.Request;
+using Vonage.Numbers;
+using System.Threading.Tasks;
+using Vonage.Messaging;
 
 namespace ShoppingCartMVC.Controllers
 {
@@ -1472,6 +1478,8 @@ namespace ShoppingCartMVC.Controllers
             var existingOrder = db.TblInStoreOrders.FirstOrDefault(o => o.OrderNumber == orderNumber);
             return existingOrder != null;
         }
+
+
         [HttpPost]
         public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod)
         {
@@ -1483,11 +1491,14 @@ namespace ShoppingCartMVC.Controllers
 
             string waiterName = Session["User"] as string;
 
+            int waiterID = Convert.ToInt16(Session["uid"]);
 
             string payMethod = Request.Form["paymentOption"];
 
             DateTime orderDateTime = DateTime.Now;
 
+            string cellN = Request.Form["inputCell"];
+            string emailU = Request.Form["inputEmail"];
 
             var ordersToInsert = new List<tblInStoreOrder>();
 
@@ -1509,12 +1520,15 @@ namespace ShoppingCartMVC.Controllers
                     OrderNumber = orderNumber,
                     OrderDateTime = orderDateTime,
                     WaiterName = waiterName,
+                    WaiterID = waiterID,
                     ProductName = product.Product,
                     Unit = product.UnitPrice,
                     Qty = product.Quantity,
                     Total = product.TotalPrice,
                     Method = method,
                     PayMethod = isDineIn ? null : paymentMethod,
+                    CellNumber = cellN,
+                    Email = emailU,
                     Status = "Preparing",
                     TableNumber = string.IsNullOrEmpty(tableNumber) ? "NONE" : tableNumber,
                     ReservedDate = null,
@@ -1957,25 +1971,55 @@ namespace ShoppingCartMVC.Controllers
             return View(ordersWithSameOrderNumber);
         }
 
-        private void SendOrderReadyEmail(string orderNumber)
-        {
-            var body = $"Dear Customer,<br /><br />Your order : {orderNumber} is now ready... We hope you enjoy your meal soon! Please note that your payment is pending. Kindly complete payment at the restaurant<br /><br />";
+        #endregion
 
-            var message = new MailMessage();
-            message.To.Add(new MailAddress("sadiyyah002@gmail.com"));
-            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
-            message.Subject = "Order Ready Confirmation";
-            message.Body = body;
-            message.IsBodyHtml = true;
+        #region Order Ready In Store
+        private const string VonageApiKey = "48a0f779";
+        private const string VonageApiSecret = "QrcrIOFMhfx07D1A";
+        private const string FromNumber = "Vonage APIs";
+
+        private async Task SendOrderReadyEmail(string OrderNumber, string toNumber, string message, string email)
+        {
+            //sending sms to notify order is ready
+
+            //var credentials = Credentials.FromApiKeyAndSecret(VonageApiKey, VonageApiSecret);
+            //var client = new VonageClient(credentials);
+
+            //var request = new SendSmsRequest
+            //{
+            //    From = FromNumber,
+            //    To = toNumber,
+            //    Text = message
+            //};
+
+            //var response = await client.SmsClient.SendAnSmsAsync(request);           
+
+            //sending email for waiter rating 
+            string baseUrlW = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+            string urlW = Url.Action("WaiterRating", "Account", new { OrderNo = OrderNumber });
+            string linkW = $"{baseUrlW}{urlW}";
+
+            var body = "Dear Turbo Meals Customer, <br/><br/>"
+                + "We value your feedback and would appreciate you leaving a rating for your waiter,using the following link: " + linkW
+                + "<br/><br/>Kind regards<br/><br/>Turbo Meals Family.";
+
+            var Emessage = new MailMessage();
+            Emessage.To.Add(new MailAddress(email));
+            Emessage.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+            Emessage.Subject = "Turbo Meals Waiter Rating";
+            Emessage.Body = body;
+            Emessage.IsBodyHtml = true;
 
             using (var smtp = new SmtpClient())
             {
-                smtp.Send(message);
+                await smtp.SendMailAsync(Emessage);
             }
+
         }
 
+
         [HttpPost]
-        public ActionResult MarkAsReady(int OrderId)
+        public async Task<ActionResult> MarkAsReady(int OrderId)
         {
             var order = db.TblInStoreOrders.Find(OrderId);
 
@@ -2046,8 +2090,27 @@ namespace ShoppingCartMVC.Controllers
 
                 db.SaveChanges();
 
+                string message = "Dear Turbo Meals Customer,\nYour order: " + order.OrderNumber + " is now ready.\n";
+                if (order.Method == "Takeaway")
+                {
+                    message += "You can collect order from Collections.\n";
+                    if (order.PayMethod == "Cash")
+                    {
+                        message += "Please note, payment is pending and may be done upon collection.\n";
+                    }
+                    message += "We hope you enjoy your meal, and hope to see you again soon.";
+                }
+                else
+                {
+                    message += "Your waiter " + order.WaiterName + " will be bringing your order to your table, Table " + order.TableNumber + " shortly. Thank you for your patience.\n";
+                    message += "\nWe hope you enjoy your meal.\n\n\n";
+                    message += "We would greatly appreciate you taking a minute and leaving a rating of your waiter, using the link sent to your email address.";
+                }
+
+
+
                 // Send the order ready confirmation email
-                SendOrderReadyEmail(order.OrderNumber);
+                await SendOrderReadyEmail(order.OrderNumber, order.CellNumber, message, order.Email);
             }
 
             return RedirectToAction("PrepInStoreOrders");

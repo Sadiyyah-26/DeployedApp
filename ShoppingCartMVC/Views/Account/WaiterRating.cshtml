@@ -1,7 +1,6 @@
-﻿@model ShoppingCartMVC.Models.RateAndTipVM
-
+﻿@model ShoppingCartMVC.Models.WaiterRatingVM
 <head>
-    <title>Rate & Tip</title>
+    <title>Turbo Meals Waiter Rating</title>
     <style>
         .card {
             border: 3px solid #04d47a;
@@ -21,23 +20,23 @@
 
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Rate & Tip </u></h2>
+<h2 class="card-title" style="text-align:center"><u> Rate </u></h2>
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-            @using (Html.BeginForm("RateAndTip", "Account", FormMethod.Post))
+            @using (Html.BeginForm("WaiterRating", "Account", FormMethod.Post))
             {
                 <div class="form-horizontal">
                     <hr />
                     <div class="col-lg-6 mx-auto">
-                        <img src="~/Uploads/@Model.DriverImage" style="height:250px;width:100%" />
+                        <img src="~/Uploads/@Model.WaiterImage" style="height:250px;width:100%" />
                     </div>
 
                     <div class="col-lg-6">
-                        <h3>@Model.DriverName</h3>
-                        <p>@Model.DriverEmail</p>
+                        <h3>@Model.WaiterName</h3>
+                        <p>@Model.WaiterEmail</p>
 
-                        <p>Current Rating: <h2><strong>@Model.DriverAvgRating</strong></h2></p>
+                        <p>Current Avg Rating: <h2><strong>@Model.WaiterAvgRating</strong></h2></p>
                     </div>
 
                     <div class="form-group">
@@ -55,15 +54,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <span>Your Tip:</span>
-                        <div class="radio-group">
-                            @Html.RadioButtonFor(model => model.IsCustomTip, true) Custom Amount
-                            <br />
-                            @Html.RadioButtonFor(model => model.IsCustomTip, false) No Tip
-                            @Html.TextBoxFor(model => model.CustomTip, new { @class = "form-control" })
-                        </div>
-                    </div>
+                   
 
                     <div class="form-group" style="display: flex;">
                         <input type="submit" value="Proceed" class="btn btn-success" />
@@ -80,6 +71,4 @@
 <br />
 <br />
 <br />
-
-
 
