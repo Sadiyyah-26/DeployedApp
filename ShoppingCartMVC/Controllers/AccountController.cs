@@ -91,15 +91,63 @@ namespace ShoppingCartMVC.Controllers
                 if (query.RoleType == 1)
                 {
                     Session["uid"] = query.UserId;
+                    Session["UserRole"] = "Admin";
+
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
+
+                    var accProfile = db.TblAccProfiles.FirstOrDefault(m => m.UserID == query.UserId);
+
+                    if (accProfile == null)
+                    {
+                        // No record with matching UserID found, so we create a new record
+                        tblAccProfile ap = new tblAccProfile();
+
+                        if (ModelState.IsValid)
+                        {
+                            ap.userName = query.Name;
+                            ap.UserID = query.UserId;
+                        }
+
+                        db.TblAccProfiles.Add(ap);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        Session["userProfile"] = accProfile.userProfileImage;
+                    }
+
+
                     return RedirectToAction("GetAllOrderDetail", "Home");
                 }
                 else if (query.RoleType == 2)
                 {
                     Session["uid"] = query.UserId;
+                    Session["UserRole"] = "User";
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
+
+                    var accProfile = db.TblAccProfiles.FirstOrDefault(m => m.UserID == query.UserId);
+
+                    if (accProfile == null)
+                    {
+                        // No record with matching UserID found, so we create a new record
+                        tblAccProfile ap = new tblAccProfile();
+
+                        if (ModelState.IsValid)
+                        {
+                            ap.userName = query.Name;
+                            ap.UserID = query.UserId;
+                        }
+
+                        db.TblAccProfiles.Add(ap);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        Session["userProfile"] = accProfile.userProfileImage;
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
                 else if (query.RoleType == 3)
@@ -492,6 +540,66 @@ namespace ShoppingCartMVC.Controllers
 
             }
             return View("Thanks");
+        }
+
+        #endregion
+
+        #region Admin and User View Profile and edit account
+        public ActionResult AccProfile()
+        {
+            int userID = Convert.ToInt16(Session["uid"]);
+            tblAccProfile user = db.TblAccProfiles.SingleOrDefault(m => m.UserID == userID);
+
+            if (user != null)
+            {
+                return View(user);
+            }
+            else
+            {
+                // Handle the case where the user is not found (e.g., show an error message)
+                return RedirectToAction("Index", "Home"); // Redirect to a different page if needed
+            }
+
+        }
+
+
+        public ActionResult profileEdit()
+        {
+            int userID = Convert.ToInt16(Session["uid"]);
+            TempData["id"] = userID;
+            var query = db.TblAccProfiles.SingleOrDefault(m => m.UserID == userID);
+            return View(query);
+        }
+
+        [HttpPost]
+        public ActionResult profileEdit(tblAccProfile ap, HttpPostedFileBase Image)
+        {
+            int id = Convert.ToInt16(TempData["id"]);
+
+            try
+            {
+                // Fetch the current entity from the database
+                var currentEntity = db.TblAccProfiles.FirstOrDefault(m => m.UserID == id);
+
+                if (currentEntity != null)
+                {
+                    if (Image != null)
+                    {
+                        // Update the EmpImage field only
+                        currentEntity.userProfileImage = Image.FileName.ToString();
+                        var folder = Server.MapPath("~/Uploads/");
+                        Image.SaveAs(Path.Combine(folder, Image.FileName.ToString()));
+                    }
+
+                    // Save changes
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = ex;
+            }
+            return RedirectToAction("AccProfile");
         }
 
         #endregion

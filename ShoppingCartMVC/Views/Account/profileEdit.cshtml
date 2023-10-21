@@ -1,0 +1,59 @@
+﻿@model ShoppingCartMVC.Models.tblAccProfile
+<head>
+    <title>Update Account</title>
+    <style>
+        .card {
+            border: 2px solid green;
+        }
+
+        .form-group {
+            text-align: center;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 2fr);
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<br />
+
+<h2 class="card-title" style="text-align:center"><u> Update Photo </u></h2>
+<div class="col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm("profileEdit", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.HiddenFor(model => model.UserID)
+
+                    <div class="form-group">
+                        <span>Select Image:</span>
+                        <div class="col-md-10">
+                            <img src="~/Uploads/@Model.userProfileImage" style="width:150px; height:100px;" class="img-responsive" />
+                            <input type="file" name="Image" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <input type="submit" value="Update" class="btn btn-success" />
+                    </div>
+
+                    <p style="text-align:center">
+                        <a href="@Url.Action("AccProfile", "Account")" class="btn btn-dark">Back</a>
+                    </p>
+                </div>
+                <p>@TempData["msg"]</p>
+            }
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<br />

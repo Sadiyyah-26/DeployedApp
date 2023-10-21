@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Chat";
+}
+
+<style>
+    div.panel-body {
+        overflow: scroll;
+        background: url('http://subtlepatterns.com/patterns/geometry2.png');
+    }
+
+    footer {
+        display: none;
+    }
+</style>
+
+<h2>ChatBox</h2>
+<div class="chat-panel panel panel-default">
+    <div class="panel-heading">
+        ChatBox using SignalR
+        <i class="fa fa-paper-plane fa-fw"></i>
+    </div>
+    <div class="panel-body" id="chat" style="height:250px;">
+        <input type="hidden" id="displayname" />
+        <p id="discussion"></p>
+    </div>
+    <div class="panel-footer">
+        <div class="input-group">
+            <input id="message" type="text" name="message" class="form-control input-sm" placeholder="Type your message here..." />
+            <span class="input-group-btn">
+                <input type="button" class="btn btn-warning btn-sm" id="sendmessage" value="Send">
+            </span>
+        </div>
+    </div>
+</div>
+
+@if (Session["User"] != null)
+{
+    <script>
+        var userNameFromSession = '@Session["User"]';
+    </script>
+}
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="~/SignalR/hubs/"></script>
+    <script>
+        $(function () {
+            var chat = $.connection.chatHub;
+            var userName = userNameFromSession;
+
+            chat.client.addNewMessageToPage = function (senderName, message, userProfileImage) {
+                if (senderName === userName) {
+                    $('#discussion').append('<p style="color: blue; text-align: right;">' +
+                        '<img src="' + userProfileImage + '" title="' + senderName + '">' +
+                        ' <span style="font-weight: bold; color: blue;">' + senderName + '</span>: ' + htmlEncode(message) + '</p>');
+                } else {
+                    $('#discussion').append('<p style="color: green; text-align: left;">' +
+                        '<img src="' + userProfileImage + '" title="' + senderName + '">' +
+                        ' <span style="font-weight: bold; color: green;">' + senderName + '</span>: ' + htmlEncode(message) + '</p>');
+                }
+            };
+
+            $('#message').focus();
+
+            $.connection.hub.start().done(function () {
+                $('#sendmessage').click(function () {
+                    var message = $('#message').val();
+                    chat.server.send(userName, message);
+                    $('#message').val('').focus();
+                });
+            });
+        });
+
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+    </script>
+}

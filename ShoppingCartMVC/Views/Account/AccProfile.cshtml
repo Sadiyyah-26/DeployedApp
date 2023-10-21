@@ -1,0 +1,28 @@
+﻿@model ShoppingCartMVC.Models.tblAccProfile
+@{
+    ViewBag.Title = "AccProfile";
+}
+
+<h2>My Details</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <input type="hidden" name="id" value="@Model.UserID" />
+            <img src="~/Uploads/@Model.userProfileImage" style="height:250px;width:100%" />
+        </div>
+
+        <div class="col-lg-6">
+            <h3>@Model.userName</h3>
+            <p>@Model.TblUser.Email</p>
+         
+        </div>
+
+        <div>
+            <p><a href="@Url.Action("profileEdit", "Account")" class="btn btn-primary">Edit</a></p>
+
+        </div>
+    </div>
+</div>
+
+
