@@ -40,6 +40,9 @@ namespace ShoppingCartMVC.Models
         public virtual DbSet<tblBill> TblBills { get; set; }
 
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
+        
+        public virtual DbSet<tblAccProfile> TblAccProfiles { get; set; }
+
     }
 }
 
