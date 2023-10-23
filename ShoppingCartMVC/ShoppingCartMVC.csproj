@@ -336,6 +336,7 @@
     <Compile Include="Models\MyRoleProvider.cs" />
     <Compile Include="Models\RateAndTipVM.cs" />
     <Compile Include="Models\ReserveOrderViewModel.cs" />
+    <Compile Include="Models\ResetPasswordModel.cs" />
     <Compile Include="Models\SelectedProductModel.cs" />
     <Compile Include="Models\SupplierIngredients.cs" />
     <Compile Include="Models\tblAccProfile.cs" />
@@ -418,6 +419,7 @@
     <Content Include="Images\edit6.png" />
     <Content Include="Images\HomepageBD.png" />
     <Content Include="Images\LoginPic.png" />
+    <Content Include="Images\Logo2.png" />
     <Content Include="Images\LogoPlain.png" />
     <Content Include="Images\LogoW.png" />
     <Content Include="Images\LogoW2.jpg" />
@@ -588,6 +590,8 @@
     <Content Include="Views\LiveChat\Chat.cshtml" />
     <Content Include="Views\Account\AccProfile.cshtml" />
     <Content Include="Views\Account\profileEdit.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

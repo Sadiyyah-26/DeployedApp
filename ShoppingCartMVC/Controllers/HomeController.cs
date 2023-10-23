@@ -294,15 +294,28 @@ namespace ShoppingCartMVC.Controllers
             if (ModelState.IsValid)
             {
                 List<Cart> li2 = TempData["cart"] as List<Cart>;
+
+                //changes final
+                int? cartTotal = 0;
+
+                if (Method == "Delivery")
+                {
+                    cartTotal = (int)TempData["total"] + 50;
+                }
+                else
+                {
+                    cartTotal = (int)TempData["total"];
+                }
+
                 tblInvoice iv = new tblInvoice();
                 iv.UserId = Convert.ToInt32(Session["uid"].ToString());
                 iv.InvoiceDate = System.DateTime.Now;
                 //iv.Bill = (int)TempData["total"];
 
-                if (RedeemPoints == "No" || RedeemPoints == null) { iv.Bill = (int)TempData["total"]; }
+                if (RedeemPoints == "No" || RedeemPoints == null) { iv.Bill = cartTotal; }
                 else if (RedeemPoints == "Yes")
                 {
-                    iv.Bill = Convert.ToInt32((int)TempData["total"] * 0.5);
+                    iv.Bill = Convert.ToInt32(cartTotal * 0.5);
 
                     //Remove points from the user's account
                     UserPoints uPoints = new UserPoints();
@@ -335,7 +348,7 @@ namespace ShoppingCartMVC.Controllers
                     foreach (var item in cols)
                     {
                         //Add 5% of the total bill as points to their account
-                        item.PointBalance += (int)TempData["total"] * 0.05;
+                        item.PointBalance += (double)cartTotal * 0.05;
                     }
                     db.SaveChanges();
                 }
@@ -351,7 +364,7 @@ namespace ShoppingCartMVC.Controllers
                     foreach (var item in cols)
                     {
                         //Add 5% of the total bill as points to their account
-                        item.PointBalance += (int)TempData["total"] * 0.05;
+                        item.PointBalance += (double)cartTotal * 0.05;
                     }
                     db.SaveChanges();
                 }

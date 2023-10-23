@@ -21,7 +21,7 @@ namespace ShoppingCartMVC.Models
         public string Email { get; set; }      
         public string Password { get; set; }
         public int? RoleType { get; set; }
-
+        public string ResetPasswordCode { get; set; } = "";
         public virtual ICollection<tblInvoice> tblInvoices { get; set; }
     }
 }

@@ -3,10 +3,19 @@
 <head>
     <title>Checkout</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         .card {
             border: 1px solid;
+        }
+
+        .thead {
+            background-color: #fc872fef;
+        }
+
+        .text-center {
+            color: black;
         }
     </style>
 </head>
@@ -25,11 +34,11 @@
                 <div class="cart-list">
                     <h3>Total Item : @TempData["item_count"]</h3>
                     <table class="table">
-                        <thead class="thead-primary">
+                        <thead class="thead">
                             <tr class="text-center">
 
                                 <th></th>
-                                @*<th>ID</th>*@
+
                                 <th>Item</th>
                                 <th>Price</th>
                                 <th>Qty</th>
@@ -46,9 +55,6 @@
 
                                 <tr class="text-center">
                                     <td class="product-remove"><a href="@Url.Action("remove", "Home", new { id = item.proid })"><span class="fa fa-remove fa-1x"></span></a></td>
-                                    @*<td class="product-name">
-                                            <h3>@item.proid</h3>
-                                        </td>*@
 
                                     <td class="product-name">
                                         <h3>@item.proname</h3>
@@ -78,25 +84,20 @@
 
             </div>
         </div>
+
         <div class="row justify-content-end">
-
-
             <div class="col-lg-4 mt-5 cart-wrap ftco-animate fadeInUp ftco-animated">
                 <div class="cart-total mb-3">
                     <h3>Cart Total</h3>
-
-
                     <hr>
                     <p class="d-flex total-price">
                         <span>Total</span>
-                        <span>R @TempData["total"].00</span>
+                        <span id="totalValue">R @TempData["total"].00</span>
                     </p>
                 </div>
-
-
-
             </div>
         </div>
+
     }
 
 
@@ -142,7 +143,11 @@
                                     <h5 class="card-title">Delivery Method :</h5>
 
 
-                                    <input type="radio" name="Method" value="Delivery" /><label>&ensp;Delivery</label>
+                                    <input type="radio" name="Method" value="Delivery" title="Standard Delivery Fee of R50" /><label>&ensp;Delivery</label>
+                                    <br />
+                                    <div id="deliveryFeeMessage" style="display: none; color: orangered;">
+                                        Standard delivery fee of R50 will be added.
+                                    </div>
                                     <br />
                                     <input type="radio" name="Method" value="Collection" /><label>&ensp;Collection</label>
 
@@ -180,4 +185,47 @@
 
 </div>
 <br />
+
+
+<script>
+$(document).ready(function () {
+    // Get references to elements
+    var deliveryRadioButton = $("input[name='Method'][value='Delivery']");
+    var collectionRadioButton = $("input[name='Method'][value='Collection']");
+    var deliveryFeeRow = $("#deliveryFeeRow");
+    var totalValue = $("#totalValue");
+    var deliveryFeeMessage = $("#deliveryFeeMessage"); // Get the delivery fee message element
+
+    // Calculate and store the original total on page load
+    var originalTotal = parseFloat("@TempData["total"]");
+
+    // Add event listeners to the radio buttons
+    deliveryRadioButton.on("change", function () {
+        if ($(this).is(":checked")) {
+            // Show the delivery fee row
+            deliveryFeeRow.show();
+            deliveryFeeMessage.show(); // Display the delivery fee message
+
+            // Calculate and update the new total with an additional R50
+            var newTotal = originalTotal + 50;
+
+            totalValue.text("R " + newTotal.toFixed(2));
+        }
+    });
+
+    collectionRadioButton.on("change", function () {
+        if ($(this).is(":checked")) {
+            // Hide the delivery fee row and the delivery fee message
+            deliveryFeeRow.hide();
+            deliveryFeeMessage.hide();
+
+            // Reset the total value to the original total
+            totalValue.text("R " + originalTotal.toFixed(2));
+        }
+    });
+});
+</script>
+
+
+
 

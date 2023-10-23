@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using RegistrationAndLogin.Models;
 using ShoppingCartMVC.Models;
 
 namespace ShoppingCartMVC.Controllers
@@ -22,7 +23,7 @@ namespace ShoppingCartMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(tblUser t, HttpPostedFileBase Image)
+        public ActionResult Register(tblUser t)
         {
             tblUser u = new tblUser();
             if (ModelState.IsValid)
@@ -181,7 +182,25 @@ namespace ShoppingCartMVC.Controllers
                     FormsAuthentication.SetAuthCookie(query.Email, false);
                     Session["User"] = query.Name;
 
+                    var emp = db.tblEmployees.FirstOrDefault(m => m.UserID == query.UserId);
+
+                    if (emp == null)
+                    {
+                        // No record with matching UserID found, so we create a new record
+                        tblEmployee e = new tblEmployee();
+
+                        if (ModelState.IsValid)
+                        {
+                            e.EmpName = query.Name;
+                            e.EmpImage = "NULL";
+                            e.UserID = query.UserId;
+                        }
+
+                        db.tblEmployees.Add(e);
+                        db.SaveChanges();
+                    }
                     return RedirectToAction("PrepStaff", "Home", new { id = @Session["uid"] });
+
                 }
                 else if (query.RoleType == 5)
                 {
@@ -218,6 +237,118 @@ namespace ShoppingCartMVC.Controllers
             return View();
         }
 
+        #endregion
+
+        #region Forget Password and Reset Password
+        [NonAction]
+        public void SendVerificationLinkEmail(int userID, string activationCode, string customerEmail)
+        {
+            string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
+            string url = Url.Action("ResetPassword", "Account", new { id = userID, token = activationCode });
+            string link = $"{baseUrl}{url}";
+
+            var content = "Hi,<br/><br/> We got your request for the reset of your account password. Please click on the below link to reset your password" +
+                    "<br/><a href=" + link + ">Reset Password</a>";
+
+
+
+            var email = new MailMessage();
+            email.To.Add(new MailAddress(customerEmail));
+            email.From = new MailAddress("turbomeals123@gmail.com");
+            email.Subject = "Reset Password for Turbo Meals Account";
+            email.Body = content;
+            email.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Send(email);
+            }
+
+
+        }
+
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgotPassword(string EmailID)
+        {
+            //Verify Email ID
+            //Generate Reset password link
+            //Send Email
+            string message = "";
+
+            var account = db.tblUsers.Where(u => u.Email.Equals(EmailID)).FirstOrDefault();
+            if (account != null)
+            {
+                //Send email for reset password
+                string resetCode = Guid.NewGuid().ToString();
+                SendVerificationLinkEmail(account.UserId, resetCode, account.Email);
+                account.ResetPasswordCode = resetCode;
+
+
+                db.SaveChanges();
+                message = "Reset password link has been sent to your email address.";
+            }
+            else
+            {
+                message = "Account not found";
+            }
+
+            ViewBag.Message = message;
+            return View();
+        }
+
+        public ActionResult ResetPassword(int id, string token)
+        {
+            //Verify the reset password link
+            //Find account associated with this link
+            //redirect to reset password page
+
+            var user = db.tblUsers.Where(a => a.UserId.Equals(id)).FirstOrDefault();
+            if (user != null)
+            {
+                ResetPasswordModel model = new ResetPasswordModel();
+                model.ResetCode = token;
+                return View(model);
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPassword(ResetPasswordModel model)
+        {
+            var message = "";
+            if (ModelState.IsValid)
+            {
+
+                var user = db.tblUsers.Where(a => a.ResetPasswordCode.Equals(model.ResetCode)).FirstOrDefault();
+                if (user != null)
+                {
+                    user.Password = model.NewPassword;
+                    user.ResetPasswordCode = "";
+                    //dc.Configuration.ValidateOnSaveEnabled = false;
+                    db.SaveChanges();
+                    message = "New password Updated Successfully!";
+                }
+
+            }
+            else
+            {
+                message = "Something Invalid";
+            }
+
+            ViewBag.Message = message;
+            return View(model);
+        }
         #endregion
 
         #region logout 
