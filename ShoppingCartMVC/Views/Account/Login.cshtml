@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-nOSnFRRtBH/3ek3U25d+2+uFICuOB19UW97p7A7F1YJSDfKsRrlYcWpTfB+DZQrkb2W4EfD+8Bhlu8pX76wWSA==" crossorigin="anonymous" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
-    <script>$(document).ready(function () {
+    <script>
+    $(document).ready(function () {
             $('#toggle-password').click(function () {
                 var passwordInput = $('#password-input');
                 var passwordFieldType = passwordInput.attr('type');
@@ -27,6 +28,40 @@
                 }
             });
         });</script> @*v changes*@
+
+        <style>
+            .action-links {
+                display: inline-block;
+               
+            }
+
+            .link-spacing {
+                margin-left: 50px; /* Adjust the margin to your desired spacing */
+            }
+            .orange-link {
+                color: orange;
+                font-size: 19px; /* Increase the font size to your desired value */
+                font-weight: bold; /* Make the text bold */
+                text-decoration: none; /* Remove the underline (if needed) */
+            }
+            .orange-link:hover{
+                color:orangered;
+            }
+
+            .custom-orange-button {
+                background-color: orange; /* Set your desired shade of orange */
+                color: white; /* Set the text color to contrast with the background */
+                font-size: 20px; /* Set the font size to your preference */
+                font-weight: bold; /* Make the text bold if desired */
+                border: none;
+            }
+
+                .custom-orange-button:hover {
+                    background-color: darkorange;
+                }
+        </style>
+
+
     </head>
     <body>
 
@@ -68,10 +103,15 @@
                             </div>
                             <br />
                             <div class="form-group">
-                                <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
+                                <input type="submit" value="Login" class="btn custom-orange-button  py-3 px-5">
                             </div>
                         </form>
 
+                        <div class="action-links">
+                            @Html.ActionLink("Register Now", "Register", "Account", null, new { @class = "orange-link" })
+                            <span class="link-spacing"></span>
+                            @Html.ActionLink("Forgot Password?", "ForgotPassword", "Account", null, new { @class = "orange-link" })
+                        </div>
 
                     </div>
 
