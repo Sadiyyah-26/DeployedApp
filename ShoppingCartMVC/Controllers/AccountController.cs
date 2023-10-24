@@ -486,6 +486,7 @@ namespace ShoppingCartMVC.Controllers
                 var query = db.tblDrivers.SingleOrDefault(m => m.TblOrder.InvoiceId == inv);
                 var completed = db.tblOrders.SingleOrDefault(db => db.InvoiceId == inv);
                 var emp = db.tblEmployees.SingleOrDefault(u => u.UserID == query.UserId);
+                var email = completed.TblInvoice.TblUser.Email;
 
                 if (emp != null)
                 {
@@ -533,6 +534,26 @@ namespace ShoppingCartMVC.Controllers
                     completed.Rated = true;
 
                     db.SaveChanges();
+
+                    //send thank you email
+                    var body = "Dear Turbo Meals Customer,<br/><br/>" +
+                         "We are writing to express our gratitude for your recent feedback regarding our driver's performance. Your opinion is of great importance to us as it allows us to enhance the quality of the services we provide."
+                         + "<br/><br/>We appreciate the time you've taken to share your thoughts with us, and please be assured that your feedback will be instrumental in our ongoing efforts to improve our services."
+                         + "<br/><br/>If you have any further comments or suggestions, please do not hesitate to reach out. We are always eager to hear from you."
+                         + "<br/><br/>Thank you again for your valuable input."
+                         + "<br/><br/>Kind regards,<br/>The Turbo Meals Family";
+
+                    var message = new MailMessage();
+                    message.To.Add(new MailAddress(email));
+                    message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                    message.Subject = "Turbo Meals Driver Rating Completed";
+                    message.Body = body;
+                    message.IsBodyHtml = true;
+
+                    using (var smtp = new SmtpClient())
+                    {
+                        smtp.Send(message);
+                    }
 
                     if (model.IsCustomTip)
                     {
@@ -635,39 +656,85 @@ namespace ShoppingCartMVC.Controllers
                 var result = qry.SingleOrDefault();
                 var emp = db.tblEmployees.FirstOrDefault(m => m.EmpName == result.WaiterName);
                 var completedRating = db.TblInStoreOrders.SingleOrDefault(m => m.OrderNumber == order);
+                var email = completedRating.Email;
 
-                if (vm.rating == 1)
+                if (emp != null)
                 {
-                    emp.Rating1 += 1;
-                }
-                else
-                  if (vm.rating == 2)
-                {
-                    emp.Rating2 += 1;
-                }
-                else
-                  if (vm.rating == 3)
-                {
-                    emp.Rating3 += 1;
-                }
-                else
-                  if (vm.rating == 4)
-                {
-                    emp.Rating4 += 1;
-                }
-                else
-                  if (vm.rating == 5)
-                {
-                    emp.Rating5 += 1;
+                    //tips
+                    if (vm.IsCustomTip)
+                    {
+
+                        emp.Tips += vm.CustomTip;
+                    }
+                    else
+                    {
+
+                        emp.Tips += 0;
+                    }
+
+                    //rating
+                    if (vm.rating == 1)
+                    {
+                        emp.Rating1 += 1;
+                    }
+                    else
+                      if (vm.rating == 2)
+                    {
+                        emp.Rating2 += 1;
+                    }
+                    else
+                      if (vm.rating == 3)
+                    {
+                        emp.Rating3 += 1;
+                    }
+                    else
+                      if (vm.rating == 4)
+                    {
+                        emp.Rating4 += 1;
+                    }
+                    else
+                      if (vm.rating == 5)
+                    {
+                        emp.Rating5 += 1;
+                    }
+
+                    var sum = emp.Rating1 + emp.Rating2 + emp.Rating3 + emp.Rating4 + emp.Rating5;
+                    emp.avgRating = sum / 5.00;
+
+                    completedRating.waiterRated = true;
+
+                    db.SaveChanges();
+
+                    if (vm.IsCustomTip)
+                    {
+                        return Content("<script>" +
+                                               "function callPayPal() {" +
+                                               "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + vm.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/Thanks';" +
+                                               "}" +
+                                               "callPayPal();" +
+                                               "</script>");
+                    }
                 }
 
-                var sum = emp.Rating1 + emp.Rating2 + emp.Rating3 + emp.Rating4 + emp.Rating5;
-                emp.avgRating = sum / 5.00;
+                //send thank you email
+                var body = "Dear Turbo Meals Customer,<br/><br/>" +
+                     "We are writing to express our gratitude for your recent feedback regarding our waiter's performance. Your opinion is of great importance to us as it allows us to enhance the quality of the services we provide."
+                     + "<br/><br/>We appreciate the time you've taken to share your thoughts with us, and please be assured that your feedback will be instrumental in our ongoing efforts to improve our services."
+                     + "<br/><br/>If you have any further comments or suggestions, please do not hesitate to reach out. We are always eager to hear from you."
+                     + "<br/><br/>Thank you again for your valuable input."
+                     + "<br/><br/>Kind regards,<br/>The Turbo Meals Family";
 
-                completedRating.waiterRated = true;
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(email));
+                message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+                message.Subject = "Turbo Meals Waiter Rating Completed";
+                message.Body = body;
+                message.IsBodyHtml = true;
 
-                db.SaveChanges();
-
+                using (var smtp = new SmtpClient())
+                {
+                    smtp.Send(message);
+                }
 
             }
             return View("Thanks");

@@ -13,11 +13,10 @@ using ShoppingCartMVC.Models;
 using QRCoder;
 using System.Windows;
 using System.Net;
-using Vonage;
-using Vonage.Request;
-using Vonage.Numbers;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 using System.Threading.Tasks;
-using Vonage.Messaging;
+
 
 namespace ShoppingCartMVC.Controllers
 {
@@ -300,7 +299,7 @@ namespace ShoppingCartMVC.Controllers
 
                 if (Method == "Delivery")
                 {
-                    cartTotal = (int)TempData["total"] + 50;
+                    cartTotal = (int)TempData["total"] + 30;
                 }
                 else
                 {
@@ -399,18 +398,21 @@ namespace ShoppingCartMVC.Controllers
                 db.SaveChanges();
 
                 // Send email to user
-                var body = $"Dear {userName},<br /><br />Your order was placed successfully.<br><br> You will be notified when your order is ready.<br><br>";
+                var body = $"<html><body>" +
+             $"<p>Dear {userName},</p><br /><br />" +
+             $"<p>Your order was placed successfully.</p><br /><br />" +
+             $"<p>You will be notified when your order is ready.</p><br /><br />";
 
                 if (iv.Payment == "Cash")
                 {
-                    body += "Please note that your payment is pending. Kindly complete the payment when you recieve your order.";
+                    body += $"<p>Please note that your payment is pending. Kindly complete the payment when you receive your order.</p><br /><br />";
                 }
                 else if (iv.Payment == "PayPal")
                 {
-                    body += "Your payment has been successfully processed.";
+                    body += $"<p>Your payment has been successfully processed.</p><br /><br />";
                 }
 
-                body += "<br /><br />Order Details:<br />";
+                body += $"<p><strong>Order Details:</strong></p>";
 
                 foreach (var item in li2)
                 {
@@ -420,11 +422,13 @@ namespace ShoppingCartMVC.Controllers
                     int Price = (int)product.Unit;
                     int bill = item.bill;
 
-                    body += $"Item: {productName}<br />" +
-                            $"Quantity: {quantity}<br />" +
-                            $"UnitPrice: {Price}<br />" +
-                            $"Total Bill: {bill}<br /><br />";
+                    body += $"<p>Item: {productName}</p>" +
+                            $"<p>Quantity: {quantity}</p>" +
+                            $"<p>Unit Price: R{Price}.00</p>" +
+                            $"<p>Total Bill: R{bill}.00</p><br /><br />";
                 }
+
+                body += $"</body></html>";
 
                 var message = new MailMessage();
                 message.To.Add(new MailAddress(userEmail));
@@ -437,6 +441,7 @@ namespace ShoppingCartMVC.Controllers
                 {
                     smtp.Send(message);
                 }
+
 
 
                 TempData.Remove("total");
@@ -823,11 +828,12 @@ namespace ShoppingCartMVC.Controllers
             string url = Url.Action("RateAndTip", "Account", new { InvoiceId = TempData["oId"] });
             string link = $"{baseUrl}{url}";
 
-          
+
             var body = "Dear " + name + ",<br><br>" +
                 "Your Order with Invoice #" + oId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
                 "Thank you for choosing Turbo Meals!<br>" +
-                "Click here to rate and tip your driver: " + link;
+                "Use the following link to rate and tip your driver: <a href=" + link + ">Driver Rating</a>"; ;
+
 
 
             var message = new MailMessage();
@@ -1075,7 +1081,7 @@ namespace ShoppingCartMVC.Controllers
                                 string link = $"{baseUrl}{url}";
 
                                 var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
-                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: " + link; ;
+                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: <a href=" + link + ">Order Stock</a>"; ;
 
 
 
@@ -1987,25 +1993,23 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Order Ready In Store
-        private const string VonageApiKey = "48a0f779";
-        private const string VonageApiSecret = "QrcrIOFMhfx07D1A";
-        private const string FromNumber = "Vonage APIs";
 
         private async Task SendOrderReadyEmail(string OrderNumber, string toNumber, string message, string email)
         {
             //sending sms to notify order is ready
 
-            //var credentials = Credentials.FromApiKeyAndSecret(VonageApiKey, VonageApiSecret);
-            //var client = new VonageClient(credentials);
+            string accountSid = "ACb88a86596a0f96d4a39e78710f29cd46";
+            string authToken = "60ce9beec8d9c41f0eebf37bb485c6c5";
+            string fromPhoneNumber = "+13308879147";
 
-            //var request = new SendSmsRequest
-            //{
-            //    From = FromNumber,
-            //    To = toNumber,
-            //    Text = message
-            //};
+            TwilioClient.Init(accountSid, authToken);
 
-            //var response = await client.SmsClient.SendAnSmsAsync(request);           
+            var smsMessage = MessageResource.Create(
+                body: message,
+                from: new Twilio.Types.PhoneNumber(fromPhoneNumber),
+                to: new Twilio.Types.PhoneNumber("+27606854298")
+            );
+
 
             //sending email for waiter rating 
             string baseUrlW = $"{Request.Url.Scheme}://{Request.Url.Authority}";
@@ -2013,8 +2017,9 @@ namespace ShoppingCartMVC.Controllers
             string linkW = $"{baseUrlW}{urlW}";
 
             var body = "Dear Turbo Meals Customer, <br/><br/>"
-                + "We value your feedback and would appreciate you leaving a rating for your waiter,using the following link: " + linkW
-                + "<br/><br/>Kind regards<br/><br/>Turbo Meals Family.";
+                + "We value your feedback and would appreciate you leaving a rating for your waiter,using the following link: <a href=" + linkW + ">Waiter Rating</a>"
+                + "<br/><br/>Thank you for helping us improve our services." + "<br/><br/>Kind regards<br/><br/>Turbo Meals Family.";
+
 
             var Emessage = new MailMessage();
             Emessage.To.Add(new MailAddress(email));

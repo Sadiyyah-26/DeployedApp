@@ -1,13 +1,10 @@
 ﻿@model ShoppingCartMVC.Models.tblUser
 
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/css/css/Registration.css" rel="stylesheet" />
     <title>Register</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />  @*v changes*@
 
@@ -26,67 +23,103 @@
                 }
             });
         });</script> @*v changes*@
-    </head>
 
-
-    <body>
-
-        <br />
-        <br />
-        <br />
-        <br />
-        @*<h1>Once you entered all details </h1>*@
-        @using (Html.BeginForm())
-        {
-
-            <div class="container">
-                <h2>Register</h2>
-                <br />
-                <h3 style="color:red;">@TempData["msg"]</h3>
-                <br />
-                <div class="row">
-                    <div class="col-lg-4">
-                        <img src="~/Images/Reg.png" />
-
-                        <form class="bg-white p-5 contact-form">
-                            <div class="form-group">
-                                <br />
-                                <span>Name:</span>
-                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                            </div>
-                            <br />
-                            <div class="form-group">
-                                <span>Email:</span>
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                            </div>
-                            <br />
-                            <div class="form-group">
-                                <span>Password:</span>
-                                <div class="input-group">
-                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "password-input" })
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                            <i class="fas fa-eye-slash" id="toggle-password"></i>  @*v changes*@
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <br />
-                            <br />
-                            <div class="form-group">
-                                <input type="submit" value="Register" class="btn btn-primary py-3 px-5">
-                            </div>
-                            <br />
-                        </form>
-                       
-
-                    </div>
-
-                </div>
-
-            </div>
+    <style>
+        h2 {
+            font-size: 50px;
         }
 
+        .card {
+            border: 3px solid orangered;
+        }
 
-    </body>
-</html>
+        .card-body {
+            text-align: center;
+        }
+        .form-group {
+            display: flex !important;
+            flex-direction: column !important;
+            font-size: 23px;
+        }
+
+        .reg {
+            align-self: flex-start !important;
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+    </style>
+
+    </head>
+
+        <br />
+        <br />
+        <div class="card mx-auto" style="max-width: fit-content;">
+            <div class="row no-gutters">
+                <div class="col-md-6">
+                    <div class="card-body">
+                        @using (Html.BeginForm())
+                        {
+
+                            <div class="container">
+                                <h2>Register</h2>
+                                <br />
+                                <h3 style="color:red;">@TempData["msg"]</h3>
+                                <br />
+                              
+                                        <form class="bg-white p-5 contact-form">
+                                            <div class="form-group">
+                                                <br />
+                                                <span class="reg">Name:</span>
+                                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                            </div>
+                                            <br />
+                                            <div class="form-group">
+                                                <span class="reg">Email:</span>
+                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                            </div>
+                                            <br />
+                                            <div class="form-group">
+                                                <span class="reg">Password:</span>
+                                                <div class="input-group">
+                                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "password-input" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-eye-slash" id="toggle-password"></i>  @*v changes*@
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <div class="form-group">
+                                                <input type="submit" value="Register" class="btn custom-orange-button py-3 px-5">
+                                            </div>
+                                            <br />
+                                        </form>
+                                  
+
+                            </div>
+                        }
+ </div>
+            </div>
+            <div class="col-md-5">
+
+                <img src="~/Images/Reg2.png" class="card-img" alt="..." />
+            </div>
+        </div>
+    </div>
+
+   
+    <br />
