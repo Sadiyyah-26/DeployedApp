@@ -36,45 +36,45 @@
     </style>
 </head>
 <body>
-    <section class="header">
-        <div class="main">
-            <div class="men_text">
-                <img src="~/Images/LogoPlain.png" width="230" height="240" />
-                <h1>Get Fresh<span>Food</span><br>the Turbo Way</h1>
+        <section class="header">
+            <div class="main">
+                <div class="men_text">
+                    @*<img src="~/Images/LogoPlain.png" width="230" height="240" />*@
+                    <h1>Get Fresh<span>Food</span><br>the Turbo Way</h1>
+                </div>
             </div>
-        </div>
-        <p>
-            Get ready for an authentic experience from our fast-food restaurant providing you with turbo meals right at your doorstep
-        </p>
-        <div class="main_btn">
-            <a href="#">&nbsp;&nbsp;Order Now</a>
-            <i class="fa-solid fa-angle-right"></i>
-        </div>
+            <p>
+                Get ready for an authentic experience from our fast-food restaurant providing you with turbo meals right at your doorstep
+            </p>
+            <div class="main_btn">
+                <a href="#">&nbsp;&nbsp;Order Now</a>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+            <br />
+            <div class="main_btn">
+                <a href="#video" onclick="openFullscreen();">&nbsp; Watch Video</a>
+            </div>
+            <video width="0" controls id="myvideo">
+                <source src="~/Images/TurboVideo.mp4" type="video/mp4" />
+            </video>
+
+        </section>
         <br />
-        <div class="main_btn">
-            <a href="#video" onclick="openFullscreen();">&nbsp; Watch Video</a>
-        </div>
-        <video width="0" controls id="myvideo">
-            <source src="~/Images/TurboVideo.mp4" type="video/mp4" />
-        </video>
-
-    </section>
-    <br />
 
 
-    <script>
-        var elem = document.getElementById("myvideo");
-        /* Function to open fullscreen mode */
-        function openFullscreen() {
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            }​​ else if (elem.webkitRequestFullscreen) {​​ /* Safari */
-                elem.webkitRequestFullscreen();
-            }​​ else if (elem.msRequestFullscreen) {​​ /* IE11 */
-                elem.msRequestFullscreen();
+        <script>
+            var elem = document.getElementById("myvideo");
+            /* Function to open fullscreen mode */
+            function openFullscreen() {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {​​ /* Safari */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {​​ /* IE11 */
+                    elem.msRequestFullscreen();
+                }
             }
-        }
 
-    </script>
+        </script>
 </body>
 </html>

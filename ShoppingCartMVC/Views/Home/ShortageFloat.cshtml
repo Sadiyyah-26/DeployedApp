@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "ShortageFloat";
+}
+
+<h2>ShortageFloat</h2>
+@if (TempData["ShortageMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ShortageMessage"]
+    </div>
+}

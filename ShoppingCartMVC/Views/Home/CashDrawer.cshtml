@@ -1,0 +1,88 @@
+﻿@model ShoppingCartMVC.Models.tblCashFloat
+
+@{
+    ViewBag.Title = "CashDrawer";
+}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+<style>
+    .row {
+        margin: 0; /* Remove margin to move the row to the left */
+    }
+
+    /* Style for the left sidebar */
+    .sidebar {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #00008B;
+        padding-top: 20px;
+    }
+
+        /* Style for the sidebar links */
+        .sidebar a {
+            padding: 15px 25px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            color: #ffffff; /* Text color white */
+            background-color: #00008B; /* Blue background */
+            display: block;
+        }
+
+            .sidebar a:hover {
+                background-color: #333;
+            }
+
+    /* Style for the main content area */
+    .content {
+        margin-left: 260px;
+        padding: 20px;
+    }
+</style>
+<br />
+<br />
+<br />
+<br />
+
+<div class="container">
+    <div class="row">
+        <!-- Left Sidebar Navigation -->
+        <!--<div class="col-md-3 sidebar">
+            <a href="#" class="list-group-item">
+                <i class="fas fa-list"></i> Dashboard
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fas fa-utensils"></i> WaiterMenu
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fas fa-money"></i> GenerateBill
+            </a>
+            <a href="#" class="list-group-item">
+                <i class="fas fa-table"></i> Reserve Table
+            </a>-->
+            <!-- Add more links as needed -->
+        <!--</div>-->
+
+        <!-- Main Content Area -->
+        <div class="col-md-9 content">
+            <h2>CashDrawer</h2>
+
+            @using (Html.BeginForm("SaveCashFloat", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Amount)
+                    @Html.TextBoxFor(model => model.Amount, new { @class = "form-control" })
+                </div>
+
+                <input type="submit" value="Proceed" class="btn btn-primary" />
+            }
+        </div>
+    </div>
+</div>
+
+

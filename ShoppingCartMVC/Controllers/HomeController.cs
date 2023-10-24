@@ -1500,7 +1500,7 @@ namespace ShoppingCartMVC.Controllers
 
 
         [HttpPost]
-        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod)
+        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod, int? changeDue)
         {
             if (selectedProducts == null || selectedProducts.Count == 0)
             {
@@ -1511,6 +1511,7 @@ namespace ShoppingCartMVC.Controllers
             string waiterName = Session["User"] as string;
 
             int waiterID = Convert.ToInt16(Session["uid"]);
+
 
             string payMethod = Request.Form["paymentOption"];
 
@@ -1527,15 +1528,47 @@ namespace ShoppingCartMVC.Controllers
 
             int totalAmount = (int)selectedProducts.Sum(product => product.Total);
 
+
             string orderNumber = GenerateOrderNumber();
+            int changeDueValue = changeDue ?? 0;
+
+            // Check if there is a record for the current date in tblCashFloat
+            var currentDate = DateTime.Now.Date;
+            var cashFloatEntry = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
+
+            if (cashFloatEntry != null)
+            {
+                // Deduct the changeDueValue from the current day's cash float
+                cashFloatEntry.Amount -= changeDueValue;
+                if (cashFloatEntry.Amount < 0)
+                {
+                    TempData["ShortageMessage"] = "Shortage of change, please fill the cash drawer.";
+                    return View("ShortageFloat");
+                }
+                else
+                {
+                    // Save changes to the database
+                    db.SaveChanges();
+                }
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "";
+            }
+
+
+
 
 
             foreach (var product in selectedProducts)
             {
                 string method = isDineIn ? "Dine-in" : "Takeaway";
+                //int changeDueValue = changeDue ?? 0;
 
                 var order = new tblInStoreOrder
                 {
+
+
                     OrderNumber = orderNumber,
                     OrderDateTime = orderDateTime,
                     WaiterName = waiterName,
@@ -1551,7 +1584,9 @@ namespace ShoppingCartMVC.Controllers
                     Status = "Preparing",
                     TableNumber = string.IsNullOrEmpty(tableNumber) ? "NONE" : tableNumber,
                     ReservedDate = null,
-                    ReservedTime = null
+                    ReservedTime = null,
+                    Change = changeDueValue,
+                    Amountgiven = changeDue + product.TotalPrice
                 };
 
 
@@ -2618,6 +2653,94 @@ namespace ShoppingCartMVC.Controllers
         }
         #endregion
 
-     
+        #region WaiterCashDrawer
+        public JsonResult GetCurrentFloatAmount()
+        {
+            using (var dbContext = new dbOnlineStoreEntities())
+            {
+                // Fetch the current float amount from the database
+                var currentFloat = dbContext.tblCashFloats.OrderByDescending(f => f.Date).FirstOrDefault();
+
+                if (currentFloat != null)
+                {
+                    return Json(new { amount = currentFloat.Amount }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            // If there's no data or an error occurs, provide a default amount
+            return Json(new { amount = 0.00 }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult CashDrawer()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                // Retrieve the cash float for the current day
+                var currentDay = DateTime.Now.Date;
+                var cashFloat = context.tblCashFloats
+                    .Where(c => c.Date == currentDay)
+                    .FirstOrDefault();
+
+                if (cashFloat != null)
+                {
+                    // Pass the cash float for the current day to the view
+                    return View(cashFloat);
+                }
+            }
+
+            // If there's no cash float for the current day, pass a new CashFloat object
+            return View(new tblCashFloat());
+        }
+
+        [HttpPost]
+        public ActionResult SaveCashFloat(tblCashFloat cashFloat)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var context = new dbOnlineStoreEntities())
+                {
+                    cashFloat.Date = DateTime.Now.Date; // Set the current date (without time)
+
+                    // Check if there's a cash float for the current day
+                    var existingCashFloat = context.tblCashFloats
+                        .Where(c => c.Date == cashFloat.Date)
+                        .FirstOrDefault();
+
+                    if (existingCashFloat != null)
+                    {
+                        // Update the cash float for the current day
+                        existingCashFloat.Amount = cashFloat.Amount;
+                    }
+                    else
+                    {
+                        // If there's no cash float for the current day, add a new record
+                        context.tblCashFloats.Add(cashFloat);
+                    }
+
+                    context.SaveChanges();
+                }
+
+                return RedirectToAction("CashDrawer");
+            }
+
+            return View("CashDrawer", cashFloat);
+        }
+        public ActionResult Transactions()
+        {
+            List<tblInStoreOrder> instore;
+
+            using (var context = new dbOnlineStoreEntities())
+            {
+                instore = context.TblInStoreOrders.ToList();
+            }
+
+            return View(instore);
+        }
+
+        public ActionResult ShortageFloat()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }
