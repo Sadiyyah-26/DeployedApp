@@ -654,6 +654,10 @@
     <Content Include="Views\Bot\Bot.cshtml" />
     <Content Include="Views\Home\CashDrawer.cshtml" />
     <Content Include="Views\Home\ShortageFloat.cshtml" />
+    <Content Include="Views\Home\AdminCashFloat.cshtml" />
+    <Content Include="Views\Home\AdminChange.cshtml" />
+    <Content Include="Views\Home\Transactions.cshtml" />
+    <Content Include="Views\Home\AllocateTips.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
