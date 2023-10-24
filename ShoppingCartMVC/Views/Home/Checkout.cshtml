@@ -146,7 +146,7 @@
                                     <input type="radio" name="Method" value="Delivery" title="Standard Delivery Fee of R50" /><label>&ensp;Delivery</label>
                                     <br />
                                     <div id="deliveryFeeMessage" style="display: none; color: orangered;">
-                                        Standard delivery fee of R50 will be added.
+                                        Standard delivery fee of R30 will be added.
                                     </div>
                                     <br />
                                     <input type="radio" name="Method" value="Collection" /><label>&ensp;Collection</label>
@@ -207,7 +207,7 @@ $(document).ready(function () {
             deliveryFeeMessage.show(); // Display the delivery fee message
 
             // Calculate and update the new total with an additional R50
-            var newTotal = originalTotal + 50;
+            var newTotal = originalTotal + 30;
 
             totalValue.text("R " + newTotal.toFixed(2));
         }

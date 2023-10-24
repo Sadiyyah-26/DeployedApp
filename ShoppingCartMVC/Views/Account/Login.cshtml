@@ -1,20 +1,17 @@
 ﻿@model ShoppingCartMVC.Models.tblUser
 
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/css/css/Login.css" rel="stylesheet" />
     <title>Login</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />  @*v changes*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-nOSnFRRtBH/3ek3U25d+2+uFICuOB19UW97p7A7F1YJSDfKsRrlYcWpTfB+DZQrkb2W4EfD+8Bhlu8pX76wWSA==" crossorigin="anonymous" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery library -->
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
             $('#toggle-password').click(function () {
                 var passwordInput = $('#password-input');
                 var passwordFieldType = passwordInput.attr('type');
@@ -30,23 +27,35 @@
         });</script> @*v changes*@
 
         <style>
+            h2{
+            font-size:50px;
+            }
+            .card {
+                border: 3px solid orangered;
+            }
+
+            .card-body {
+                text-align: center;
+            }
+
             .action-links {
                 display: inline-block;
-               
             }
 
             .link-spacing {
                 margin-left: 50px; /* Adjust the margin to your desired spacing */
             }
+
             .orange-link {
                 color: orange;
                 font-size: 19px; /* Increase the font size to your desired value */
                 font-weight: bold; /* Make the text bold */
                 text-decoration: none; /* Remove the underline (if needed) */
             }
-            .orange-link:hover{
-                color:orangered;
-            }
+
+                .orange-link:hover {
+                    color: orangered;
+                }
 
             .custom-orange-button {
                 background-color: orange; /* Set your desired shade of orange */
@@ -56,75 +65,79 @@
                 border: none;
             }
 
-                .custom-orange-button:hover {
+            .custom-orange-button:hover {
                     background-color: darkorange;
-                }
+                    color: white;
+            }
+
+            .form-group {
+                display: flex !important;
+                flex-direction: column !important;
+                font-size: 23px;
+            }
+
+            .textLogin {
+                align-self: flex-start !important;
+            }
         </style>
 
 
     </head>
-    <body>
 
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        @using (Html.BeginForm())
-        {
-            <div class="container">
-                <h2>Login</h2>
-                <br />
-                <h3 style="color:red;">@TempData["msg"]</h3>
-                <br />
-                <div class="row">
-                    <div class="col-lg-4">
-                        <img src="~/Images/LoginPic.png" />
-
-                        <form class="bg-white p-5 contact-form">
-                            <div class="form-group">
-                                <br />
-                                <span>Email:</span>
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                            </div>
+    <br /><br />
+    <div class="card mx-auto" style="max-width: fit-content;">
+        <div class="row no-gutters">
+            <div class="col-md-6">
+                <div class="card-body">
+                    @using (Html.BeginForm())
+                    {
+                        <div class="container">
+                            <h2>Log In</h2>
                             <br />
-                            <div class="form-group">
-                                <span>Password:</span>
-                                <div class="input-group">
-                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "password-input" })
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                            <i class="fas fa-eye-slash" id="toggle-password"></i>  @*v changes*@
-                                        </span>
+                            <h3 style="color:red;">@TempData["msg"]</h3>
+                            <br />
+
+                            <form class="bg-white p-5 contact-form">
+                                <div class="form-group">
+                                    <br />
+                                    <span class="textLogin">Email:</span>
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                </div>
+                                <br />
+                                <div class="form-group">
+                                    <span class="textLogin">Password:</span>
+                                    <div class="input-group">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "password-input" })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-eye-slash" id="toggle-password"></i>  @*v changes*@
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <br /> <br />
+                                <div class="form-group">
+                                    <input type="submit" value="Log in" class="btn custom-orange-button  py-3 px-5">
+                                </div>
+                            </form>
                             <br />
-                            <div class="form-group">
-                                <input type="submit" value="Login" class="btn custom-orange-button  py-3 px-5">
+                            <div class="action-links">
+                                @Html.ActionLink("Register Now", "Register", "Account", null, new { @class = "orange-link" })
+                                <span class="link-spacing"></span>
+                                @Html.ActionLink("Forgot Password?", "ForgotPassword", "Account", null, new { @class = "orange-link" })
                             </div>
-                        </form>
+                            <br /> <br /> <br /> <br />
 
-                        <div class="action-links">
-                            @Html.ActionLink("Register Now", "Register", "Account", null, new { @class = "orange-link" })
-                            <span class="link-spacing"></span>
-                            @Html.ActionLink("Forgot Password?", "ForgotPassword", "Account", null, new { @class = "orange-link" })
                         </div>
-
-                    </div>
-
+                        
+                    }
                 </div>
-
             </div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-        }
-    </body>
-</html>
+            <div class="col-md-6">
+
+                <img src="~/Images/LoginPic.png" class="card-img" alt="..." />
+            </div>
+        </div>
+    </div>
+
+    <br /><br />

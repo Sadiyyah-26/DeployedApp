@@ -54,7 +54,15 @@
                         </div>
                     </div>
 
-                   
+                    <div class="form-group">
+                        <span>Your Tip:</span>
+                        <div class="radio-group">
+                            @Html.RadioButtonFor(model => model.IsCustomTip, true) Custom Amount
+                            <br />
+                            @Html.RadioButtonFor(model => model.IsCustomTip, false) No Tip
+                            @Html.TextBoxFor(model => model.CustomTip, new { @class = "form-control" })
+                        </div>
+                    </div>
 
                     <div class="form-group" style="display: flex;">
                         <input type="submit" value="Proceed" class="btn btn-success" />
