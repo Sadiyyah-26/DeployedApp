@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Professional Chatbot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #chat-container {
+            max-width: 1000px;
+            height: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            background-color: rgb(255, 106, 0);
+            color: #fff;
+            margin: 0;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        #chat-messages {
+            padding: 15px;
+            padding-top: 50px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .user-message, .bot-message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: #fff;
+            text-align: right;
+        }
+
+        .bot-message {
+            background-color: #f5f5f5;
+            color: #000;
+        }
+
+        #user-message {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        #send-button {
+            width: 20%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .initial-message {
+            background-color: #f5f5f5;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .message-icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            text-align: center;
+            line-height: 1.5em;
+            /* background-color: #007bff;*/
+            /* color: #fff;*/
+            /*          border-radius: 50%;*/
+            margin-right: 10px;
+        }
+
+        .bigger-icon {
+            font-size: 2em; /* Adjust the size as needed */
+            /* Add any other desired styling */
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with the Bot</h1>
+    <div id="chat-container">
+        <div id="chat-messages">
+            <!-- Initial introduction message -->
+            <div class="bot-message initial-message">
+                <div class="message-icon bigger-icon">🤖</div>Welcome, I am your dedicated Turbo Meals chatbot, here to assist you. If you require any guidance, please allow me to direct you through the essential aspects of our Turbo Meals platform:
+
+                <!-- Individual messages with icons -->
+                <div class="bot-message">
+                    <div class="message-icon"></div> 🍔 Type 1️⃣ to learn how to place an order
+                </div>
+                <div class="bot-message">
+                    <div class="message-icon"></div> 🚚 Type 2️⃣ to learn how to track your order
+                </div>
+                <div class="bot-message">
+                    <div class="message-icon"></div> 💰 Type 3️⃣ to learn how to log a refund request if you are unhappy with your meal
+                </div>
+                <div class="bot-message">
+                    <div class="message-icon"></div> 🍽️ Type 4️⃣ to learn how to reserve a table at the restaurant
+                </div>
+                <div class="bot-message">
+                    <div class="message-icon"></div> 📞 Type 5️⃣ to get in touch with us
+                </div>
+
+            </div>
+        </div>
+        <input type="text" id="user-message" placeholder="Type your message..." />
+        <button id="send-button">Send</button>
+    </div>
+    <script>
+        var chatHistory = "";
+        function simulateTyping(message, delay) {
+            var messageContainer = $("#chat-messages");
+            var botMessage = "🤖 Bot: ";
+            var index = 0;
+            var typingInterval = setInterval(function () {
+                if (index < message.length) {
+                    botMessage += message.charAt(index);
+                    messageContainer.find(".bot-message:last").html(botMessage);
+                    index++;
+                } else {
+                    clearInterval(typingInterval);
+                }
+            }, delay);
+        }
+
+        $(document).ready(function () {
+            $("#send-button").on("click", function () {
+                var userMessage = $("#user-message").val();
+                var messageContainer = $("#chat-messages");
+                messageContainer.append("<div class='user-message'> 🙋‍ You: " + userMessage + "</div");
+
+                $.post("/Bot/PostMessage", { userMessage: userMessage }, function (data) {
+                    var botMessageContainer = $("<div class='bot-message'></div>");
+                    messageContainer.append(botMessageContainer);
+                    // Simulate the typing effect with a delay of 50ms per character
+                    simulateTyping(data, 5);
+                    chatHistory += "<div class='user-message'>You: " + userMessage + "</div><div class='bot-message'>" + data + "</div>";
+                    $("#user-message").val(""); // Clear the input field
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

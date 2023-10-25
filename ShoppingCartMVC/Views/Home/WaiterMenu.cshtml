@@ -251,7 +251,9 @@
     </style>
 </head>
 <body>
+
     <p id="movableText">Waiter Name : @Session["User"]</p>
+    <p id="floatAmountLabel">Float Amount: R 0.00</p>
     <button id="undoButton" class="generate-button">
         <i class="fas fa-undo"></i> Undo
     </button>
@@ -294,72 +296,74 @@
         </div>
         @*<button id="undoButton" class="generate-button">Undo</button>
             <button id="redoButton" class="generate-button">Redo</button>*@
-    <div class="selected-products" id="selectedProducts">
-        <h2>Selected Products</h2>
-        <ul id="selectedList"></ul>
-        <p>Total Price: <span id="totalPrice">R 0</span></p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-
-        <div id="orderOptions">
-            <div class="order-option">
-                <button id="dineInButton" class="order-button dine-in">Dine-in</button>
-            </div>
-            <div class="order-option">
-                <button id="takeAwayButton" class="order-button takeaway">Takeaway</button>
-            </div>
-        </div>
-        <br />
-        <br />
-        <br />
-        <!-- Add container for table number selection -->
-        <div id="tableNumberContainer" style="display: none;">
-            <label for="tableNumber">Table Number:</label>
-            <select id="tableNumber">
-                <option value="">None</option> <!-- Add this line for "None" option -->
-                @for (int i = 1; i <= 15; i++)
-                {
-                    <option value="@i">@i</option>
-                }
-            </select>
-        </div>
-
-        <!-- Add container for payment options -->
-        <div id="paymentOptionsContainer" style="display: none;">
-            <label for="paymentOption">Payment Options:</label>
+        <div class="selected-products" id="selectedProducts">
+            <h2>Selected Products</h2>
+            <ul id="selectedList"></ul>
+            <p>Total Price: <span id="totalPrice">R 0</span></p>
             <br />
-            <input type="radio" name="paymentOption" value="Cash"> Cash
-            <input type="radio" name="paymentOption" value="Card"> Card
-        </div>
-        <!-- Add container for cash amount input -->
-        <div id="cashAmountContainer" style="display: none;">
-            <label for="cashAmount">Cash Amount:</label>
-            <input type="text" id="cashAmount" name="cashAmount" />
-        </div>
+            <br />
+            <br />
+            <br />
+            <br />
 
-        <!-- Add container for change due label -->
-        <div id="changeDueLabel" style="display: none;">
-            <label>Change Due:</label>
-            <span id="changeDue">0.00</span>
-        </div>
-        <br />
+            <div id="orderOptions">
+                <div class="order-option">
+                    <button id="dineInButton" class="order-button dine-in">Dine-in</button>
+                </div>
+                <div class="order-option">
+                    <button id="takeAwayButton" class="order-button takeaway">Takeaway</button>
+                </div>
+            </div>
+            <br />
+            <br />
+            <br />
+            <!-- Add container for table number selection -->
+            <div id="tableNumberContainer" style="display: none;">
+                <label for="tableNumber">Table Number:</label>
+                <select id="tableNumber">
+                    <option value="">None</option> <!-- Add this line for "None" option -->
+                    @for (int i = 1; i <= 15; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="inputEmail">Email Address:</label>
-            <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Enter email" required>
-        </div>
+            <!-- Add container for payment options -->
+            <div id="paymentOptionsContainer" style="display: none;">
+                <label for="paymentOption">Payment Options:</label>
+                <br />
+                <input type="radio" name="paymentOption" value="Cash"> Cash
+                <input type="radio" name="paymentOption" value="Card"> Card
+            </div>
+            <!-- Add container for cash amount input -->
+            <div id="cashAmountContainer" style="display: none;">
+                <label for="cashAmount">Cash Tendered:</label>
+                <input type="text" id="cashAmount" name="cashAmount" />
+            </div>
 
-        <div class="form-group">
-            <label for="inputNumber">Cell Number:</label>
-            <input type="number" id="inputCell" name="inputCell" class="form-control" placeholder="Enter number" required>
-        </div>
+            <br />
+            <br />
+            <!-- Add container for change due label -->
+            <div id="changeDueLabel" style="display: none;">
+                <label>Change Due:</label>
+                <span id="changeDue">0.00</span>
+            </div>
+            <br />
 
-        <button id="generateButton" class="generate-button">Generate</button>
-        @*<button id="generateButton">Generate</button>*@
-    </div>
+            <div class="form-group">
+                <label for="inputEmail">Email Address:</label>
+                <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Enter email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="inputNumber">Cell Number:</label>
+                <input type="number" id="inputCell" name="inputCell" class="form-control" placeholder="Enter number" required>
+            </div>
+
+            <button id="generateButton" class="generate-button">Generate</button>
+            @*<button id="generateButton">Generate</button>*@
+        </div>
 
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -399,6 +403,15 @@
                 $('#totalPrice').text('R ' + totalPrice.toFixed(2));
             });
 
+
+            $('.quantity-input').on('input', function () {
+                updateTotalPrice();
+            });
+
+            function updateTotalPrice() {
+                var totalPrice = calculateTotalPrice();
+                $('#totalPrice').text('R ' + totalPrice.toFixed(2));
+            }
             // Function to calculate total price
             function calculateTotalPrice() {
                 var totalPrice = 0;
@@ -449,14 +462,17 @@
                 calculateChange();
             });
 
-            // Function to calculate and display the change
             function calculateChange() {
                 var cashAmount = parseFloat($('#cashAmount').val());
                 var totalAmount = calculateTotalPrice(); // Implement this function to calculate the total order amount
 
                 if (!isNaN(cashAmount) && cashAmount >= totalAmount) {
                     var changeDue = cashAmount - totalAmount;
-                    $('#changeDue').text(changeDue.toFixed(2));
+
+                    // Round the change due to an integer value
+                    var roundedChangeDue = Math.round(changeDue);
+
+                    $('#changeDue').text(roundedChangeDue); // Display the rounded change due
                     $('#changeDueLabel').show();
                 } else {
                     $('#changeDueLabel').hide();
@@ -492,6 +508,9 @@
                 form.append($('<input>').attr('type', 'hidden').attr('name', 'paymentMethod').val(paymentMethod));
                 form.append($('<input>').attr('type', 'hidden').attr('name', 'inputCell').val(cell));
                 form.append($('<input>').attr('type', 'hidden').attr('name', 'inputEmail').val(email));
+                form.append($('<input>').attr('type', 'hidden').attr('name', 'changeDue').val($('#changeDue').text()));
+
+
 
                 for (var i = 0; i < selectedProducts.length; i++) {
                     form.append($('<input>').attr('type', 'hidden').attr('name', 'selectedProducts[' + i + '].Product').val(selectedProducts[i].Product));
@@ -503,9 +522,37 @@
                 $('body').append(form);
                 form.submit();
             });
+            // Function to fetch the current float amount
+            function fetchCurrentFloatAmount() {
+                // Send an AJAX request to your server to fetch the float amount
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/GetCurrentFloatAmount', // Replace with the actual URL of your action method
+                    dataType: 'json',
+                    success: function (data) {
+                        var currentFloatAmount = data.amount;
+                        updateFloatAmountLabel(currentFloatAmount);
+                    },
+                    error: function () {
+                        // Handle the error or provide a default float amount
+                        var defaultFloatAmount = 0.00;
+                        updateFloatAmountLabel(defaultFloatAmount);
+                    }
+                });
+            }
+
+            // Function to update the float amount label
+            function updateFloatAmountLabel(floatAmount) {
+                $('#floatAmountLabel').text('Float Amount: R ' + floatAmount.toFixed(2));
+            }
+
+            // Call the fetchCurrentFloatAmount function on page load
+            fetchCurrentFloatAmount();
         });
 
     </script>
 </body>
 </html>
+
+
 
