@@ -20,6 +20,7 @@ namespace ShoppingCartMVC.Models
         public int? Qty { get; internal set; }
         public int? Total { get; internal set; }
 
+        public int? ChangeDue { get; set; }
         public string PaymentMethod { get; internal set; }
     }
 }
