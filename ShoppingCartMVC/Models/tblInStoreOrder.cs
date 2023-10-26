@@ -31,9 +31,9 @@ namespace ShoppingCartMVC.Models
 
         public int? Total { get; set; }
 
-        public int? Change { get; set; }
+        //public int? Change { get; set; }
 
-        public int? Amountgiven { get; set; }
+        //public int? Amountgiven { get; set; }
         public string Method { get; set; }
 
         public string PayMethod { get; set; } = "Pending";
@@ -48,7 +48,7 @@ namespace ShoppingCartMVC.Models
 
         public bool waiterRated { get; set; } = false;
 
-        public double? Tip { get; set; }
+        //public double? Tip { get; set; }
 
         public DateTime? ReservedDate { get; set; }
 

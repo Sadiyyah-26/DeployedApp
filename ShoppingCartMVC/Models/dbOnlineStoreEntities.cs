@@ -43,8 +43,7 @@ namespace ShoppingCartMVC.Models
         
         public virtual DbSet<tblAccProfile> TblAccProfiles { get; set; }
 
-        public virtual DbSet<tblCashFloat> tblCashFloats { get; set; }
-        public virtual DbSet<tblAdminCashFloat> tblAdminCashFloats { get; set; }
+   
 
     }
 }
