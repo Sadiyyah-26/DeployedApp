@@ -1,6 +1,5 @@
 ﻿@model ShoppingCartMVC.Models.BillViewModel
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -119,9 +118,10 @@
 
     <div class="container">
         <div class="receipt">
+            @*<div class="header">*@
             <h2>Restaurant Receipt</h2>
             <p class="restaurant-name">Turbo Meals</p>
-            <p class="address">165 Bayview Road, Park Avenue, Durban, 4087</p>
+            <p class="address"> 165 Bayview Road,Park Avenue,Durban,4087</p>
             <p class="contact-details">
                 Email: turbomeals123@gmail.com | Phone: 031-456-2547
             </p>
@@ -136,27 +136,20 @@
                     <span>@product.ProductName</span> &ensp;<span>Quantity: @product.Qty</span>
                     <span style="float:right;">@product.Total</span>
                     <br />
+                    @*<span>Quantity: @product.Qty</span>*@
+                    <!--<span style="float:right;">@product.UnitPrice</span>--> <!-- Unit Price -->
                 </div>
             }
 
             <div class="total">Total: @Model.TotalAmount</div>
-
-            <!-- Add an input field for the amount given -->
-            <!--<div class="input-group">
-                <label for="amountGiven">Amount Given:</label>
-                <input type="text" id="amountGiven" />
-            </div>-->
-            <!-- Add a label to display the change -->
-            <!--<div class="change">Change Due: <span id="changeLabel">0</span></div>-->
-            <!-- Add a button to trigger the change calculation -->
-            <!--<button onclick="calculateChange()">Calculate Change</button>-->
+            <div class="item">Payment Method: @Model.PaymentMethod</div>
 
             <div class="receipt-info">
                 <p>Thank you for dining with us!</p>
                 <p>Date: @DateTime.Now.ToString("MM/dd/yyyy hh:mm tt")</p>
             </div>
         </div>
-        @*<input type="hidden" name="changeDue" value="@Model.ChangeDue" />*@
+
         <div class="payment-options">
             <form action="@Url.Action("UpdatePaymentMethod", "Home")" method="post">
                 <input type="hidden" name="orderNumber" value="@Model.OrderNumber" />
@@ -164,24 +157,6 @@
                 <h4>Select Payment Method:</h4>
                 <label><input type="radio" name="paymentMethod" value="Cash" /> Cash</label>
                 <label><input type="radio" name="paymentMethod" value="Card" /> Card</label>
-
-                <br />
-
-                <div class="input-group">
-                    <label for="amountGiven">Amount Given:</label>
-                    <input type="text" id="amountGiven" name="amountGiven" oninput="calculateChange()" />
-                </div>
-
-                <input type="hidden" name="changeDue" value="@Model.ChangeDue" />
-                <!-- Add a label to display the change -->
-                <div class="change">Change Due: <span id="changeLabel">0</span></div>
-
-
-                <div class="input-group">
-                    <label for="tipAmount">Enter Tip Amount:</label>
-                    <input type="text" id="tipAmount" name="tipAmount" />
-                </div>
-
 
                 <br />
                 <button type="submit" class="success-button">Submit Payment</button>
@@ -192,28 +167,14 @@
         </div>
     </div>
     <script>
-        function printBill()
-        {
-        var printContents = document.querySelector('.receipt').innerHTML;
-        var originalContents = document.body.innerHTML;
+        function printBill() {
+            var printContents = document.querySelector('.receipt').innerHTML;
+            var originalContents = document.body.innerHTML;
 
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
-    }
-
-        function calculateChange()
-        {
-    var totalAmount = @Model.TotalAmount;
-    var amountGiven = parseFloat(document.getElementById('amountGiven').value);
-    var change = amountGiven - totalAmount;
-    document.getElementById('changeLabel').textContent = change.toFixed(2);
-
-    // Update the hidden input fields
-            document.querySelector('input[name="changeDue"]').value = change.toFixed(2);
-
-
-}
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
     </script>
 </body>
 </html>
@@ -237,6 +198,7 @@
 <br />
 <br />
 <br />
+
 
 
 

@@ -396,11 +396,9 @@
     <Compile Include="Models\SelectedProductModel.cs" />
     <Compile Include="Models\SupplierIngredients.cs" />
     <Compile Include="Models\tblAccProfile.cs" />
-    <Compile Include="Models\tblAdminCashFloat.cs" />
     <Compile Include="Models\tblAdminInvoice.cs" />
     <Compile Include="Models\tblAdminOrder.cs" />
     <Compile Include="Models\tblBill.cs" />
-    <Compile Include="Models\tblCashFloat.cs" />
     <Compile Include="Models\tblCategory.cs" />
     <Compile Include="Models\tblDonations.cs" />
     <Compile Include="Models\tblEmployee.cs" />
@@ -652,12 +650,6 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Bot\Bot.cshtml" />
-    <Content Include="Views\Home\CashDrawer.cshtml" />
-    <Content Include="Views\Home\ShortageFloat.cshtml" />
-    <Content Include="Views\Home\AdminCashFloat.cshtml" />
-    <Content Include="Views\Home\AdminChange.cshtml" />
-    <Content Include="Views\Home\Transactions.cshtml" />
-    <Content Include="Views\Home\AllocateTips.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

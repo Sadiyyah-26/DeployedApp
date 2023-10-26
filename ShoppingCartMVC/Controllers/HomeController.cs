@@ -1497,10 +1497,8 @@ namespace ShoppingCartMVC.Controllers
             var existingOrder = db.TblInStoreOrders.FirstOrDefault(o => o.OrderNumber == orderNumber);
             return existingOrder != null;
         }
-
-
         [HttpPost]
-        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod, int? changeDue)
+        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod)
         {
             if (selectedProducts == null || selectedProducts.Count == 0)
             {
@@ -1509,9 +1507,7 @@ namespace ShoppingCartMVC.Controllers
 
 
             string waiterName = Session["User"] as string;
-
             int waiterID = Convert.ToInt16(Session["uid"]);
-
 
             string payMethod = Request.Form["paymentOption"];
 
@@ -1528,47 +1524,15 @@ namespace ShoppingCartMVC.Controllers
 
             int totalAmount = (int)selectedProducts.Sum(product => product.Total);
 
-
             string orderNumber = GenerateOrderNumber();
-            int changeDueValue = changeDue ?? 0;
-
-            // Check if there is a record for the current date in tblCashFloat
-            var currentDate = DateTime.Now.Date;
-            var cashFloatEntry = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
-
-            if (cashFloatEntry != null)
-            {
-                // Deduct the changeDueValue from the current day's cash float
-                cashFloatEntry.Amount -= changeDueValue;
-                if (cashFloatEntry.Amount < 0)
-                {
-                    TempData["ShortageMessage"] = "Shortage of change, please fill the cash drawer.";
-                    return View("ShortageFloat");
-                }
-                else
-                {
-                    // Save changes to the database
-                    db.SaveChanges();
-                }
-            }
-            else
-            {
-                TempData["SuccessMessage"] = "";
-            }
-
-
-
 
 
             foreach (var product in selectedProducts)
             {
                 string method = isDineIn ? "Dine-in" : "Takeaway";
-                //int changeDueValue = changeDue ?? 0;
 
                 var order = new tblInStoreOrder
                 {
-
-
                     OrderNumber = orderNumber,
                     OrderDateTime = orderDateTime,
                     WaiterName = waiterName,
@@ -1584,9 +1548,7 @@ namespace ShoppingCartMVC.Controllers
                     Status = "Preparing",
                     TableNumber = string.IsNullOrEmpty(tableNumber) ? "NONE" : tableNumber,
                     ReservedDate = null,
-                    ReservedTime = null,
-                    Change = changeDueValue,
-                    Amountgiven = changeDue + product.TotalPrice
+                    ReservedTime = null
                 };
 
 
@@ -1675,7 +1637,7 @@ namespace ShoppingCartMVC.Controllers
         #endregion
 
         #region Generate Bill
-        public ActionResult GenerateBill(string orderNumber, int? changeDue)
+        public ActionResult GenerateBill(string orderNumber)
         {
             using (var dbContext = new dbOnlineStoreEntities())
             {
@@ -1705,8 +1667,7 @@ namespace ShoppingCartMVC.Controllers
                     OrderNumber = orderNumber,
                     Products = products,
                     TotalAmount = (int)totalAmount,
-                    PaymentMethod = paymentMethod, // Corrected property name
-                    ChangeDue = changeDue
+                    PaymentMethod = paymentMethod // Corrected property name
                 };
                 // Create a view model and populate it with the product data and total amount
                 return View("GenerateBill", viewModel);
@@ -2660,375 +2621,375 @@ namespace ShoppingCartMVC.Controllers
         }
 
         #region AdminCashDrawer
-        public ActionResult AdminCashFloat()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                // Retrieve the cash float for the current day
-                var currentDay = DateTime.Now.Date;
-                var cashFloat = context.tblAdminCashFloats
-                    .Where(c => c.Date == currentDay)
-                    .FirstOrDefault();
+        //public ActionResult AdminCashFloat()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        // Retrieve the cash float for the current day
+        //        var currentDay = DateTime.Now.Date;
+        //        var cashFloat = context.tblAdminCashFloats
+        //            .Where(c => c.Date == currentDay)
+        //            .FirstOrDefault();
 
-                decimal totalCashPaymentsAdmin = CalculateTotalCashPaymentsAdmin(); // Calculate total cash payments
-                decimal totalCashPaymentsWaiter = CalculateTotalCashPaymentsWaiter();
-                decimal totalCashFloatWaiter = GetCashFloatWaiter();
-                decimal totalCashFloatAdmin = GetCashFloatAdmin();
-                decimal totalCardPaymentsAdmin = CalculateTotalCardPaymentsAdmin();
-                decimal totalCardPaymentsWaiter = CalculateTotalCardPaymentsWaiter();
-                decimal totalCashRevenue = CalculateTotalCashRevenue();
-                decimal totalCardRevenue = CalculateTotalCardRevenue();
-                decimal totalFunds = TotalFunds();
+        //        decimal totalCashPaymentsAdmin = CalculateTotalCashPaymentsAdmin(); // Calculate total cash payments
+        //        decimal totalCashPaymentsWaiter = CalculateTotalCashPaymentsWaiter();
+        //        decimal totalCashFloatWaiter = GetCashFloatWaiter();
+        //        decimal totalCashFloatAdmin = GetCashFloatAdmin();
+        //        decimal totalCardPaymentsAdmin = CalculateTotalCardPaymentsAdmin();
+        //        decimal totalCardPaymentsWaiter = CalculateTotalCardPaymentsWaiter();
+        //        decimal totalCashRevenue = CalculateTotalCashRevenue();
+        //        decimal totalCardRevenue = CalculateTotalCardRevenue();
+        //        decimal totalFunds = TotalFunds();
 
-                if (cashFloat != null)
-                {
-                    // Pass the cash float and total cash payments for the current day to the view
-                    ViewBag.CashFloat = cashFloat;
-                    ViewBag.TotalCashPaymentsAdmin = totalCashPaymentsAdmin;
-                    ViewBag.TotalCashPaymentsWaiter = totalCashPaymentsWaiter;
-                    ViewBag.TotalCashFloatWaiter = totalCashFloatWaiter;
-                    ViewBag.TotalCashFloatAdmin = totalCashFloatAdmin;
-                    ViewBag.TotalCardPaymentsAdmin = totalCardPaymentsAdmin;
-                    ViewBag.TotalCardPaymentsWaiter = totalCardPaymentsWaiter;
-                    ViewBag.TotalCashRevenue = totalCashRevenue;
-                    ViewBag.TotalCardRevenue = totalCardRevenue;
-                    ViewBag.TotalFunds = totalFunds;
-                    return View(cashFloat);
-                }
-            }
+        //        if (cashFloat != null)
+        //        {
+        //            // Pass the cash float and total cash payments for the current day to the view
+        //            ViewBag.CashFloat = cashFloat;
+        //            ViewBag.TotalCashPaymentsAdmin = totalCashPaymentsAdmin;
+        //            ViewBag.TotalCashPaymentsWaiter = totalCashPaymentsWaiter;
+        //            ViewBag.TotalCashFloatWaiter = totalCashFloatWaiter;
+        //            ViewBag.TotalCashFloatAdmin = totalCashFloatAdmin;
+        //            ViewBag.TotalCardPaymentsAdmin = totalCardPaymentsAdmin;
+        //            ViewBag.TotalCardPaymentsWaiter = totalCardPaymentsWaiter;
+        //            ViewBag.TotalCashRevenue = totalCashRevenue;
+        //            ViewBag.TotalCardRevenue = totalCardRevenue;
+        //            ViewBag.TotalFunds = totalFunds;
+        //            return View(cashFloat);
+        //        }
+        //    }
 
-            // If there's no cash float for the current day, pass a new CashFloat object and the total cash payments
-            ViewBag.TotalCashPaymentsAdmin = CalculateTotalCashPaymentsAdmin();
-            ViewBag.TotalCashPaymentsWaiter = CalculateTotalCashPaymentsWaiter();
-            ViewBag.TotalCashFloatWaiter = GetCashFloatWaiter();
-            ViewBag.TotalCashFloatAdmin = GetCashFloatAdmin();
-            ViewBag.TotalCardPaymentsAdmin = CalculateTotalCardPaymentsAdmin();
-            ViewBag.TotalCardPaymentsWaiter = CalculateTotalCardPaymentsWaiter();
-            ViewBag.TotalCashRevenue = CalculateTotalCashRevenue();
-            ViewBag.TotalCardRevenue = CalculateTotalCardRevenue();
-            ViewBag.TotalFunds = TotalFunds();
-            return View(new tblAdminCashFloat());
-        }
-
-
-        [HttpPost]
-        public ActionResult SaveCashFloatAdmin(tblAdminCashFloat cashFloat)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var context = new dbOnlineStoreEntities())
-                {
-                    cashFloat.Date = DateTime.Now.Date; // Set the current date (without time)
-
-                    // Check if there's a cash float for the current day
-                    var existingCashFloat = context.tblAdminCashFloats
-                        .Where(c => c.Date == cashFloat.Date)
-                        .FirstOrDefault();
-
-                    if (existingCashFloat != null)
-                    {
-                        // Update the cash float for the current day
-                        existingCashFloat.Amount = cashFloat.Amount;
-                    }
-                    else
-                    {
-                        // If there's no cash float for the current day, add a new record
-                        context.tblAdminCashFloats.Add(cashFloat);
-                    }
-
-                    context.SaveChanges();
-                }
-
-                return RedirectToAction("AdminCashFLoat");
-            }
-
-            return View("AdminCashFloat", cashFloat);
-        }
+        //    // If there's no cash float for the current day, pass a new CashFloat object and the total cash payments
+        //    ViewBag.TotalCashPaymentsAdmin = CalculateTotalCashPaymentsAdmin();
+        //    ViewBag.TotalCashPaymentsWaiter = CalculateTotalCashPaymentsWaiter();
+        //    ViewBag.TotalCashFloatWaiter = GetCashFloatWaiter();
+        //    ViewBag.TotalCashFloatAdmin = GetCashFloatAdmin();
+        //    ViewBag.TotalCardPaymentsAdmin = CalculateTotalCardPaymentsAdmin();
+        //    ViewBag.TotalCardPaymentsWaiter = CalculateTotalCardPaymentsWaiter();
+        //    ViewBag.TotalCashRevenue = CalculateTotalCashRevenue();
+        //    ViewBag.TotalCardRevenue = CalculateTotalCardRevenue();
+        //    ViewBag.TotalFunds = TotalFunds();
+        //    return View(new tblAdminCashFloat());
+        //}
 
 
-        public decimal CalculateTotalCashPaymentsAdmin()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                decimal totalCashPaymentsAdmin = context.tblInvoices
-                    .Where(i => i.Payment == "Cash" && i.Payment_Status == "Paid")
-                    .Sum(i => i.Bill) ?? 0;
+        //[HttpPost]
+        //public ActionResult SaveCashFloatAdmin(tblAdminCashFloat cashFloat)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (var context = new dbOnlineStoreEntities())
+        //        {
+        //            cashFloat.Date = DateTime.Now.Date; // Set the current date (without time)
 
-                return totalCashPaymentsAdmin;
-            }
-        }
+        //            // Check if there's a cash float for the current day
+        //            var existingCashFloat = context.tblAdminCashFloats
+        //                .Where(c => c.Date == cashFloat.Date)
+        //                .FirstOrDefault();
 
-        public decimal CalculateTotalCashPaymentsWaiter()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                decimal totalCashPaymentsWaiter = context.TblInStoreOrders
-                    .Where(order => order.PayMethod == "Cash")
-                    .Sum(order => (decimal?)order.Total) ?? 0;
+        //            if (existingCashFloat != null)
+        //            {
+        //                // Update the cash float for the current day
+        //                existingCashFloat.Amount = cashFloat.Amount;
+        //            }
+        //            else
+        //            {
+        //                // If there's no cash float for the current day, add a new record
+        //                context.tblAdminCashFloats.Add(cashFloat);
+        //            }
 
-                return totalCashPaymentsWaiter;
-            }
-        }
+        //            context.SaveChanges();
+        //        }
+
+        //        return RedirectToAction("AdminCashFLoat");
+        //    }
+
+        //    return View("AdminCashFloat", cashFloat);
+        //}
 
 
-        public decimal GetCashFloatAdmin()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                DateTime currentDate = DateTime.Today;
-                decimal cashFloatForCurrentDayAdmin = context.tblAdminCashFloats
-                    .Where(cf => cf.Date == currentDate)
-                    .Select(cf => (decimal?)cf.Amount)
-                    .FirstOrDefault() ?? 0;
+        //public decimal CalculateTotalCashPaymentsAdmin()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        decimal totalCashPaymentsAdmin = context.tblInvoices
+        //            .Where(i => i.Payment == "Cash" && i.Payment_Status == "Paid")
+        //            .Sum(i => i.Bill) ?? 0;
 
-                return cashFloatForCurrentDayAdmin;
-            }
-        }
-        public decimal GetCashFloatWaiter()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                DateTime currentDate = DateTime.Today;
-                decimal cashFloatForCurrentDay = context.tblCashFloats
-                    .Where(cf => cf.Date == currentDate)
-                    .Select(cf => (decimal?)cf.Amount)
-                    .FirstOrDefault() ?? 0;
+        //        return totalCashPaymentsAdmin;
+        //    }
+        //}
 
-                return cashFloatForCurrentDay;
-            }
-        }
+        //public decimal CalculateTotalCashPaymentsWaiter()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        decimal totalCashPaymentsWaiter = context.TblInStoreOrders
+        //            .Where(order => order.PayMethod == "Cash")
+        //            .Sum(order => (decimal?)order.Total) ?? 0;
 
-        public decimal CalculateTotalCardPaymentsAdmin()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                decimal totalCardPaymentsAdmin = context.tblInvoices
-                    .Where(i => i.Payment == "Card" && i.Payment_Status == "Paid")
-                    .Sum(i => i.Bill) ?? 0;
+        //        return totalCashPaymentsWaiter;
+        //    }
+        //}
 
-                return totalCardPaymentsAdmin;
-            }
-        }
-        public decimal CalculateTotalCardPaymentsWaiter()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                decimal totalCardPaymentsWaiter = context.TblInStoreOrders
-                    .Where(order => order.PayMethod == "Card")
-                    .Sum(order => (decimal?)order.Total) ?? 0;
 
-                return totalCardPaymentsWaiter;
-            }
-        }
+        //public decimal GetCashFloatAdmin()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        DateTime currentDate = DateTime.Today;
+        //        decimal cashFloatForCurrentDayAdmin = context.tblAdminCashFloats
+        //            .Where(cf => cf.Date == currentDate)
+        //            .Select(cf => (decimal?)cf.Amount)
+        //            .FirstOrDefault() ?? 0;
 
-        public decimal CalculateTotalCashRevenue()
-        {
-            decimal totalCashRevenue = CalculateTotalCashPaymentsAdmin() + CalculateTotalCashPaymentsWaiter();
-            return totalCashRevenue;
+        //        return cashFloatForCurrentDayAdmin;
+        //    }
+        //}
+        //public decimal GetCashFloatWaiter()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        DateTime currentDate = DateTime.Today;
+        //        decimal cashFloatForCurrentDay = context.tblCashFloats
+        //            .Where(cf => cf.Date == currentDate)
+        //            .Select(cf => (decimal?)cf.Amount)
+        //            .FirstOrDefault() ?? 0;
 
-        }
+        //        return cashFloatForCurrentDay;
+        //    }
+        //}
 
-        public decimal CalculateTotalCardRevenue()
-        {
-            decimal totalCardRevenue = CalculateTotalCardPaymentsAdmin() + CalculateTotalCardPaymentsWaiter();
-            return totalCardRevenue;
+        //public decimal CalculateTotalCardPaymentsAdmin()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        decimal totalCardPaymentsAdmin = context.tblInvoices
+        //            .Where(i => i.Payment == "Card" && i.Payment_Status == "Paid")
+        //            .Sum(i => i.Bill) ?? 0;
 
-        }
-        public decimal TotalFunds()
-        {
-            decimal total = CalculateTotalCashRevenue() + CalculateTotalCardRevenue() + GetCashFloatAdmin() + GetCashFloatWaiter();
-            return total;
+        //        return totalCardPaymentsAdmin;
+        //    }
+        //}
+        //public decimal CalculateTotalCardPaymentsWaiter()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        decimal totalCardPaymentsWaiter = context.TblInStoreOrders
+        //            .Where(order => order.PayMethod == "Card")
+        //            .Sum(order => (decimal?)order.Total) ?? 0;
 
-        }
+        //        return totalCardPaymentsWaiter;
+        //    }
+        //}
 
-        public decimal Profit()
-        {
-            decimal total = CalculateTotalCashRevenue() + CalculateTotalCardRevenue() + GetCashFloatAdmin() + GetCashFloatWaiter();
-            return total;
+        //public decimal CalculateTotalCashRevenue()
+        //{
+        //    decimal totalCashRevenue = CalculateTotalCashPaymentsAdmin() + CalculateTotalCashPaymentsWaiter();
+        //    return totalCashRevenue;
 
-        }
+        //}
 
-        public ActionResult AdminChange()
-        {
-            return View();
-        }
+        //public decimal CalculateTotalCardRevenue()
+        //{
+        //    decimal totalCardRevenue = CalculateTotalCardPaymentsAdmin() + CalculateTotalCardPaymentsWaiter();
+        //    return totalCardRevenue;
 
-        [HttpPost]
-        public ActionResult SaveChange(int AmountGiven, int MealAmount)
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                DateTime date = DateTime.Now.Date;
+        //}
+        //public decimal TotalFunds()
+        //{
+        //    decimal total = CalculateTotalCashRevenue() + CalculateTotalCardRevenue() + GetCashFloatAdmin() + GetCashFloatWaiter();
+        //    return total;
 
-                var existingCashFloat = context.tblAdminCashFloats
-                    .Where(c => c.Date == date)
-                    .FirstOrDefault();
+        //}
 
-                // Calculate the change
-                int change = AmountGiven - MealAmount;
+        //public decimal Profit()
+        //{
+        //    decimal total = CalculateTotalCashRevenue() + CalculateTotalCardRevenue() + GetCashFloatAdmin() + GetCashFloatWaiter();
+        //    return total;
 
-                if (existingCashFloat != null)
-                {
-                    // Check if the cash float is enough
-                    if (existingCashFloat.Amount >= change)
-                    {
-                        // Update the existing cash float
-                        existingCashFloat.Amount -= change;
-                    }
-                    else
-                    {
-                        // Redirect to a Shortage view if the cash float is insufficient
-                        TempData["ShortageMessage"] = "Shortage of change, please fill the cash drawer.";
-                        return RedirectToAction("ShortageFloat");
-                    }
-                }
-                else
-                {
-                    // If there's no cash float for the current day, create a new record
-                    tblAdminCashFloat newCashFloat = new tblAdminCashFloat
-                    {
-                        Date = date,
-                        Amount = -change // Negative change to represent deduction
-                    };
+        //}
 
-                    context.tblAdminCashFloats.Add(newCashFloat);
-                }
+        //public ActionResult AdminChange()
+        //{
+        //    return View();
+        //}
 
-                context.SaveChanges();
-            }
+        //[HttpPost]
+        //public ActionResult SaveChange(int AmountGiven, int MealAmount)
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        DateTime date = DateTime.Now.Date;
 
-            return RedirectToAction("AdminChange");
-        }
+        //        var existingCashFloat = context.tblAdminCashFloats
+        //            .Where(c => c.Date == date)
+        //            .FirstOrDefault();
 
-        [HttpPost]
-        public ActionResult GetChangeOutForDelivery(int ChangeTakenOut)
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                DateTime date = DateTime.Now.Date;
+        //        // Calculate the change
+        //        int change = AmountGiven - MealAmount;
 
-                var existingCashFloat = context.tblAdminCashFloats
-                    .Where(c => c.Date == date)
-                    .FirstOrDefault();
+        //        if (existingCashFloat != null)
+        //        {
+        //            // Check if the cash float is enough
+        //            if (existingCashFloat.Amount >= change)
+        //            {
+        //                // Update the existing cash float
+        //                existingCashFloat.Amount -= change;
+        //            }
+        //            else
+        //            {
+        //                // Redirect to a Shortage view if the cash float is insufficient
+        //                TempData["ShortageMessage"] = "Shortage of change, please fill the cash drawer.";
+        //                return RedirectToAction("ShortageFloat");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            // If there's no cash float for the current day, create a new record
+        //            tblAdminCashFloat newCashFloat = new tblAdminCashFloat
+        //            {
+        //                Date = date,
+        //                Amount = -change // Negative change to represent deduction
+        //            };
 
-                if (existingCashFloat != null)
-                {
-                    // Check if the cash float is enough for the change taken out for delivery
-                    if (existingCashFloat.Amount >= ChangeTakenOut)
-                    {
-                        // Update the existing cash float to deduct the change taken out
-                        existingCashFloat.Amount -= ChangeTakenOut;
-                        context.SaveChanges();
-                    }
-                    else
-                    {
-                        // Redirect to a Shortage view if the cash float is insufficient
-                        TempData["ShortageMessage"] = "Shortage of change for delivery, please fill the cash drawer.";
-                        return RedirectToAction("ShortageFloat");
-                    }
-                }
-                else
-                {
-                    // Redirect to a Shortage view as there is no cash float for the current day
-                    TempData["ShortageMessage"] = "Shortage of change for delivery, please fill the cash drawer.";
-                    return RedirectToAction("ShortageFloat");
-                }
-            }
+        //            context.tblAdminCashFloats.Add(newCashFloat);
+        //        }
 
-            return RedirectToAction("AdminChange");
-        }
+        //        context.SaveChanges();
+        //    }
+
+        //    return RedirectToAction("AdminChange");
+        //}
+
+        //[HttpPost]
+        //public ActionResult GetChangeOutForDelivery(int ChangeTakenOut)
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        DateTime date = DateTime.Now.Date;
+
+        //        var existingCashFloat = context.tblAdminCashFloats
+        //            .Where(c => c.Date == date)
+        //            .FirstOrDefault();
+
+        //        if (existingCashFloat != null)
+        //        {
+        //            // Check if the cash float is enough for the change taken out for delivery
+        //            if (existingCashFloat.Amount >= ChangeTakenOut)
+        //            {
+        //                // Update the existing cash float to deduct the change taken out
+        //                existingCashFloat.Amount -= ChangeTakenOut;
+        //                context.SaveChanges();
+        //            }
+        //            else
+        //            {
+        //                // Redirect to a Shortage view if the cash float is insufficient
+        //                TempData["ShortageMessage"] = "Shortage of change for delivery, please fill the cash drawer.";
+        //                return RedirectToAction("ShortageFloat");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            // Redirect to a Shortage view as there is no cash float for the current day
+        //            TempData["ShortageMessage"] = "Shortage of change for delivery, please fill the cash drawer.";
+        //            return RedirectToAction("ShortageFloat");
+        //        }
+        //    }
+
+        //    return RedirectToAction("AdminChange");
+        //}
 
 
 
         #endregion
 
         #region WaiterCashDrawer
-        public JsonResult GetCurrentFloatAmount()
-        {
-            using (var dbContext = new dbOnlineStoreEntities())
-            {
-                // Fetch the current float amount from the database
-                var currentFloat = dbContext.tblCashFloats.OrderByDescending(f => f.Date).FirstOrDefault();
+        //public JsonResult GetCurrentFloatAmount()
+        //{
+        //    using (var dbContext = new dbOnlineStoreEntities())
+        //    {
+        //        // Fetch the current float amount from the database
+        //        var currentFloat = dbContext.tblCashFloats.OrderByDescending(f => f.Date).FirstOrDefault();
 
-                if (currentFloat != null)
-                {
-                    return Json(new { amount = currentFloat.Amount }, JsonRequestBehavior.AllowGet);
-                }
-            }
+        //        if (currentFloat != null)
+        //        {
+        //            return Json(new { amount = currentFloat.Amount }, JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
 
-            // If there's no data or an error occurs, provide a default amount
-            return Json(new { amount = 0.00 }, JsonRequestBehavior.AllowGet);
-        }
-        public ActionResult CashDrawer()
-        {
-            using (var context = new dbOnlineStoreEntities())
-            {
-                // Retrieve the cash float for the current day
-                var currentDay = DateTime.Now.Date;
-                var cashFloat = context.tblCashFloats
-                    .Where(c => c.Date == currentDay)
-                    .FirstOrDefault();
+        //    // If there's no data or an error occurs, provide a default amount
+        //    return Json(new { amount = 0.00 }, JsonRequestBehavior.AllowGet);
+        //}
+        //public ActionResult CashDrawer()
+        //{
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        // Retrieve the cash float for the current day
+        //        var currentDay = DateTime.Now.Date;
+        //        var cashFloat = context.tblCashFloats
+        //            .Where(c => c.Date == currentDay)
+        //            .FirstOrDefault();
 
-                if (cashFloat != null)
-                {
-                    // Pass the cash float for the current day to the view
-                    return View(cashFloat);
-                }
-            }
+        //        if (cashFloat != null)
+        //        {
+        //            // Pass the cash float for the current day to the view
+        //            return View(cashFloat);
+        //        }
+        //    }
 
-            // If there's no cash float for the current day, pass a new CashFloat object
-            return View(new tblCashFloat());
-        }
+        //    // If there's no cash float for the current day, pass a new CashFloat object
+        //    return View(new tblCashFloat());
+        //}
 
-        [HttpPost]
-        public ActionResult SaveCashFloat(tblCashFloat cashFloat)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var context = new dbOnlineStoreEntities())
-                {
-                    cashFloat.Date = DateTime.Now.Date; // Set the current date (without time)
+        //[HttpPost]
+        //public ActionResult SaveCashFloat(tblCashFloat cashFloat)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (var context = new dbOnlineStoreEntities())
+        //        {
+        //            cashFloat.Date = DateTime.Now.Date; // Set the current date (without time)
 
-                    // Check if there's a cash float for the current day
-                    var existingCashFloat = context.tblCashFloats
-                        .Where(c => c.Date == cashFloat.Date)
-                        .FirstOrDefault();
+        //            // Check if there's a cash float for the current day
+        //            var existingCashFloat = context.tblCashFloats
+        //                .Where(c => c.Date == cashFloat.Date)
+        //                .FirstOrDefault();
 
-                    if (existingCashFloat != null)
-                    {
-                        // Update the cash float for the current day
-                        existingCashFloat.Amount = cashFloat.Amount;
-                    }
-                    else
-                    {
-                        // If there's no cash float for the current day, add a new record
-                        context.tblCashFloats.Add(cashFloat);
-                    }
+        //            if (existingCashFloat != null)
+        //            {
+        //                // Update the cash float for the current day
+        //                existingCashFloat.Amount = cashFloat.Amount;
+        //            }
+        //            else
+        //            {
+        //                // If there's no cash float for the current day, add a new record
+        //                context.tblCashFloats.Add(cashFloat);
+        //            }
 
-                    context.SaveChanges();
-                }
+        //            context.SaveChanges();
+        //        }
 
-                return RedirectToAction("CashDrawer");
-            }
+        //        return RedirectToAction("CashDrawer");
+        //    }
 
-            return View("CashDrawer", cashFloat);
-        }
-        public ActionResult Transactions()
-        {
-            List<tblInStoreOrder> instore;
+        //    return View("CashDrawer", cashFloat);
+        //}
+        //public ActionResult Transactions()
+        //{
+        //    List<tblInStoreOrder> instore;
 
-            using (var context = new dbOnlineStoreEntities())
-            {
-                instore = context.TblInStoreOrders.ToList();
-            }
+        //    using (var context = new dbOnlineStoreEntities())
+        //    {
+        //        instore = context.TblInStoreOrders.ToList();
+        //    }
 
-            return View(instore);
-        }
+        //    return View(instore);
+        //}
 
-        public ActionResult ShortageFloat()
-        {
-            return View();
-        }
+        //public ActionResult ShortageFloat()
+        //{
+        //    return View();
+        //}
 
         #endregion
     }
