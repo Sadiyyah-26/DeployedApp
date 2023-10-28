@@ -47,6 +47,8 @@ namespace ShoppingCartMVC.Models
 
         public DateTime? OrderDate { get; set; }
 
+        public string OrderStatus { get; set; }
+
         //tblIngredients
         public string Ing_Name { get; set; }
 
@@ -55,6 +57,7 @@ namespace ShoppingCartMVC.Models
         public class Item
         {
             public int OrderId { get; set; }
+            public string OrderStatus { get; set; }
             public string Ing_Name { get; set; }
             public int? Unit { get; set; }
             public int? Qty { get; set; }

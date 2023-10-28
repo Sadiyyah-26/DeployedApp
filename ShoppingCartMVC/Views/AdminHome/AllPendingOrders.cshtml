@@ -1,0 +1,56 @@
+﻿@model List<IGrouping<int, ShoppingCartMVC.Models.PendingOrdersVM>>
+<head>
+    <title>
+        Supplier Pending Orders
+    </title>
+</head>
+<br />
+<h2> Pending Orders</h2>
+<br />
+<br />
+<div class="container">
+    @foreach (var supplierGroup in Model)
+    {
+        <h2>@supplierGroup.First().SupplName</h2>
+        <br />
+        using (Html.BeginForm("ConfirmIngOrderWithSupplier", "AdminHome", FormMethod.Post))
+        {
+            <div class="d-flex align-items-center">
+                <h3>Purchase Order Num: # @supplierGroup.First().InvoiceID</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Image</th>
+                        <th>Qty Ordered</th>
+                        <th>Stock Availability Confirmed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < supplierGroup.Count(); i++)
+                    {
+                        var ing = supplierGroup.ElementAt(i);
+                        <tr>
+                            <td>@ing.Ing_Name</td>
+                            <td><img src="~/Uploads/@ing.IngImage" style="width:150px; height:100px;" /></td>
+                            <td>@ing.OrderedStockQty</td>
+                            <td>
+                                <input type="checkbox" name="supplierGroup[@i].StockAvailabilityConfirmed" value="true" />
+                                @Html.Hidden("supplierGroup[" + i + "].Ing_ID", supplierGroup.ElementAt(i).Ing_ID)
+                                @*@Html.HiddenFor(modelItem => supplierGroup.ElementAt(i).SupplierId)*@
+                                @Html.Hidden("supplierGroup[" + i + "].SupplierId", supplierGroup.ElementAt(i).SupplierId)
+
+                                @Html.Hidden("supplierGroup[" + i + "].InvoiceID", ing.InvoiceID)
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <input type="submit" value="Submit Stock Availability">
+        }
+        <br />
+        <br />
+    }
+</div>

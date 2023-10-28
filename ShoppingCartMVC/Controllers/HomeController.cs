@@ -1056,7 +1056,7 @@ namespace ShoppingCartMVC.Controllers
                         var ingID = i.Ing_ID;
 
                         var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-                        var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
+                      
 
                         decimal qtyToReduce = 0;
                         if (ingr != null)
@@ -1071,17 +1071,14 @@ namespace ShoppingCartMVC.Controllers
                                 ingr.StockStatus = "Low Stock";
                                 //send qty alert email 
                                 string ing = ingr.Ing_Name;
-                                string qty = Convert.ToString(ingr.Ing_StockyQty);
-                                string suppl = supplIngr.TblSupplier.SupplName;
-                                //test for link redirect
-                                int supID = supplIngr.SupplierId;
+                                string qty = Convert.ToString(ingr.Ing_StockyQty);                               
 
                                 string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
-                                string url = Url.Action("Index", "AdminHome", new { id = supID });
+                                string url = Url.Action("LowStock", "Ingredients");
                                 string link = $"{baseUrl}{url}";
 
                                 var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
-                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: <a href=" + link + ">Order Stock</a>"; ;
+                                content += "Ingredient: " + ing + " current quantity is " + qty + "<br/>Click here to view low stock ingredients: <a href=" + link + ">Low Stock</a>"; ;
 
 
 
@@ -1991,7 +1988,7 @@ namespace ShoppingCartMVC.Controllers
 
         #region Order Ready In Store
 
-        private async Task SendOrderReadyEmail(string OrderNumber, string toNumber, string message, string email)
+        private async Task SendOrderReadyEmail(string OrderNumber, string message, string email)
         {
             //sending sms to notify order is ready
 
@@ -2015,7 +2012,7 @@ namespace ShoppingCartMVC.Controllers
 
             var body = "Dear Turbo Meals Customer, <br/><br/>"
                 + "We value your feedback and would appreciate you leaving a rating for your waiter,using the following link: <a href=" + linkW + ">Waiter Rating</a>"
-                + "<br/><br/>Thank you for helping us improve our services." + "<br/><br/>Kind regards<br/><br/>Turbo Meals Family.";
+                + "<br/><br/>Thank you for helping us improve our services." + "<br/><br/>Kind regards<br/>Turbo Meals Family.";
 
 
             var Emessage = new MailMessage();
@@ -2054,8 +2051,7 @@ namespace ShoppingCartMVC.Controllers
                         var ingID = i.Ing_ID;
 
                         var ingr = db.tblIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-                        var supplIngr = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == ingID);
-
+                       
                         decimal qtyToReduce = 0;
                         if (ingr != null)
                         {
@@ -2070,16 +2066,13 @@ namespace ShoppingCartMVC.Controllers
                                 //send qty alert email 
                                 string ing = ingr.Ing_Name;
                                 string qty = Convert.ToString(ingr.Ing_StockyQty);
-                                string suppl = supplIngr.TblSupplier.SupplName;
-                                //test for link redirect
-                                int supID = supplIngr.SupplierId;
-
+                               
                                 string baseUrl = $"{Request.Url.Scheme}://{Request.Url.Authority}";
-                                string url = Url.Action("Index", "AdminHome", new { id = supID });
+                                string url = Url.Action("LowStock", "Ingredients");
                                 string link = $"{baseUrl}{url}";
 
                                 var content = $"The Stock Quantity for the following Ingredient has dropped below 50 and requires restocking.<br/><br/> ";
-                                content += "Ingredient: " + ing + " supplied by " + suppl + " current quantity has dropped to " + qty + "<br/>Click here to place order with Supplier: " + link; ;
+                                content += "Ingredient: " + ing + " current quantity is " + qty + "<br/>Click here to view low stock ingredients: <a href=" + link + ">Low Stock</a>";
 
 
 
@@ -2125,7 +2118,7 @@ namespace ShoppingCartMVC.Controllers
 
 
                 // Send the order ready confirmation email
-                await SendOrderReadyEmail(order.OrderNumber, order.CellNumber, message, order.Email);
+                await SendOrderReadyEmail(order.OrderNumber, message, order.Email);
             }
 
             return RedirectToAction("PrepInStoreOrders");

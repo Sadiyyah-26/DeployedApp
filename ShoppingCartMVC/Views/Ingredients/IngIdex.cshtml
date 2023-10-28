@@ -29,6 +29,7 @@ $(document).ready(function(){
                 <th>Image</th>
                 <th>Standard Qty for 1</th>
                 <th>Stock Qty</th>
+                <th>Stock Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -39,9 +40,18 @@ $(document).ready(function(){
 
                     <td>@item.Ing_Name</td>
                     <td><img src="~/Uploads/@item.Ing_Image" style="width:150px; height:100px;" /></td>
-                    <td>@((int)Math.Round(item.Ing_StandardQty))  @item.StdQty_UnitMeaseurement</td>                   
+                    <td>@((int)Math.Round(item.Ing_StandardQty))  @item.StdQty_UnitMeaseurement</td>
                     <td>@item.Ing_StockyQty</td>
-
+                    <td>
+                        @if(item.StockStatus=="In Stock")
+                        { 
+                            <p style="color:green;font-size:20px">@item.StockStatus</p>
+                        }
+                        else if(item.StockStatus == "Low Stock")
+                        {
+                    <p style="color: darkred; font-size: 20px">@item.StockStatus</p>
+                        }                        
+                    </td>
                     <td class="btns">
                         <a href="@Url.Action("EditIngr", "Ingredients", new { id = item.Ing_ID})" class="btn btn-info">Edit</a>
                         <a href="@Url.Action("DeleteIngr", "Ingredients", new { id = item.Ing_ID})" class="btn btn-danger">Delete</a>

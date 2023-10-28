@@ -1,0 +1,84 @@
+﻿@model ShoppingCartMVC.Models.PurchaseOrderVM
+
+@{
+    ViewBag.Title = "Low Stock Ingredients for Supplier";
+}
+
+<head>
+    <title>Low Stock Ingredients for Supplier</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<div class="container">
+    <h2>Low Stock Products</h2>
+    <p>Supplier: @ViewBag.SupplierName</p>
+
+    @using (Html.BeginForm("CreatePurchaseOrder", "Ingredients", FormMethod.Post))
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Qty Remaining</th>
+                    <th>Quantity to Order</th>
+                    <th>Unit Cost</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.LowStockItems.Count; i++)
+                {
+                    <tr>
+                        <td>@Model.LowStockItems[i].Ing_ID</td>
+                        <td><img src="~/Uploads/@Model.LowStockItems[i].IngImage" style="width:150px; height:100px;" /></td>
+                        <td>@Model.LowStockItems[i].StockQty</td>
+                        <td>
+                           
+                            @Html.HiddenFor(model => model.LowStockItems[i].Ing_ID)
+                            @Html.HiddenFor(model => model.LowStockItems[i].UnitCost)
+                            @Html.TextBoxFor(model => model.LowStockItems[i].Quantity, new { @class = "form-control quantity-input" })
+                        </td>
+                        <td>@Model.LowStockItems[i].UnitCost</td>
+                        <td class="total-cost">0.00</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div>
+            <label for="contact">Contact:</label>
+            @Html.TextBoxFor(model => model.Contact, new { @class = "form-control" })
+        </div>
+        <div>
+            <label for="address">Address:</label>
+            @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+        </div>
+        <br />
+
+        <input type="submit" value="Create Purchase Order" class="btn btn-success" id="create-order-btn" />
+    }
+    <div class="text-right">
+        <p>Final Total: <span id="final-total">0.00</span></p>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle real-time calculations
+    $(document).ready(function () {
+        $('.quantity-input').on('input', function () {
+            var row = $(this).closest('tr');
+            var quantity = parseFloat($(this).val()) || 0;
+            var unitCost = parseFloat(row.find('.total-cost').prev().text()) || 0;
+            var totalCost = (quantity * unitCost).toFixed(2);
+            row.find('.total-cost').text(totalCost);
+            
+            // Calculate the final total
+            var finalTotal = 0;
+            $('.total-cost').each(function () {
+                finalTotal += parseFloat($(this).text()) || 0;
+            });
+            $('#final-total').text(finalTotal.toFixed(2));
+        });
+    });
+</script>

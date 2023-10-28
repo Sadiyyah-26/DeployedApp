@@ -43,10 +43,9 @@
                     <td>@item.TblIngredients.Ing_Name</td>
                     <td>R @item.Ing_UnitCost .00</td>
                     <td>
-                        <a href="@Url.Action("UpdateUnitCost", "Ingredients", new { id = item.Ing_ID})" class="btn btn-info">Edit</a>
+                        <a href="@Url.Action("UpdateUnitCost", "Ingredients", new { ingId = item.Ing_ID,supplierID=item.SupplierId})" class="btn btn-info">Edit</a>
 
                     </td>
-
                 </tr>
             }
         </tbody>

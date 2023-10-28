@@ -9,9 +9,7 @@ namespace ShoppingCartMVC.Models
 {
     public class LowStockVM
     {
-        //[Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public int LowStock_ID { get; set; }
+  
         public int SupplierId { get; set; }
         public string SupplName { get; set; }
         public int Ing_ID { get; set; }
@@ -19,5 +17,9 @@ namespace ShoppingCartMVC.Models
         public string IngImage { get; set; }
         public decimal StockQty { get; set; }
         public string StockStatus { get; set; }
+
+        public decimal Quantity { get; set; }
+        public double UnitCost { get; set; }
+        public decimal TotalCost { get; set; }
     }
 }
