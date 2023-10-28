@@ -146,7 +146,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 30px;
+            font-size: 30px !important;
            
         }
 
@@ -160,9 +160,9 @@
                 font-size: 20px !important;
                 color: white !important;
                 transition: color 0.2s;
-                flex-direction: column;
+                /*flex-direction: column;
                 margin-left: 10px;
-                white-space: nowrap; /* Prevent links from wrapping */
+                white-space: nowrap;*/ /* Prevent links from wrapping */
             }
 
                 .navbar-nav .nav-link:hover {
@@ -197,7 +197,7 @@
 
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="ftco-navbar">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand">
                 <img src="~/Images/Logo2.png" alt="Turbo Meals Logo" class="navbar-logo">
                 Turbo Meals
@@ -334,6 +334,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Stock</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
                                     <a class="dropdown-item" href="@Url.Action("LowStock", "Ingredients")">Low Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("AllPendingOrders", "AdminHome")">Pending Stock Orderd</a>
                                     <a class="dropdown-item" href="@Url.Action("AdminGetAllOrderDetail", "AdminHome")">Ordered Stock</a>
                                     <a class="dropdown-item" href="@Url.Action("ReturnedOrdersList", "AdminHome")">Returned Stock</a>
                                     <a class="dropdown-item" href="@Url.Action("ReceivedOrdersList", "AdminHome")">Received Stock</a>

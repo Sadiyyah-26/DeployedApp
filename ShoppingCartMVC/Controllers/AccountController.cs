@@ -247,8 +247,8 @@ namespace ShoppingCartMVC.Controllers
             string url = Url.Action("ResetPassword", "Account", new { id = userID, token = activationCode });
             string link = $"{baseUrl}{url}";
 
-            var content = "Hi,<br/><br/> We got your request for the reset of your account password. Please click on the below link to reset your password" +
-                    "<br/><a href=" + link + ">Reset Password</a>";
+            var content = "Hi,<br/><br/> We got your request for the reset of your account password. Please click on the below link to reset your password: " +
+                    "<a href=" + link + ">Reset Password</a>";
 
 
 

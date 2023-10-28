@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShoppingCartMVC.Models.tblAdminOrder>
+﻿@model List<ShoppingCartMVC.Models.StockOrdersWithIngrVM>
 <head>
     <title>
         Supplier Received Orders
@@ -6,55 +6,40 @@
 </head>
 <br />
 <h2> Supplier Received Orders</h2>
-<div class="container">
-
-
-    <table class="table">
-
+<br />
+<br />
+<table class="table">
+    <thead>
         <tr>
-            <th>
-                Invoice No #
-            </th>
-            <th>
-                Supplier Name
-            </th>
-
-            <th>
-                Order Date
-            </th>
-           
-            <th>
-                Invoice
-            </th>
-
+            <th>Invoice No #</th>
+            <th>Ingredients</th>
+            <th>Supplier Name</th>
+            <th>Order Date</th>
+            <th>Invoice</th>
         </tr>
-        <tbody id="myTable">
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @item.InvoiceId
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TblSupplier.SupplName)
-                    </td>
-                    <td>
-                        @item.OrderDate
-                    </td>
-                   
-                    <td>
-                        <a href="@Url.Action("AdminInvoice", "AdminHome", new { InvID = item.InvoiceId })" class="btn btn-primary">View</a>
-                    </td>
-
-                   
-
-                </tr>
-            }
-        </tbody>
-    </table>
-
-</div>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.InvoiceId</td>
+                <td>
+                    <ul>
+                        @foreach (var ingredient in item.Ingredients)
+                        {
+                            <li>@ingredient</li>
+                        }
+                    </ul>
+                </td>
+                <td>@item.SupplierName</td>
+                <td>@item.OrderDate</td>
+                <td>
+                    <a href="@Url.Action("AdminInvoice", "AdminHome", new { InvID = item.InvoiceId })" class="btn btn-primary">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <br />
 <br />

@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="ColorTranslations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Handy.DotNETCore-Compatibility.ColorTranslations.0.2.1\lib\net20\ColorTranslations.dll</HintPath>
     </Reference>
@@ -63,6 +66,9 @@
     </Reference>
     <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="jose-jwt, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\jose-jwt.4.1.0\lib\net472\jose-jwt.dll</HintPath>
@@ -390,10 +396,13 @@
     <Compile Include="Models\InvoiceVM.cs" />
     <Compile Include="Models\LowStockVM.cs" />
     <Compile Include="Models\MyRoleProvider.cs" />
+    <Compile Include="Models\PendingOrdersVM.cs" />
+    <Compile Include="Models\PurchaseOrderVM.cs" />
     <Compile Include="Models\RateAndTipVM.cs" />
     <Compile Include="Models\ReserveOrderViewModel.cs" />
     <Compile Include="Models\ResetPasswordModel.cs" />
     <Compile Include="Models\SelectedProductModel.cs" />
+    <Compile Include="Models\StockOrdersWithIngrVM.cs" />
     <Compile Include="Models\SupplierIngredients.cs" />
     <Compile Include="Models\tblAccProfile.cs" />
     <Compile Include="Models\tblAdminInvoice.cs" />
@@ -607,11 +616,8 @@
     <Content Include="Views\Ingredients\IngProIndex.cshtml" />
     <Content Include="Views\Ingredients\LowStock.cshtml" />
     <Content Include="Views\Ingredients\SupplIngIndex.cshtml" />
-    <Content Include="Views\AdminHome\AdminAddtoCart.cshtml" />
-    <Content Include="Views\AdminHome\AdminCheckout.cshtml" />
     <Content Include="Views\AdminHome\AdminGetAllOrderDetail.cshtml" />
     <Content Include="Views\AdminHome\AdminInvoice.cshtml" />
-    <Content Include="Views\AdminHome\Index.cshtml" />
     <Content Include="Views\AdminHome\ReceivedOrdersList.cshtml" />
     <Content Include="Views\AdminHome\ReturnedOrdersList.cshtml" />
     <Content Include="Views\AdminHome\SupplierConfirmOrder.cshtml" />
@@ -650,6 +656,11 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Bot\Bot.cshtml" />
+    <Content Include="Views\Ingredients\LowStockForSupplier.cshtml" />
+    <Content Include="Views\Ingredients\PurchaseOrder.cshtml" />
+    <Content Include="Views\AdminHome\AllPendingOrders.cshtml" />
+    <Content Include="Views\AdminHome\ConfirmIngOrderWithSupplier.cshtml" />
+    <Content Include="Views\AdminHome\PaymentSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

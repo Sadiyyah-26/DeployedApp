@@ -17,8 +17,9 @@
 <div class="col-sm-5 mx-auto">
     <div class="card">
         <div class="card-body">
-            @using (Html.BeginForm("UpdateUnitCost", "Ingredients", FormMethod.Post))
-            {
+            @using (Html.BeginForm("UpdateUnitCostPost", "Ingredients", FormMethod.Post))
+            {              
+
                 <div class="form-group">
                     <b> @Html.DisplayFor(m => m.TblIngredients.Ing_Name)</b>
                 </div>
@@ -28,16 +29,14 @@
                 </div>
                 <br />
                 <div class="form-group">
-                    <p style="text-align:center">New Unit Cost: </p> R <input type="number" name="unitCost" value="0" /> .00
+                    <p style="text-align:center">New Unit Cost: </p> R @Html.TextBox("Ing_UnitCost", Model.Ing_UnitCost) .00
                 </div>
+
 
                 <br />
                 <div class="form-group">
-
                     <input type="submit" value="Update" class="btn btn-success" />
-
                 </div>
-
             }
         </div>
     </div>

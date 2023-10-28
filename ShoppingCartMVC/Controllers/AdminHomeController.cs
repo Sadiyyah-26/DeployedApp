@@ -1,8 +1,12 @@
-﻿using ShoppingCartMVC.Models;
+﻿using iTextSharp.text.pdf;
+using iTextSharp.text;
+using ShoppingCartMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -12,196 +16,311 @@ namespace ShoppingCartMVC.Controllers
     {
         dbOnlineStoreEntities db=new dbOnlineStoreEntities();
 
-        List<AdminCart> Ali = new List<AdminCart>();
+        //List<AdminCart> Ali = new List<AdminCart>();
 
-        #region Home Page in showing all Supplier Ingredients 
-
-        public ActionResult Index(int id)
+        #region Showing All Pending Supplier Stock Orders
+        public ActionResult AllPendingOrders()//final changes
         {
+            var orders = db.tblAdminOrders.Where(order => order.OrderStatus == "Pending").ToList();
+            var ingredients = db.tblIngredients.ToList();
 
-            if (TempData["admincart"] != null)
-            {
-                double x = 0;
-
-                List<AdminCart> Ali2 = TempData["admincart"] as List<AdminCart>;
-                foreach (var item in Ali2)
-                {
-                    x += item.bill;
-
-                }
-                TempData["admintotal"] = x;
-                TempData["admin_item_count"] = Ali2.Count();
-            }
-            TempData.Keep();
-
-            var qry = db.tblSuppliers.SingleOrDefault(m => m.SupplierId == id);
-
-            var suppliedIngredients = db.SupplierIngredients
-     .Where(si => si.SupplierId == id)
-     .Join(db.tblIngredients, si => si.Ing_ID, i => i.Ing_ID, (si, i) => new IngrVM { ID = si.Ing_ID, IngName = i.Ing_Name, Ing_Image = i.Ing_Image, Ing_UnitCost = si.Ing_UnitCost, Ing_StockyQty = i.Ing_StockyQty })
-     .ToList();
-
-
-            ViewBag.ingrList = suppliedIngredients;
-            return View(qry);
-        }
-
-        #endregion
-
-
-        #region Prep Staff Add to Cart
-
-        public ActionResult AdminAddtoCart(int id)
-        {
-            var query = db.tblIngredients.Where(x => x.Ing_ID == id).SingleOrDefault();
-            var ingCost = db.SupplierIngredients.SingleOrDefault(n => n.Ing_ID == id)?.Ing_UnitCost;
-            TempData["unit"] = ingCost;
-            var supID = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == id)?.SupplierId;
-            TempData["sID"] = supID;
-            return View(query);
-        }
-
-        [HttpPost]
-        public ActionResult AdminAddtoCart(int id, int qty)
-        {
-            tblIngredients p = db.tblIngredients.Where(x => x.Ing_ID == id).SingleOrDefault();
-            var ingCost = db.SupplierIngredients.SingleOrDefault(n => n.Ing_ID == id)?.Ing_UnitCost;
-            var supID = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == id)?.SupplierId;
-
-            AdminCart ac = new AdminCart();
-            ac.ingrid = id;
-            ac.ingrname = p.Ing_Name;
-            ac.price = (double)ingCost;
-            ac.qty = Convert.ToInt32(qty);
-            ac.bill = ac.price * ac.qty;
-            if (TempData["admincart"] == null)
-            {
-                Ali.Add(ac);
-                TempData["admincart"] = Ali;
-            }
-            else
-            {
-                List<AdminCart> Ali2 = TempData["admincart"] as List<AdminCart>;
-                int flag = 0;
-                foreach (var item in Ali2)
-                {
-                    if (item.ingrid == ac.ingrid)
+            var pendingIngredients = orders
+                .Join(db.tblSuppliers,
+                    order => order.SupplierId,
+                    supplier => supplier.SupplierId,
+                    (order, supplier) => new PendingOrdersVM
                     {
-                        item.qty += ac.qty;
-                        item.bill += ac.bill;
-                        flag = 1;
-                    }
+                        InvoiceID = order.InvoiceId,
+                        SupplierId = supplier.SupplierId,
+                        SupplName = supplier.SupplName,
+                        Ing_ID = order.IngrID,
+                        Ing_Name = ingredients.FirstOrDefault(ing => ing.Ing_ID == order.IngrID)?.Ing_Name,
+                        IngImage = ingredients.FirstOrDefault(ing => ing.Ing_ID == order.IngrID)?.Ing_Image,
+                        OrderedStockQty = order.Qty
+                    })
+                .ToList();
 
-                }
-                if (flag == 0)
-                {
-                    Ali2.Add(ac);
-                    //new item
-                }
-                TempData["admincart"] = Ali2;
 
-            }
 
-            TempData.Keep();
-            TempData["sID"] = supID;
-            return RedirectToAction("Index", new { id = supID });
+            TempData["PendingOrdersData"] = pendingIngredients;
+            var groupedIngredients = pendingIngredients.GroupBy(info => info.SupplierId).ToList();
+
+            return View(groupedIngredients);
         }
 
         #endregion
 
-
-        #region Prep Staff Remove Cart Ingredients
-
-        public ActionResult remove(int? id)
+        public ActionResult PaymentSuccess()
         {
-            if (TempData["admincart"] == null)
-            {
-                TempData.Remove("admintotal");
-                TempData.Remove("admincart");
-            }
-            else
-            {
-                List<AdminCart> Ali2 = TempData["admincart"] as List<AdminCart>;
-                AdminCart ac = Ali2.Where(x => x.ingrid == id).SingleOrDefault();
-                Ali2.Remove(ac);
-                double s = 0;
-                foreach (var item in Ali2)
-                {
-                    s += item.bill;
-                }
-                TempData["admintotal"] = s;
-
-            }
-            var supID = db.SupplierIngredients.SingleOrDefault(m => m.Ing_ID == id)?.SupplierId;
-            TempData["sID"] = supID;
-            return RedirectToAction("Index", new { id = supID });
-        }
-        #endregion
-
-
-        #region Prep Staff Checkout Code
-
-        public ActionResult AdminCheckout()
-        {
-            TempData["Supplier"] = TempData["sID"];
-            TempData.Keep();
             return View();
         }
 
+        #region Confirm Stock Availability with Supplier
         [HttpPost]
-        public ActionResult AdminCheckout(string contact, string address)
+        public ActionResult ConfirmIngOrderWithSupplier(List<PendingOrdersVM> supplierGroup)
         {
-
-           
+            if (supplierGroup != null && supplierGroup.Count > 0)
+            {
                 if (ModelState.IsValid)
                 {
-                    List<AdminCart> Ali2 = TempData["admincart"] as List<AdminCart>;
-                    tblAdminInvoice aiv = new tblAdminInvoice();
-                    aiv.UserId = Convert.ToInt32(Session["uid"].ToString());
-                    aiv.InvoiceDate = System.DateTime.Now;
-                    aiv.Bill = (double)TempData["admintotal"];
-                    aiv.Payment = "PayPal";
-                    aiv.SupplierId = (int)TempData["Supplier"];
+                    // Group ingredients by InvoiceID and SupplierID
+                    var groupedIngredients = supplierGroup.GroupBy(ing => new { ing.InvoiceID, ing.SupplierId });
 
-                    db.tblAdminInvoices.Add(aiv);
-                    db.SaveChanges();
-                    TempData["id"] = aiv.InvoiceId;
-                    //order book
-                    foreach (var item in Ali2)
+                    foreach (var group in groupedIngredients)
                     {
-                        tblAdminOrder od = new tblAdminOrder();
-                        od.IngrID = item.ingrid;
-                        od.Contact = contact;
-                        od.Address = address;
-                        od.OrderDate = System.DateTime.Now;
-                        od.InvoiceId = aiv.InvoiceId;
-                        od.Qty = item.qty;
-                        od.Unit = Convert.ToInt32(item.price);
-                        od.Total = Convert.ToInt32(item.bill);
-                        od.SupplierId = (int)TempData["Supplier"];
-                        db.tblAdminOrders.Add(od);
+                        int? invoiceId = group.Key.InvoiceID;
+                        int supplierId = group.Key.SupplierId;
+                        TempData["Invoice"] = invoiceId;
+
+                        foreach (var ingredient in group)
+                        {
+                            // Find all orders with the same InvoiceID, SupplierId, and Ing_ID
+                            var orders = db.tblAdminOrders
+                                .Where(m => m.InvoiceId == invoiceId && m.SupplierId == supplierId && m.IngrID == ingredient.Ing_ID)
+                                .ToList();
+
+                            foreach (var order in orders)
+                            {
+                                bool isCheckboxChecked = ingredient.StockAvailabilityConfirmed;
+
+                                if (isCheckboxChecked)
+                                {
+                                    order.OrderStatus = "Ordered";
+                                    order.TblAdminInvoice.InvoiceDate = System.DateTime.Now;
+                                }
+                                else
+                                {
+                                    order.OrderStatus = "Cancelled";
+                                }
+                            }
+                        }
                     }
 
+                    // Save changes to all records
                     db.SaveChanges();
-                    TempData.Remove("admintotal");
-                    TempData.Remove("admincart");
-                    // TempData["msg"] = "Order Book Successfully!!";
-                    //relook at paypal link entering order shouldnt be coming up
-                    return Content("<script>" +
-                "function callPayPal() {" +
-                "var InvID = " + (int)TempData["id"] + ";" +
-                "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + aiv.Bill.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=SupplierOrder&return=https://2023grp01a.azurewebsites.net/AdminHome/AdminInvoice?InvID=' + InvID;" +
-                "}" +
-                "callPayPal();" +
-             "</script>");
-
                 }
 
-            TempData.Keep();
-            return View();
+                // Send invoice as PDF via email if any order is "Ordered"
+                if (supplierGroup.Any(ing => ing.StockAvailabilityConfirmed))
+                {
+                    // Get the invoice data
+                    AdminInv_VM invoiceData = GetInvoiceData(Convert.ToInt32(TempData["Invoice"]));
 
+                    // Generate the PDF invoice
+                    byte[] pdfBytes = GenerateInvoicePDF(invoiceData);
+
+                    // Send the email with the PDF invoice
+                    SendEmailWithInvoice(invoiceData.SupplName, Convert.ToInt32(TempData["Invoice"]), invoiceData.ContactPerson, invoiceData.ContactNum, invoiceData.ContactPersonPos, pdfBytes);
+                }
+
+                // Clear TempData to ensure it's not reused on subsequent requests
+                TempData["PendingOrdersData"] = null;
+
+                // Redirect to a success or confirmation page
+                return RedirectToAction("PaymentSuccess");
+            }
+            else
+            {
+                // Handle the case where the supplierGroup is null or empty
+                return View("Error");
+            }
         }
 
+
+        #endregion
+
+        #region Generate Invoice as PDF
+        #region Get Invoice Data
+        private AdminInv_VM GetInvoiceData(int invoiceId)
+        {
+            int InvID = invoiceId; // Use the provided invoiceId parameter
+            List<AdminInv_VM> AinvList = new List<AdminInv_VM>();
+
+            var adminInvList = (from ao in db.tblAdminOrders
+                                join ai in db.tblAdminInvoices on ao.InvoiceId equals ai.InvoiceId
+                                join s in db.tblSuppliers on ai.SupplierId equals s.SupplierId
+                                join i in db.tblIngredients on ao.IngrID equals i.Ing_ID
+                                where ai.InvoiceId == InvID
+                                select new
+                                {
+                                    ai.InvoiceId,
+                                    ai.InvoiceDate,
+                                    ai.Payment,
+                                    s.SupplName,
+                                    s.ContactPerson,
+                                    s.ContactPersonPos,
+                                    s.ContactNum,
+                                    s.Email,
+                                    s.Tel,
+                                    s.PhysicalAddress,
+                                    ao.OrderId,
+                                    ao.OrderStatus,
+                                    ao.OrderDate,
+                                    i.Ing_Name,
+                                    ao.Contact,
+                                    ao.Address,
+                                    ao.Unit,
+                                    ao.Qty,
+                                    ao.Total
+                                }).ToList();
+
+            var orderRecs = adminInvList.GroupBy(m => m.InvoiceId);
+
+            // Create a ViewModel for the invoice
+            AdminInv_VM objIVM = new AdminInv_VM();
+
+            // You can aggregate data here if needed (e.g., summing up quantities)
+
+            if (orderRecs.Any())
+            {
+                var order = orderRecs.First(); // Assuming there's only one invoice for the provided invoiceId
+
+                // Assign common values to the ViewModel
+                objIVM.InvoiceId = order.Key; // Group Key is the InvoiceId
+                objIVM.InvoiceDate = order.First().InvoiceDate;
+                objIVM.OrderDate = order.First().OrderDate;
+                objIVM.Payment = order.First().Payment;
+                objIVM.SupplName = order.First().SupplName;
+                objIVM.ContactPerson = order.First().ContactPerson;
+                objIVM.ContactPersonPos = order.First().ContactPersonPos;
+                objIVM.ContactNum = order.First().ContactNum;
+                objIVM.Email = order.First().Email;
+                objIVM.Tel = order.First().Tel;
+                objIVM.PhysicalAddress = order.First().PhysicalAddress;
+                objIVM.Contact = order.First().Contact;
+                objIVM.Address = order.First().Address;
+
+                // Create a list of items within the invoice
+                objIVM.Items = order.Select(item => new AdminInv_VM.Item
+                {
+                    OrderId = item.OrderId,
+                    OrderStatus = item.OrderStatus,
+                    Ing_Name = item.Ing_Name,
+                    Unit = item.Unit,
+                    Qty = item.Qty,
+                    Total = item.Total
+                }).ToList();
+            }
+
+            return objIVM;
+        }
+
+        #endregion
+
+        // Generate PDF invoice using iTextSharp
+        private byte[] GenerateInvoicePDF(AdminInv_VM invoiceData)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document document = new Document(PageSize.A4, 50, 50, 25, 25);
+                PdfWriter writer = PdfWriter.GetInstance(document, ms);
+                document.Open();
+
+                // Add content to the PDF document based on invoiceData
+                // You can add content here to match your desired format and style
+                // For example:
+                // Company name and address
+                document.Add(new iTextSharp.text.Paragraph("TURBO MEALS") { Alignment = Element.ALIGN_CENTER });
+                document.Add(Chunk.NEWLINE);
+
+                // Delivery address and contact
+                document.Add(new iTextSharp.text.Paragraph("Delivery Address: " + invoiceData.Address));
+                document.Add(new iTextSharp.text.Paragraph("Contact: " + invoiceData.Contact));
+                document.Add(Chunk.NEWLINE);
+
+                // Invoice information
+                document.Add(new iTextSharp.text.Paragraph("Invoice #" + invoiceData.InvoiceId));
+                document.Add(new iTextSharp.text.Paragraph("Payment Status: " + invoiceData.Payment) { Alignment = Element.ALIGN_RIGHT });
+                document.Add(Chunk.NEWLINE);
+
+                // Supplier information
+                document.Add(new iTextSharp.text.Paragraph("Supplier Info:"));
+                document.Add(new iTextSharp.text.Paragraph(invoiceData.SupplName) { Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14f, BaseColor.ORANGE) });
+                document.Add(new iTextSharp.text.Paragraph(invoiceData.ContactPerson + " - " + invoiceData.ContactPersonPos));
+                document.Add(new iTextSharp.text.Paragraph(invoiceData.ContactNum));
+                document.Add(new iTextSharp.text.Paragraph(invoiceData.Email));
+                document.Add(new iTextSharp.text.Paragraph(invoiceData.Tel));
+                document.Add(new iTextSharp.text.Paragraph("Physical Address: " + invoiceData.PhysicalAddress));
+                document.Add(Chunk.NEWLINE);
+
+                // Invoice and order dates
+                document.Add(new iTextSharp.text.Paragraph("Invoice Date: " + invoiceData.InvoiceDate));
+                document.Add(new iTextSharp.text.Paragraph("Order Date: " + invoiceData.OrderDate));
+                document.Add(Chunk.NEWLINE);
+
+                // Order summary
+                document.Add(new iTextSharp.text.Paragraph("Order Summary") { Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16f) });
+
+                PdfPTable table = new PdfPTable(5);
+                table.WidthPercentage = 100;
+
+                table.AddCell(new PdfPCell(new Phrase("Order Status", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10f))));
+                table.AddCell(new PdfPCell(new Phrase("Item Name", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10f))));
+                table.AddCell(new PdfPCell(new Phrase("Unit Price", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10f))));
+                table.AddCell(new PdfPCell(new Phrase("Quantity for Order", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10f))));
+                table.AddCell(new PdfPCell(new Phrase("Sub-Total", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10f))));
+                double grandTotal = 0;
+
+                foreach (var item in invoiceData.Items)
+                {
+                    table.AddCell(item.OrderStatus.ToString());
+                    table.AddCell(item.Ing_Name);
+                    table.AddCell("R " + (item.Unit.HasValue ? ((decimal)item.Unit).ToString("0.00") : "N/A"));
+                    table.AddCell(item.Qty.ToString());
+                    table.AddCell("R " + (item.Unit.HasValue ? ((decimal)item.Total).ToString("0.00") : "N/A"));
+
+                    if (item.OrderStatus != "Cancelled")
+                    {
+                        grandTotal += (double)item.Total;
+                    }
+                }
+
+                document.Add(table);
+
+                document.Add(Chunk.NEWLINE);
+
+                // Total amount
+                document.Add(new iTextSharp.text.Paragraph("Total Amount: R " + grandTotal.ToString("0.00")) { Alignment = Element.ALIGN_RIGHT });
+
+                document.Close();
+                return ms.ToArray();
+            }
+        }
+
+
+
+        // Send email with invoice attachment
+        private void SendEmailWithInvoice(string supplName, int invoiceID, string contactPerson, string contactNum, string contactPos, byte[] pdfBytes)
+        {
+            string recipientEmail = "turbostaff786@gmail.com"; // Replace with the recipient's email address
+            var body = $@"Dear Turbo Meals Team,
+
+            We acknowledge the receipt of your recent ingredient stock order. Please find the attached invoice for Invoice ID: {invoiceID}.
+
+            Delivery will be made within 3 working days, and further notified to you on the day.
+
+            Best regards,
+
+            {contactPerson}
+            {contactPos}
+            {contactNum}";
+
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(recipientEmail));
+            message.From = new MailAddress("turbomeals123@gmail.com"); // Replace with your email address
+            message.Subject = "Invoice for Stock Ordered";
+            message.Body = body;
+            //message.IsBodyHtml = true;
+
+            using (var memoryStream = new MemoryStream(pdfBytes))
+            {
+                message.Attachments.Add(new Attachment(memoryStream, "Invoice.pdf"));
+                using (var smtp = new SmtpClient())
+                {
+                    smtp.Send(message);
+                }
+            }
+        }
         #endregion
 
 
@@ -209,14 +328,24 @@ namespace ShoppingCartMVC.Controllers
 
         public ActionResult AdminGetAllOrderDetail()
         {
-            var query = db.tblAdminOrders
+            var ordersWithIngredients = db.tblAdminOrders
                 .Where(n => n.OrderStatus == "Ordered")
                 .GroupBy(m => m.InvoiceId)
-                .Select(o => o.FirstOrDefault())
+                .Select(group => new StockOrdersWithIngrVM
+                {
+                    InvoiceId = group.Key,
+                    SupplierName = group.FirstOrDefault().TblSupplier.SupplName,
+                    OrderDate = group.FirstOrDefault().OrderDate,
+                    Ingredients = group.SelectMany(order => db.tblIngredients
+                        .Where(ingredient => ingredient.Ing_ID == order.IngrID)
+                        .Select(ingredient => ingredient.Ing_Name))
+                        .ToList()
+                })
                 .ToList();
 
-            return View(query);
+            return View(ordersWithIngredients);
         }
+
 
         #endregion
 
@@ -224,13 +353,23 @@ namespace ShoppingCartMVC.Controllers
         #region Returned Orders with Supplier
         public ActionResult ReturnedOrdersList()
         {
-            var query = db.tblAdminOrders
+            var ordersWithIngredients = db.tblAdminOrders
                 .Where(n => n.OrderStatus == "Returned")
                 .GroupBy(m => m.InvoiceId)
-                .Select(o => o.FirstOrDefault())
+                .Select(group => new StockOrdersWithIngrVM
+                {
+                    InvoiceId = group.Key,
+                    SupplierName = group.FirstOrDefault().TblSupplier.SupplName,
+                    OrderDate = group.FirstOrDefault().OrderDate,
+                    ReturnReason = group.FirstOrDefault().ReturnReason,
+                    Ingredients = group.SelectMany(order => db.tblIngredients
+                        .Where(ingredient => ingredient.Ing_ID == order.IngrID)
+                        .Select(ingredient => ingredient.Ing_Name))
+                        .ToList()
+                })
                 .ToList();
 
-            return View(query);
+            return View(ordersWithIngredients);
         }
 
         [HttpPost]
@@ -258,18 +397,27 @@ namespace ShoppingCartMVC.Controllers
         #region Received Orders List from Supplier
         public ActionResult ReceivedOrdersList()
         {
-            var query = db.tblAdminOrders
+            var ordersWithIngredients = db.tblAdminOrders
                 .Where(n => n.OrderStatus == "Received")
                 .GroupBy(m => m.InvoiceId)
-                .Select(o => o.FirstOrDefault())
+                .Select(group => new StockOrdersWithIngrVM
+                {
+                    InvoiceId = group.Key,
+                    SupplierName = group.FirstOrDefault().TblSupplier.SupplName,
+                    OrderDate = group.FirstOrDefault().OrderDate,
+                    Ingredients = group.SelectMany(order => db.tblIngredients
+                        .Where(ingredient => ingredient.Ing_ID == order.IngrID)
+                        .Select(ingredient => ingredient.Ing_Name))
+                        .ToList()
+                })
                 .ToList();
 
-            return View(query);
+            return View(ordersWithIngredients);
         }
         #endregion
 
 
-        #region  Confirm Order with Supplier
+        #region  Confirm Delivery with Supplier
 
         public ActionResult SupplierConfirmOrder(int InvoiceID)
         {
@@ -289,6 +437,8 @@ namespace ShoppingCartMVC.Controllers
                 .Where(m => m.InvoiceId == id && m.OrderStatus == "Ordered")
                 .GroupBy(n => n.InvoiceId)
                 .ToList();
+
+            var updatePayment = db.tblAdminInvoices.FirstOrDefault(m => m.InvoiceId == id);
 
             foreach (var group in orders)
             {
@@ -335,7 +485,12 @@ namespace ShoppingCartMVC.Controllers
                         orderInfo.OrderStatus = "Returned";
                         orderInfo.ReturnReason = returnReason;
                         db.Entry(orderInfo).State = EntityState.Modified;
-                    }
+                    }                   
+                }
+
+                if (group.All(orderInfo => orderInfo.OrderStatus == "Received"))
+                {
+                    updatePayment.Payment = "Paid";
                 }
             }
 
@@ -373,6 +528,7 @@ namespace ShoppingCartMVC.Controllers
                                     s.PhysicalAddress,
                                     ao.OrderId,
                                     ao.OrderDate,
+                                    ao.OrderStatus,
                                     i.Ing_Name,
                                     ao.Contact,
                                     ao.Address,
@@ -413,6 +569,7 @@ namespace ShoppingCartMVC.Controllers
                 objIVM.Items = order.Select(item => new AdminInv_VM.Item
                 {
                     OrderId = item.OrderId,
+                    OrderStatus = item.OrderStatus,
                     Ing_Name = item.Ing_Name,
                     Unit = item.Unit,
                     Qty = item.Qty,

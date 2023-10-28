@@ -1,7 +1,15 @@
-﻿@model List<ShoppingCartMVC.Models.LowStockVM>
+﻿@model List<IGrouping<int, ShoppingCartMVC.Models.LowStockVM>>
+
 <head>
     <title>Low Stock Ingredients</title>
+
+    <style>
+        .supplier-link {
+            margin-left: 10px; /* Adjust the margin as needed */
+        }
+    </style>
 </head>
+
 <script src="~/js/jquery.min.js"></script>
 
 <script>
@@ -20,36 +28,34 @@
     <div class="form-group">
         <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Ingredient Name</th>
-                <th>Image</th>
-                <th>Qty Remaining</th>
-                <th>Supplier</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ing in Model)
-            {
 
+    @foreach (var supplierGroup in Model)
+    {
+        <div class="d-flex align-items-center">
+            <h3>@supplierGroup.First().SupplName</h3>
+
+            <!-- Link to a page that displays all low stock ingredients for this supplier -->
+            <a href="@Url.Action("LowStockForSupplier", new { supplierId = supplierGroup.Key })" class="btn btn-success supplier-link">View Low Stock</a>
+        </div>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@ing.Ing_ID</td>
-                    <td>@ing.Ing_Name</td>
-                    <td><img src="~/Uploads/@ing.IngImage" style="width:150px; height:100px;" /></td>
-                    <td>@ing.StockQty</td>
-                    <td>
-                        @ing.SupplName
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Index", "AdminHome",new {id=ing.SupplierId})" class="btn btn-success">Go to Supplier</a>
-                    </td>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Qty Remaining</th>                 
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var ing in supplierGroup)
+                {
+                    <tr>
+                        <td>@ing.Ing_ID</td>
+                        <td><img src="~/Uploads/@ing.IngImage" style="width:150px; height:100px;" /></td>
+                        <td>@ing.StockQty</td>
+                        <td></td> <!-- Leave this empty for ingredients -->
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
-<br />
-<br />

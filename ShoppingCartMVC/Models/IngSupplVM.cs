@@ -8,6 +8,7 @@ namespace ShoppingCartMVC.Models
     public class IngSupplVM
     {
         public string IngredientName { get; set; }
-        public string SupplName { get; set; }
+        public List<SupplierIngredients> Suppliers { get; set; }
+        public double Ing_UnitCost { get; set; }
     }
 }

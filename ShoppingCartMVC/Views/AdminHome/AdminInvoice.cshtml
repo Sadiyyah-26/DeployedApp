@@ -80,7 +80,16 @@
                                 <h4 class="float-end font-size-15">
                                     Invoice # @Html.DisplayFor(modelItem => item.InvoiceId)
                                     <br />
-                                  Payment Status  <span class="badge bg-success font-size-12 ms-2">Paid</span>
+                                    Payment Status
+                                    @if (item.Payment == "Pending")
+                                    {
+                                        <span class="badge bg-warning font-size-12 ms-2">Pending</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success font-size-12 ms-2">Paid</span>
+                                    }
+
                                 </h4>
 
                             </div>
@@ -142,9 +151,10 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 60px;">Order No.</th>
-                                            <th>Item</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
+                                            <th>Order Status</th>
+                                            <th>Item Name</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity Ordered</th>
                                             <th class="text-end" style="width: 120px;">Sub-Total</th>
                                         </tr>
                                     </thead>
@@ -152,24 +162,26 @@
 
                                         @foreach (var order in item.Items)
                                         {
-
-                                            <tr>
-                                                <th scope="row">@order.OrderId</th>
-                                                <td>
-                                                    <div>
-                                                        <h5 class="text-truncate font-size-14 mb-1">@order.Ing_Name</h5>
-                                                    </div>
-                                                </td>
-                                                <td>R @order.Unit.00</td>
-                                                <td>@order.Qty</td>
-                                                <td>R @order.Total.00</td>
-
-                                            </tr>
+                                            // Check if the order status is not "Cancelled"
+                                            if (order.OrderStatus != "Cancelled")
                                             {
+                                                <tr>
+                                                    <td scope="row">@order.OrderId</td>
+                                                    <td style="color:darkorange;font:bold;font-size:20px">@order.OrderStatus</td>
+                                                    <td>
+                                                        <div>
+                                                            <h5 class="text-truncate font-size-14 mb-1">@order.Ing_Name</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td>R @order.Unit.00</td>
+                                                    <td>@order.Qty</td>
+                                                    <td>R @order.Total.00</td>
+                                                </tr>
 
                                                 grandTotal += (double)order.Total;
                                             }
                                         }
+
                                     </tbody>
                                 </table>
 
