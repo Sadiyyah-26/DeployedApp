@@ -1,14 +1,45 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblOrder>
 <head>
     <title>Order History</title>
+    <style>
+        .btn-info {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-success {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-warning {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 @{
     // Order the data by OrderID in descending order
     var sortedOrders = Model.OrderByDescending(o => o.OrderId).ToList();
 }
+<br /><br />
 
-<div class="container">
 
     <table class="table">
         <tr>
@@ -99,4 +130,4 @@
 
     </table>
 
-</div>
+

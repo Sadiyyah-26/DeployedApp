@@ -1,10 +1,15 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> @*new link for cart icon*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 
     <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="~/css/animate.css">
@@ -33,6 +38,7 @@
         body {
             line-height: 1.5;
             font-family: 'Poppins', sans-serif;
+            font-size: 22px !important;
         }
 
         * {
@@ -123,7 +129,7 @@
                     background-color: #ffffff;
                 }
 
-       @@media (max-width: 767px) {
+        @@media (max-width: 767px) {
             .footer-col {
                 width: 50%;
                 margin-bottom: 30px;
@@ -139,15 +145,14 @@
         /*@@media screen and (max-width: 768px) {
             .navbar.nav-link       {
         flex-direction: column;*/ /* For small screens, stack links vertically */
-    /*}*/
+        /*}*/
 
         /*added new design changes*/
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 30px !important;
-           
+            font-size: 31px !important;
         }
 
         .navbar-nav {
@@ -179,17 +184,45 @@
         }
 
         .navbar-brand {
-            color: #FFA500 !important;
-            /*background: linear-gradient(90deg, #FFA500, #FF0000);
-            -webkit-background-clip: text;
-            color: transparent;*/
-            /* Add a text shadow for the second color (red) */
-            /*text-shadow: 2px 2px 0 #FF0000;*/
+            color: #FFA500 !important;         
         }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+            .navbar-dark .navbar-nav .nav-link:hover {
+                color: orange !important;
+            }
+
+        .navbar-dark .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            background-color: #24262beb; /* Set the background color */
+        }
+
+            .navbar-dark .navbar-nav .nav-item.dropdown:hover .dropdown-menu .dropdown-item {
+                color: white; /* Set the text color to white */
+            }
+
+                .navbar-dark .navbar-nav .nav-item.dropdown:hover .dropdown-menu .dropdown-item:hover {
+                    color: orange; /* Set the hover background color to orange */
+                    background-color: #24262b;
+                }
         /*added new design changes*/
     </style>
 
-
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').then(function (registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 
 </head>
 <body>
@@ -204,7 +237,7 @@
 
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
+                <span class="fas fa-bars"></span> Links
             </button>
 
             <div class="collapse navbar-collapse" id="ftco-nav">
@@ -215,15 +248,17 @@
                     @if (!User.Identity.IsAuthenticated)
                     {
 
-                        <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link"><span class="fa fa-home"></span>Menu</a></li>
-                        <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fa fa-info-circle"></span>About us</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fa fa-tags"></span>Turbo Deals</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fa fa-sign-in"></span>Log In</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link"><span class="fa fa-registered"></span>Register</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fa fa-pencil"></span>Reviews</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Contact Us</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Reservations", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Reservations</a></li>
-                        <li class="nav-item"><a href="@Url.Action("Index", "Donations")" class="nav-link"><span class="fa fa-envelope"></span>Donations</a></li>
+                        <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link"><span class="fas fa-hamburger"></span> Menu</a></li>
+                        <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fas fa-info-circle"></span> About us</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fas fa-tags"></span> Turbo Deals</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fas fa-sign-in-alt"></span> Log In</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link"><span class="fas fa-registered"></span> Register</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Reviews","Home")" class="nav-link"><span class="fas fa-star"></span> Reviews</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Contact", "Home")" class="nav-link"><span class="fas fa-envelope"></span> Contact Us</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Reservations", "Home")" class="nav-link"><span class="fas fa-calendar-plus"></span> Reservations</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index", "Donations")" class="nav-link"><span class="fas fa-heart"></span> Donations</a></li>
+
+
                         if (TempData["cart"] != null)
                         {
                             TempData.Keep();
@@ -240,45 +275,45 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("Create", "Category")">Add Category</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "Category")">View Categories</a>
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Category")"><span class="fas fa-plus-circle"></span> Add Category</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Category")"><span class="far fa-eye"></span> View Categories</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("Create", "Products")">Add Product</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "Products")">View Products</a>
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Products")"><span class="fas fa-plus-circle"></span> Add Product</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Products")"><span class="far fa-eye"></span> View Products</a>
                                 </div>
                             </li>
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Extras</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("ExCreate", "Products")">Add Extras </a>
-                                    <a class="dropdown-item" href="@Url.Action("ExIndex", "Products")">View Extras</a>
+                                    <a class="dropdown-item" href="@Url.Action("ExCreate", "Products")"><span class="fas fa-plus-circle"></span> Add Extras </a>
+                                    <a class="dropdown-item" href="@Url.Action("ExIndex", "Products")"><span class="far fa-eye"></span> View Extras</a>
                                 </div>
                             </li>
 
-                            <li class="nav-item"><a href="@Url.Action("GetAllUser", "Home")" class="nav-link"><span class="fa fa-users"></span>Users</a></li>
-                            <li class="nav-item"><a href="@Url.Action("GetAllOrderDetail", "Home")" class="nav-link"><span class="fa fa-list"></span>Orders</a></li>
+                            @*<li class="nav-item"><a href="@Url.Action("GetAllUser", "Home")" class="nav-link"><span class="fa fa-users"></span>Users</a></li>*@
+                            <li class="nav-item"><a href="@Url.Action("GetAllOrderDetail", "Home")" class="nav-link">@*<span class="fa fa-list"></span>*@ Orders</a></li>
                             //<li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Index", "tblRefunds")" class="nav-link"><span class="fa fa-list"></span>Refund Requests</a></li>
-                            <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
-                            <li class="nav-item"><a href="@Url.Action("DonationDetails", "Donations")" class="nav-link"><span class="fa fa-envelope"></span>Donations</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Dashboard", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Dashboard</a></li>
-                            <li class="nav-item"><a href="@Url.Action("AdminCashFloat", "Home")" class="nav-link"><span class="fa fa-envelope"></span>Drawer</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Chat", "LiveChat")" class="nav-link"><span class="fa fa-envelope"></span>Chat</a></li>
-                            <li class="nav-item"><a href="@Url.Action("AccProfile", "Account")" class="nav-link">My Profile</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Index", "tblRefunds")" class="nav-link">@*<span class="fa fa-list"></span>*@ Refunds</a></li>
+                            <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link">@*<span class="fa fa-list"></span>*@ Reservation</a></li>
+                            <li class="nav-item"><a href="@Url.Action("DonationDetails", "Donations")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Donation</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Dashboard", "Home")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Dashboard</a></li>
+                            <li class="nav-item"><a href="@Url.Action("AdminCashFloat", "Home")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Drawer</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Chat", "LiveChat")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Chat</a></li>
+                            <li class="nav-item"><a href="@Url.Action("AccProfile", "Account")" class="nav-link"> Profile</a></li>
 
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">@*<span class="fas fa-sign-out-alt"></span>*@ LogOut</a></li>
                         }
                         if (User.IsInRole("2"))
                         {
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>Order History</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Refund", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fa fa-shopping-bag"></span>Refunds</a></li>
+                            <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-history"></span> Order History</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Refund", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-undo"></span>Refunds</a></li>
                             // <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
                             if (TempData["cart"] != null)
                             {
@@ -287,76 +322,70 @@
 
                             }
 
-                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" title="Current Point Balance" class="nav-link"><span class="fa fa-info-circle fa-1x"></span> @ViewBag.TotalPoints</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Chat", "LiveChat")" class="nav-link"><span class="fa fa-envelope"></span>Chat</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Bot", "Bot")" class="nav-link"><span class="fa fa-robot"></span>Help</a></li>
-                            <li class="nav-item"><a href="@Url.Action("AccProfile", "Account")" class="nav-link">My Profile</a></li>
+                            <li class="nav-item cta cta-colored"><a href="@Url.Action("Checkout","Home")" title="Current Point Balance" class="nav-link"><span class="fas fa-gem"></span> @ViewBag.TotalPoints</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Chat", "LiveChat")" class="nav-link"><span class="fas fa-comment-dots"></span> Chat</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Bot", "Bot")" class="nav-link"><span class="fa fa-robot"></span> Help</a></li>
+                            <li class="nav-item"><a href="@Url.Action("AccProfile", "Account")" class="nav-link"><span class="fas fa-user-circle"></span> My Profile</a></li>
 
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log Out</a></li>
                         }
                         if (User.IsInRole("3"))
                         {
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("DriverDeliveries", "Home", new { id = @Session["uid"] })" class="nav-link">Deliveries</a></li>
-                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link">My Profile</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("DriverDeliveries", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-truck"></span> Deliveries</a></li>
+                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-user-circle"></span> My Profile</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log Out</a></li>
                         }
                         if (User.IsInRole("4"))
                         {
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link">My Profile</a></li>
-                            <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link">Online Orders</a></li>
-                            <li class="nav-item"><a href="@Url.Action("PrepInStoreOrders", "Home", new { id = @Session["uid"] })" class="nav-link">In Store Orders</a></li>
-                            <li class="nav-item"><a href="@Url.Action("ReadyOrders", "Home", new { id = @Session["uid"] })" class="nav-link">Orders Ready</a></li>
+
+                            <li class="nav-item"><a href="@Url.Action("PrepStaff", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-shopping-bag"></span> Online Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("PrepInStoreOrders", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-store"></span> In Store Orders</a></li>
+                            <li class="nav-item"><a href="@Url.Action("ReadyOrders", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-check-circle"></span> Orders Ready</a></li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ingredients</a>
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-carrot"></span> Ingredients</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("AddIngr", "Ingredients")">Add Ingredients</a>
-                                    <a class="dropdown-item" href="@Url.Action("IngIdex", "Ingredients")">View Ingredients</a>
-                                    <a class="dropdown-item" href="@Url.Action("IngProIndex", "Ingredients")"> Ingredients for Products</a>
-                                    <a class="dropdown-item" href="@Url.Action("SupplIngIndex", "Ingredients")"> Supplier for Ingredients</a>
+                                    <a class="dropdown-item" href="@Url.Action("AddIngr", "Ingredients")"><span class="fas fa-plus-circle"></span> Add Ingredients</a>
+                                    <a class="dropdown-item" href="@Url.Action("IngIdex", "Ingredients")"><span class="far fa-eye"></span> View Ingredients</a>
+                                    <a class="dropdown-item" href="@Url.Action("IngProIndex", "Ingredients")"><span class="fas fa-cheese"></span> Ingredients for Products</a>
+                                    <a class="dropdown-item" href="@Url.Action("SupplIngIndex", "Ingredients")"><span class="fas fa-truck-moving"></span> Supplier for Ingredients</a>
 
 
                                 </div>
                             </li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Suppliers</a>
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-users"></span> Suppliers</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("Create", "Supplier")">Add Supplier</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "Supplier")">View Suppliers</a>
+                                    <a class="dropdown-item" href="@Url.Action("Create", "Supplier")"><span class="fas fa-plus-circle"></span>  Add Supplier</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Supplier")"><span class="far fa-eye"></span> View Suppliers</a>
 
                                 </div>
                             </li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Stock</a>
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-cubes"></span> Stock</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a class="dropdown-item" href="@Url.Action("LowStock", "Ingredients")">Low Stock</a>
-                                    <a class="dropdown-item" href="@Url.Action("AllPendingOrders", "AdminHome")">Pending Stock Orderd</a>
-                                    <a class="dropdown-item" href="@Url.Action("AdminGetAllOrderDetail", "AdminHome")">Ordered Stock</a>
-                                    <a class="dropdown-item" href="@Url.Action("ReturnedOrdersList", "AdminHome")">Returned Stock</a>
-                                    <a class="dropdown-item" href="@Url.Action("ReceivedOrdersList", "AdminHome")">Received Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("LowStock", "Ingredients")"><span class="fas fa-bell"></span> Low Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("AllPendingOrders", "AdminHome")"><span class="fas fa-check-circle"></span> Confirm Stock Order</a>
+                                    <a class="dropdown-item" href="@Url.Action("AdminGetAllOrderDetail", "AdminHome")"><span class="fas fa-shopping-cart"></span> Ordered Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("ReceivedOrdersList", "AdminHome")"><span class="fas fa-box"></span> Received Stock</a>
+                                    <a class="dropdown-item" href="@Url.Action("ReturnedOrdersList", "AdminHome")"><span class="fas fa-redo"></span> Returned Stock</a>
+
                                 </div>
-                            </li>
+                            </li>                           
 
-                            if (TempData["admincart"] != null)
-                            {
-                                TempData.Keep();
-                                <li class="nav-item cta cta-colored"><a href="@Url.Action("AdminCheckout","AdminHome")" class="nav-link"><span class="fa fa-shopping-cart fa-1x"></span>[@TempData["admin_item_count"]]</a></li>
-
-                            }
-
-
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link">Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-user-circle"></span> My Profile</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log Out</a></li>
                         }
                         if (User.IsInRole("5"))
                         {
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link">My Profile</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fa fa-sign-out"></span>Logout</a></li>
+                            <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-user-circle"></span> My Profile</a></li>
+                            <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log Out</a></li>
                         }
 
                     }

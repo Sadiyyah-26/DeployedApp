@@ -9,16 +9,36 @@
         .form-group {
             text-align: center;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
-<br />
-<br />
-<br />
 
+<br />
+<h2 class="card-title" style="text-align:center"><u> Update Extras </u></h2>
+<br />
+<h3 style="color:red;">@TempData["msg"]</h3>
+<br />
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-            <h2 class="card-title" style="text-align:center"><u> Update Extras </u></h2>
+
             @using (Html.BeginForm())
             {
 
@@ -50,18 +70,15 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Update" class="btn btn-success" />
-                        </div>
+
+                        <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                             <a href="@Url.Action("ExIndex","Products")" class="btn btn-dark  py-3 px-5">Back</a>
+                        </p>
                     </div>
                 </div>
 
-                <div class="back">
-                    <a href="@Url.Action("ExIndex","Products")" class="btn btn-dark">Back</a>
-                </div>
-                <p>@TempData["msg"]</p>
-
-                <hr />
+                      
 
             }
         </div>

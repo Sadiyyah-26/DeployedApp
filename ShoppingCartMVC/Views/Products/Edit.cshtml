@@ -3,7 +3,7 @@
     <title>Update A Product</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
         }
 
         .form-group {
@@ -15,11 +15,31 @@
             grid-template-columns: repeat(3, 2fr); /* Adjust the number of columns as needed */
             gap: 10px; /* Adjust the gap between checkboxes */
         }
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <br />
 
 <h2 class="card-title" style="text-align:center"><u> Update Product </u></h2>
+<br />
+<h3 style="color:red;">@TempData["msg"]</h3>
+<br />
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
@@ -89,15 +109,17 @@
 
 
                     <div class="form-group">
-                        
-                            <input type="submit" value="Update" class="btn btn-success" />
-                       
+
+                        <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                            <a href="@Url.Action("Index", "Products")" class="btn btn-dark py-3 px-5">Back</a>
+                        </p>
                     </div>
-                    <p style="text-align:center"> <a href="@Url.Action("Index", "Products")" class="btn btn-dark">Back</a></p>
+                    
 
                 </div>
 
-                <p>@TempData["msg"]</p>
+
             }
 
         </div>

@@ -5,6 +5,17 @@
 }
 <head>
     <title>All Extras</title>
+    <style>
+        .btn-info {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <script src="~/js/jquery.min.js"></script>
 
@@ -18,9 +29,9 @@ $(document).ready(function(){
   });
 });
 </script>
-
+<br />
 <div class="container">
-    <h2 style="text-align:center">View Extras</h2>
+    <h2 >View Extras</h2>
     <div class="form-group">
         <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
     </div>
@@ -43,7 +54,7 @@ $(document).ready(function(){
                     <td>@item.exCost</td>
                     <td>@item.tblCategory.Name</td>
                     <td>
-                        <a href="@Url.Action("ExEdit", "Products", new { id = item.ExtraID})" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("ExEdit", "Products", new { id = item.ExtraID})" class="btn btn-info">Edit</a>
                         <a href="@Url.Action("ExDelete", "Products", new { id = item.ExtraID })" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>

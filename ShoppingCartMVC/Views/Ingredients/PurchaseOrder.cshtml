@@ -1,5 +1,8 @@
 ﻿@model ShoppingCartMVC.Models.PurchaseOrderVM
 
+@{
+    var ingredients = ViewBag.Ingredients as List<ShoppingCartMVC.Models.tblIngredients>;
+}
 <head>
     <title>Purchase Order</title>
 
@@ -44,6 +47,9 @@
                 page-break-inside: avoid;
             }
 
+            .navbar {
+                display: none;
+            }
             @@page {
                 margin: 0.5cm;
             }
@@ -51,8 +57,7 @@
     </style>
 </head>
 @{
-    double grandTotal = 0;
-    double total = 0;
+    decimal grandTotal = 0;
 }
 <br />
 <br />
@@ -113,20 +118,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     @foreach (var item in Model.LowStockItems)
                                     {
-                                        <tr>
-                                            <td>@item.Ing_Name</td>
-                                            <td>@item.UnitCost</td>
-                                            <td>@item.Quantity</td>
-                                            {
-                                            @total=@item.Quantity*@item.UnitCost;
-                                            }
-                                            <td>R @total.00</td>
-                                        </tr>
-                                        {
+                                        var ingredient = ingredients.FirstOrDefault(i => i.Ing_ID == item.Ing_ID);
 
-                                            grandTotal += total;
+                                        if (ingredient != null)
+                                        {
+                                            <tr>
+                                                <td>@ingredient.Ing_Name</td> <!-- Display the ingredient name -->
+                                                <td>@item.UnitCost</td>
+                                                <td>@item.Quantity</td>
+                                                @{
+                                                    decimal total = item.Quantity * (decimal)item.UnitCost;
+                                                }
+                                                <td>R @total.00</td>
+                                            </tr>
+                                            {
+                                                grandTotal += total;
+                                            }
                                         }
                                     }
                                 </tbody>

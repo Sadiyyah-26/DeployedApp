@@ -1,6 +1,20 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblIngredients>
 <head>
     <title>All Ingredients</title>
+    <style>
+        .btn-info {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        h2{
+            text-align:center;
+        }
+    </style>
 </head>
 <script src="~/js/jquery.min.js"></script>
 
@@ -15,8 +29,8 @@ $(document).ready(function(){
 });
 </script>
 
+<br />
 
-<div class="container">
     <h2>All Ingredients</h2>
     <div class="form-group">
         <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
@@ -45,11 +59,11 @@ $(document).ready(function(){
                     <td>
                         @if(item.StockStatus=="In Stock")
                         { 
-                            <p style="color:green;font-size:20px">@item.StockStatus</p>
+                            <p style="color:green;font-size:20px; font-weight:bold">@item.StockStatus</p>
                         }
                         else if(item.StockStatus == "Low Stock")
                         {
-                    <p style="color: darkred; font-size: 20px">@item.StockStatus</p>
+                    <p style="color: darkred; font-size: 20px; font-weight: bold">@item.StockStatus</p>
                         }                        
                     </td>
                     <td class="btns">
@@ -63,6 +77,6 @@ $(document).ready(function(){
     </table>
 
 
-</div>
+
 <br />
 <br />

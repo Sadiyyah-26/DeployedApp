@@ -14,7 +14,10 @@
 
     
     <style>
-
+        h1{
+            text-align:center;
+            font-weight:bold;
+        }
         .text-uppercase {
             color: white;
         }
@@ -25,17 +28,38 @@
 
         .carousel-inner{overflow:visible;}
 
-        .carousel-inner>.td-item{
-            -webkit-transition:0s !important;
-            -o-transition:0s !important;
-            /*transition:0s !important;*/
+            .carousel-inner > .td-item {
+                -webkit-transition: 0s !important;
+                -o-transition: 0s !important;
+                /*transition:0s !important;*/
+            }
+
+        .footer {
+            display: none;
+        }
+
+        /* Reduce the width of the slideshow container */
+        #deals-carousel {
+            max-width: 1200px !important; /* You can adjust this value */
+            margin: auto;
+        }
+
+        .carousel-item {
+            height: 700px; /* Adjust the height as needed */
+        }
+
+        .td-img {
+            height: 100%; /* Ensure the image fills the carousel item */
+            object-fit: cover; /* Maintain the image aspect ratio */
         }
         </style>
     
 </head>
 
 <body>
-    
+    <br />
+    <h1> Check out These Deals On Our Menu</h1>
+    <br />
     <div id="deals-carousel" class="carousel slide" data-bs-ride="carousel">
 
         <div class="carousel-indicators">
@@ -54,7 +78,7 @@
 
                     <h2 class="fs-3 text-uppercase">Double Chicken Burger + Chips</h2>
                     <h1 class="fw-bolder">R75.00</h1>
-                    <button class=" mt-2 btn btn-primary fw-bold"> <i class="fas fa-cart-plus"></i> Get Offer</button>
+                 
 
                 </div>
 
@@ -64,11 +88,11 @@
                 <img src="~/Images/bd.jpg" class="d-block w-100 td-img" alt="Slide 2">
 
                 <div class="carousel-caption top-0 d-none d-md-block">
+
+                    <h2 class="fs-3 text-uppercase">Chicken Burger + Chips + Coke</h2>
+                    <h1 class="fw-bolder">R80.00</h1>
+
                     
-                        <h2 class="fs-3 text-uppercase">Chicken Burger + Chips + Coke</h2>
-                        <h1 class="fw-bolder">R80.00</h1>
-                    
-                    <button class="btn btn-primary"> <i class="fas fa-cart-plus"></i> Get Offer</button>
                 </div>
 
             </div>
@@ -80,7 +104,7 @@
                     <h2 class="fs-3 text-uppercase fw-bold">Turbo Wrap Deal</h2>
                     <h3 class="fs-3 text-uppercase">(Chicken Burger + Pita + Wrap + Chips)</h3>
                     <h1 class="fw-bolder">R130.00</h1>
-                    <button class="btn btn-primary"> <i class="fas fa-cart-plus"></i> Get Offer</button>
+                   
                 </div>
 
             </div>
@@ -91,7 +115,7 @@
                 <div class="carousel-caption top-0 d-none d-md-block">
                     <h2 class="fs-3 text-uppercase">Chicken Burger + Pita + Wrap</h2>
                     <h1 class="fw-bolder">R115.00</h1>
-                    <button class="btn btn-primary"> <i class="fas fa-cart-plus"></i> Get Offer</button>
+                   
                 </div>
 
             </div>
@@ -108,6 +132,7 @@
         </button>
 
     </div>
-    
+
 </body>
 </html>
+<br />

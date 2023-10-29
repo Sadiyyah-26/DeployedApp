@@ -1,42 +1,94 @@
 ﻿@{
     ViewBag.Title = "Chat";
 }
-
+<head>
+    <title>Live Chat</title>
+</head>
 <style>
     div.panel-body {
         overflow: scroll;
-        background: url('http://subtlepatterns.com/patterns/geometry2.png');
     }
 
     footer {
         display: none;
     }
-</style>
 
-<h2>ChatBox</h2>
-<div class="chat-panel panel panel-default">
-    <div class="panel-heading">
-        ChatBox using SignalR
-        <i class="fa fa-paper-plane fa-fw"></i>
-    </div>
-    <div class="panel-body" id="chat" style="height:250px;">
-        <input type="hidden" id="displayname" />
-        <p id="discussion"></p>
-    </div>
-    <div class="panel-footer">
-        <div class="input-group">
-            <input id="message" type="text" name="message" class="form-control input-sm" placeholder="Type your message here..." />
-            <span class="input-group-btn">
-                <input type="button" class="btn btn-warning btn-sm" id="sendmessage" value="Send">
-            </span>
+    h2 {
+        text-align: center;
+    }
+
+    .card {
+        border: 3px solid grey;
+        max-width: 800px; /* You can adjust this value to set the maximum card width */
+        margin: 0 auto;
+    }
+
+    .message-right {
+        color: blue;
+        text-align: right;
+        margin: 20px 0; /* Add margin to create space after the message */
+    }
+
+    .message-left {
+        color: green;
+        text-align: left;
+        margin: 20px 0; /* Add margin to create space after the message */
+    }
+
+        /* Add max-width and max-height properties to limit the image size */
+        .message-right img,
+        .message-left img {
+            max-width: 60px; /* Adjust this value to your desired maximum width */
+            max-height: 60px; /* Adjust this value to your desired maximum height */
+        }
+
+    .message-input {
+        width: 60%; /* Adjust the width of the input field as needed */
+    }
+
+    .btn-lg {
+        padding: 15px 30px; /* Adjust padding to increase the button size */
+    }
+
+
+    h1 {
+        text-align: center;
+        background-color: rgb(255, 106, 0);
+        color: #fff;
+        margin: 0;
+        padding: 15px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+</style>
+<h1>Live ChatBox</h1>
+<br />
+<div class="card mx-auto" style="max-width: 1200px;">
+    <div class="chat-panel panel panel-default">
+        <div class="panel-body" id="chat" style="height:400px;">
+            <input type="hidden" id="displayname" />
+            <p id="discussion"></p>
         </div>
+        <br />
+        <div class="panel-footer">
+            <div class="input-group">
+                <input id="message" type="text" name="message" class="form-control input-sm message-input" placeholder="Type your message here..." />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-warning btn-lg" id="sendmessage">
+                        <i class="fa fa-paper-plane fa-fw"></i> Send
+                    </button>
+                </span>
+            </div>
+        </div>
+        <br />
     </div>
 </div>
 
-@if (Session["User"] != null)
+@if (Session["User"] != null && Session["UserRole"] != null)
 {
     <script>
         var userNameFromSession = '@Session["User"]';
+        var userRoleFromSession = '@Session["UserRole"]';
     </script>
 }
 
@@ -47,17 +99,37 @@
         $(function () {
             var chat = $.connection.chatHub;
             var userName = userNameFromSession;
+            var userRole = userRoleFromSession;
 
             chat.client.addNewMessageToPage = function (senderName, message, userProfileImage) {
+                var messageContainer = $('<p>');
+
                 if (senderName === userName) {
-                    $('#discussion').append('<p style="color: blue; text-align: right;">' +
-                        '<img src="' + userProfileImage + '" title="' + senderName + '">' +
-                        ' <span style="font-weight: bold; color: blue;">' + senderName + '</span>: ' + htmlEncode(message) + '</p>');
+                    messageContainer.addClass('message-right');
                 } else {
-                    $('#discussion').append('<p style="color: green; text-align: left;">' +
-                        '<img src="' + userProfileImage + '" title="' + senderName + '">' +
-                        ' <span style="font-weight: bold; color: green;">' + senderName + '</span>: ' + htmlEncode(message) + '</p>');
+                    messageContainer.addClass('message-left');
                 }
+
+                // Create the image element with the user's profile image
+                var imgElement = $('<img>')
+                    .attr('src', userProfileImage)
+                    .attr('title', senderName);
+
+                // Create the message text element
+                var messageText = $('<span>')
+                    .css('font-weight', 'bold')
+                    .text(senderName + ': ' + htmlEncode(message));
+
+                // Append the image and message text to the message container
+                messageContainer.append(imgElement, messageText);
+
+                $('#discussion').append(messageContainer);
+
+                /* Check if the recipient (current user) is an admin and show a notification*/
+                if (userRole === 'Admin') {
+                    sendNotificationToAdmin(senderName, message);
+                }
+
             };
 
             $('#message').focus();
@@ -75,5 +147,33 @@
             var encodedValue = $('<div />').text(value).html();
             return encodedValue;
         }
+
+        // Check if the browser supports notifications
+        if ('Notification' in window) {
+            Notification.requestPermission().then(function (permission) {
+                // Permission can be 'granted', 'denied', or 'default'
+                if (permission === 'granted') {
+                    console.log('Notification permission granted.');
+                }
+            });
+        } else {
+            console.log('This browser does not support desktop notifications.');
+        }
+
+       /* Function to show notifications */
+    function sendNotificationToAdmin(senderName, message) {
+      if (Notification.permission === 'granted') {
+        var options = {
+            body: message,
+            icon: '@Url.Content("~/Images/notification.jpg")', // Provide the absolute URL to your notification icon
+        };
+
+        // Push a message to the service worker
+        navigator.serviceWorker.ready.then(function (registration) {
+            registration.showNotification('New Message from ' + senderName, options);
+        });
+      }
+    }
+
     </script>
 }

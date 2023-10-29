@@ -559,7 +559,7 @@ namespace ShoppingCartMVC.Controllers
                     {
                         return Content("<script>" +
                                                "function callPayPal() {" +
-                                               "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + model.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/Thanks';" +
+                                               "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + model.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/CompletedRating';" +
                                                "}" +
                                                "callPayPal();" +
                                                "</script>");
@@ -572,7 +572,7 @@ namespace ShoppingCartMVC.Controllers
                     return HttpNotFound();
                 }
             }
-            return View("Thanks");
+            return View("CompletedRating");
         }
 
 
@@ -709,7 +709,7 @@ namespace ShoppingCartMVC.Controllers
                     {
                         return Content("<script>" +
                                                "function callPayPal() {" +
-                                               "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + vm.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/Thanks';" +
+                                               "window.location.href = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=" + vm.CustomTip.ToString() + "&business=sb-w3cyw20367505@business.example.com&item_name=DriverTip&return=https://2023grp01a.azurewebsites.net/Account/CompletedRating';" +
                                                "}" +
                                                "callPayPal();" +
                                                "</script>");
@@ -737,7 +737,7 @@ namespace ShoppingCartMVC.Controllers
                 }
 
             }
-            return View("Thanks");
+            return View("CompletedRating");
         }
 
         #endregion

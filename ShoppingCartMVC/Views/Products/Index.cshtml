@@ -2,6 +2,17 @@
 
 <head>
     <title>All Products Created</title>
+    <style>
+        .btn-info {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <script src="~/js/jquery.min.js"></script>
 
@@ -16,6 +27,7 @@ $(document).ready(function(){
 });
 </script>
 
+<br />
 <div class="container">
     <h2>View Products</h2>
     <div class="form-group">
@@ -44,7 +56,7 @@ $(document).ready(function(){
                     <td><img src="~/Uploads/@item.Image" style="width:150px; height:100px;" /></td>
                    
                     <td>
-                        <a href="@Url.Action("Edit", "Products", new { id = item.ProID})" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("Edit", "Products", new { id = item.ProID})" class="btn btn-info">Edit</a>
                         <a href="@Url.Action("Delete", "Products", new { id = item.ProID })" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>

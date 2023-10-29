@@ -1,11 +1,20 @@
 ﻿@model List<ShoppingCartMVC.Models.tblOrder>
 
 <head>
-    <title>All New Orders Placed</title>
+    <title>Online Orders Placed</title>
+    <style>
+        .btn-success {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        h1{
+            text-align:center;
+        }
+    </style>
 </head>
 <br />
 <br />
-<h2>Orders Being Prepared</h2>
+<h1>Online Orders Being Prepared</h1>
 <br />
 @foreach (var orderGroup in Model.GroupBy(o => o.InvoiceId))
 {
