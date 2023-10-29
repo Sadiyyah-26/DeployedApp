@@ -1,11 +1,28 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblProduct>
+
+<head>
+    <style>
+        .proName {
+            font-size: 18px !important;
+            font-weight:500 !important;
+        }
+        h1{
+            font-weight:bold;
+        }
+
+        .price-sale {
+            font-weight: 400 !important;
+        }
+    </style>
+</head>
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
 <section class="ftco-section">
     <div class="container">
         <div class="row justify-content-center mb-3 pb-3">
             <div class="col-md-12 heading-section text-center ftco-animate fadeInUp ftco-animated">
-                <span class="subheading">Featured Meals</span>
-                <h2 class="mb-4">Menu</h2>
+                
+                <h1 class="mb-4">Menu</h1>
                 <p>
                     A fast-food restaurant that provides delectable hot and cold delicacies in a snap without
                     compromising on taste, quality or quantity.
@@ -35,7 +52,7 @@
             <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
         </div>
 
-
+        <br />
 
         <div class="row" id="result">
 
@@ -62,7 +79,7 @@
 
 
 
-                            <h3><a href="#">@item.P_Name</a></h3>
+                            <h3 class="proName"><a href="#">@item.P_Name</a></h3>
                             <div class="d-flex">
                                 <div class="pricing">
                                     <p class="price"><span class="mr-2 price-dc"></span><span class="price-sale">R @item.Unit</span></p>

@@ -1,8 +1,40 @@
 ﻿@model IEnumerable<ShoppingCartMVC.Models.tblOrder>
 <head>
     <title>Order History</title>
+    <style>
+        .btn-info {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-success {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-warning {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
-<div class="container">
+<br /><br />
+
 
     <table class="table">
         <tr>
@@ -22,7 +54,7 @@
             <th>Refund Status</th>
 
             <th>Invoice</th>
-
+            <th></th>
         </tr>
 
         @foreach (var item in Model)
@@ -79,4 +111,4 @@
 
     </table>
 
-</div>
+

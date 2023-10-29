@@ -408,8 +408,11 @@ namespace ShoppingCartMVC.Controllers
         {
             PurchaseOrderVM purchaseOrder = Session["PurchaseOrder"] as PurchaseOrderVM;
             var SupplInfo = db.tblSuppliers.FirstOrDefault(m => m.SupplierId == SupplID);
+            var Ingredients = db.tblIngredients.ToList();
+
             ViewBag.InvID = invID;
             ViewBag.SupplierInfo = SupplInfo;
+            ViewBag.Ingredients = Ingredients;
             return View(purchaseOrder);
 
         }

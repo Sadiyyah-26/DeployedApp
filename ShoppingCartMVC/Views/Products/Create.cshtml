@@ -6,24 +6,39 @@
     <title>Add New Product</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
         }
 
         .form-group {
             text-align: center;
         }
+
         .checkbox-grid {
             display: grid;
             grid-template-columns: repeat(3, 2fr);
             gap: 10px;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
     </style>
 </head>
-<br />
-<br />
-<br />
+
 <br />
 <h2 class="card-title" style="text-align:center"><u> Add Product </u></h2>
+<br />
+<h3 style="color:red;">@TempData["msg"]</h3>
+<br />
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
@@ -78,10 +93,10 @@
                     <br />
                     <br />
                     <div class="form-group">
-                        <input type="submit" value="Add Product" class="btn btn-primary py-3 px-5">
+                        <input type="submit" value="Add Product" class="btn custom-orange-button  py-3 px-5">
                     </div>
                 </form>
-                <h3 style="color:red;">@TempData["msg"]</h3>
+               
 
             }
 

@@ -19,11 +19,25 @@
         .container {
             font-size: 20px;
         }
+        h1{
+            text-align:center;
+        }
+
+        .btn-primary {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-secondary {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2> Ingredients used for Each Product</h2>
+        <br />
+        <h1> Ingredients used for Each Product</h1>
         <div class="form-group">
             <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
         </div>
@@ -33,6 +47,7 @@
                     <th>Product</th>
                     <th>Ingredients</th>
                     <th>Qty Used Per Product</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="myTable">

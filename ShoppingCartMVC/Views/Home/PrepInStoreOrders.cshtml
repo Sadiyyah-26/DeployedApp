@@ -1,7 +1,19 @@
 ﻿@model List<ShoppingCartMVC.Models.tblInStoreOrder>
-
-<h2>PrepInStoreOrders</h2>
-
+<head>
+    <title>Instore Orders Placed</title>
+    <style>
+        .btn-success {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        h1 {
+            text-align: center;
+        }
+  </style>
+</head>
+<br />
+<h1>Instore Orders Being Prepared</h1>
+<br />
 @foreach (var orderGroup in Model.GroupBy(o => o.OrderNumber))
 {
     <table class="table">

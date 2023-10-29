@@ -479,6 +479,7 @@
     <Content Include="Images\bd.jpg" />
     <Content Include="Images\burger.jpg" />
     <Content Include="Images\Checkin.png" />
+    <Content Include="Images\completedRating.jpeg" />
     <Content Include="Images\contactBG.jpg" />
     <Content Include="Images\contactEdited.png" />
     <Content Include="Images\defaultuser.jpg" />
@@ -496,11 +497,13 @@
     <Content Include="Images\mealsOnWheelsLogo.png" />
     <Content Include="Images\Menu.png" />
     <Content Include="Images\nando-s-perinaise-burger.jpg" />
+    <Content Include="Images\notification.jpg" />
     <Content Include="Images\order-success.jpg" />
     <Content Include="Images\p.jpg" />
     <Content Include="Images\rateDriver.jpg" />
-    <Content Include="Images\Reg.png" />
     <Content Include="Images\Reg2.png" />
+    <Content Include="Images\Reg5.png" />
+    <Content Include="Images\Reg6.png" />
     <Content Include="Images\res.jpg" />
     <Content Include="Images\ReserveSuccess.png" />
     <Content Include="Images\sales-receipt %281%29.png" />
@@ -546,6 +549,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="sw.js" />
     <Content Include="Uploads\CrunchBurger.jpg" />
     <Content Include="Uploads\NoImage.jpg" />
     <Content Include="Uploads\Screenshot %283%29.png" />
@@ -649,7 +653,6 @@
     <Content Include="Views\Account\UserDetails.cshtml" />
     <Content Include="Views\Home\ReserveOrder.cshtml" />
     <Content Include="Views\Home\OpenTable.cshtml" />
-    <Content Include="Views\Account\Thanks.cshtml" />
     <Content Include="Views\Home\SuccessBill.cshtml" />
     <Content Include="Views\Account\WaiterRating.cshtml" />
     <Content Include="Views\Account\CompletedRating.cshtml" />

@@ -3,25 +3,37 @@
     <title>Add New Extra</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
         }
 
         .form-group {
             text-align: center;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
     </style>
 </head>
+
 <br />
+<h2 class="card-title" style="text-align:center"><u> Add Extras </u></h2>
 <br />
-<br />
-<br />
-<br />
-<br />
+<h3 style="color:red;">@TempData["msg"]</h3>
 <br />
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-            <h2 class="card-title" style="text-align:center"><u> Add Extras </u></h2>
+
             @using (Html.BeginForm())
             {
                 <div class="bg-white p-5 contact-form">
@@ -44,7 +56,7 @@
                     <br />
 
                     <div class="form-group">
-                        <input type="submit" value="Add Extra" class="btn btn-primary py-3 px-5">
+                        <input type="submit" value="Add Extra" class="btn custom-orange-button  py-3 px-5">
                     </div>
                 </div>
             }
@@ -52,8 +64,4 @@
     </div>
 </div>
 <br />
-<br />
-<br />
-<br />
-<br />
-<br />
+

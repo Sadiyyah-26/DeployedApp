@@ -3,9 +3,30 @@
     <title>
         Supplier Pending Orders
     </title>
+    <style>
+        h1{
+            text-align:center;
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+           
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+            
+    </style>
 </head>
 <br />
-<h2> Pending Orders</h2>
+<h1> Confirm Supplier Stock Availabilty</h1>
 <br />
 <br />
 <div class="container">
@@ -48,7 +69,8 @@
                     }
                 </tbody>
             </table>
-            <input type="submit" value="Submit Stock Availability">
+            <input type="submit" value="Submit Stock Availability" class="btn custom-orange-button py-3 px-5">
+            <hr />
         }
         <br />
         <br />

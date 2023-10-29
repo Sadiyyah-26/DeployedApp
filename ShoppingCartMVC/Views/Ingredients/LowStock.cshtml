@@ -5,7 +5,20 @@
 
     <style>
         .supplier-link {
-            margin-left: 10px; /* Adjust the margin as needed */
+            margin-right: 10px; /* Adjust the margin as needed */
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .supplier-link:hover {
+                background-color: darkorange;
+                color: white;
+            }
+        h1{
+            text-align:center;
         }
     </style>
 </head>
@@ -22,9 +35,9 @@
         });
     });
 </script>
-
+<br />
 <div class="container">
-    <h2>Low Stock Products</h2>
+    <h1>Low Stock Products</h1>
     <div class="form-group">
         <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
     </div>
@@ -35,7 +48,7 @@
             <h3>@supplierGroup.First().SupplName</h3>
 
             <!-- Link to a page that displays all low stock ingredients for this supplier -->
-            <a href="@Url.Action("LowStockForSupplier", new { supplierId = supplierGroup.Key })" class="btn btn-success supplier-link">View Low Stock</a>
+            <a href="@Url.Action("LowStockForSupplier", new { supplierId = supplierGroup.Key })" class="btn btn-success supplier-link">Create Order</a>
         </div>
         <table class="table">
             <thead>
