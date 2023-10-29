@@ -384,6 +384,7 @@
     <Compile Include="Models\BillViewModel.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\dbOnlineStoreEntities.cs" />
+    <Compile Include="Models\Discrepancy.cs" />
     <Compile Include="Models\Drivers.cs" />
     <Compile Include="Models\ExtraVM.cs" />
     <Compile Include="Models\IngChecklist.cs" />
@@ -408,6 +409,7 @@
     <Compile Include="Models\tblAdminInvoice.cs" />
     <Compile Include="Models\tblAdminOrder.cs" />
     <Compile Include="Models\tblBill.cs" />
+    <Compile Include="Models\tblCashFloat.cs" />
     <Compile Include="Models\tblCategory.cs" />
     <Compile Include="Models\tblDonations.cs" />
     <Compile Include="Models\tblEmployee.cs" />
@@ -421,6 +423,7 @@
     <Compile Include="Models\tblReservation.cs" />
     <Compile Include="Models\tblSupplier.cs" />
     <Compile Include="Models\tblUser.cs" />
+    <Compile Include="Models\Transactions.cs" />
     <Compile Include="Models\UserPoints.cs" />
     <Compile Include="Models\WaiterRatingVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -661,6 +664,8 @@
     <Content Include="Views\AdminHome\AllPendingOrders.cshtml" />
     <Content Include="Views\AdminHome\ConfirmIngOrderWithSupplier.cshtml" />
     <Content Include="Views\AdminHome\PaymentSuccess.cshtml" />
+    <Content Include="Views\Home\AdminCashFloat.cshtml" />
+    <Content Include="Views\Home\CashDrawer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
