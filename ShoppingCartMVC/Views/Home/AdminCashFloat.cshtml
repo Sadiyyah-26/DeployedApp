@@ -20,17 +20,19 @@
 
         body {
             background-color: #f3f5f9;
+
         }
 
+      
         .wrapper {
             display: flex;
             position: relative;
         }
 
             .wrapper .sidebar {
-                width: 250px;
+                width: 260px;
                 height: 100%;
-                background: #4b4276;
+                background: #343a40;
                 padding: 30px 0px;
                 position: fixed;
             }
@@ -44,14 +46,14 @@
                 }
 
                 .wrapper .sidebar ul li {
-                    padding: 15px;
+                    padding: 20px;
                     border-bottom: 1px solid #bdb8d7;
                     border-bottom: 1px solid rgba(0,0,0,0.05);
                     border-top: 1px solid rgba(255,255,255,0.05);
                 }
 
                     .wrapper .sidebar ul li a {
-                        color: #bdb8d7;
+                        color: #fff;
                         display: block;
                     }
 
@@ -60,7 +62,7 @@
                         }
 
                     .wrapper .sidebar ul li:hover {
-                        background-color: #594f8d;
+                        background-color: #717171;
                     }
 
                         .wrapper .sidebar ul li:hover a {
@@ -187,28 +189,30 @@
     <div class="wrapper">
         <!-- Left Sidebar Navigation -->
         <div class="sidebar">
-            <h2>Dashboard</h2>
+            <h2>Drawer</h2>
             <ul>
-                <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fas fa-list"></i> Initialize Float</a></li>
+                <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fa-sharp fa-solid fa-cash-register"></i> &ensp;Initialize Float</a></li>
                 @*<li><a href="@Url.Action("AdminChange", "Home")"><i class="fas fa-utensils"></i> Collect Change</a></li>*@
                 @*<li><a href="@Url.Action("CollectedChange", "Home")"><i class="fas fa-utensils"></i> Collect Order Change</a></li>*@
-                <li><a href="@Url.Action("Transactions", "Home")"><i class="fas fa-money"></i> POS Transactions</a></li>
+                <li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>
                 @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
-                <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fas fa-table"></i> Withdrawals</a></li>
-                <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fas fa-table"></i>Discrepancy </a></li>
+                <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fa-solid fa-money-bill-transfer"></i>&ensp; Withdrawals</a></li>
+                <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fa-solid fa-right-from-bracket"></i>&ensp;Discrepancy </a></li>
                 <!-- Add more links as needed -->
             </ul>
         </div>
 
         <!-- Main Content Area -->
         <div class="main_content">
-            <div class="header">CashDrawer</div>
+            &ensp;&ensp;<div class="header">Initialize Cash Drawer Float</div>
             <div class="info">
                 @using (Html.BeginForm("SaveCashFloatAdmin", "Home", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
-
+                    <br />
                     <div class="form-group">
+                        <h1 style="font-size: 20px; color: gray;">How much is currently in the drawer today?</h1>
+                        <br />
                         @Html.LabelFor(model => model.Amount)
                         @Html.TextBoxFor(model => model.Amount, new { @class = "form-control" })
 
@@ -224,8 +228,8 @@
                     <!-- Left Table -->
                     <table class="dashboard-table">
                         <tr>
-                            <th>Section</th>
-                            <th>Info</th>
+                            <th>Cash Flow</th>
+                            <th>Amounts</th>
                         </tr>
                         <tr>
                             <td>Cash Float Admin Drawer</td>
@@ -256,8 +260,8 @@
 
                     <table class="dashboard-table">
                         <tr>
-                            <th>Section</th>
-                            <th>Info</th>
+                            <th>Cash Flow</th>
+                            <th>Amounts</th>
                         </tr>
                         <tr>
                             <td>Current Cash Revenue (Cash Drawers)</td>

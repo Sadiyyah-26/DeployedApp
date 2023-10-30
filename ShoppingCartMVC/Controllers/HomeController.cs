@@ -3154,9 +3154,15 @@ namespace ShoppingCartMVC.Controllers
         #region Discrepancy
         public ActionResult Discrepancy()
         {
-            return View();
-        }
+            // Assuming you have a context for your database
+            using (var dbContext = new dbOnlineStoreEntities()) // Replace YourDbContext with your actual DbContext class
+            {
+                // Retrieve the list of existing discrepancy records from your data source
+                List<Discrepancy> discrepancyRecords = dbContext.tblDiscrepancy.ToList();
 
+                return View(discrepancyRecords);
+            }
+        }
         [HttpPost]
         public ActionResult CreateDiscrepancy(Discrepancy model)
         {
@@ -3185,7 +3191,7 @@ namespace ShoppingCartMVC.Controllers
                 db.SaveChanges();
 
                 // Redirect to a success page or perform other actions
-                return RedirectToAction("DiscrepancyCreated");
+                return RedirectToAction("Discrepancy");
             }
 
             // If there are validation errors, redisplay the form with error messages

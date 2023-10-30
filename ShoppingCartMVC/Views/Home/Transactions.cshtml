@@ -28,9 +28,9 @@
         }
 
             .wrapper .sidebar {
-                width: 250px;
+                width: 260px;
                 height: 100%;
-                background: #4b4276;
+                background: #343a40;
                 padding: 30px 0px;
                 position: fixed;
             }
@@ -51,7 +51,7 @@
                 }
 
                     .wrapper .sidebar ul li a {
-                        color: #bdb8d7;
+                        color: #fff;
                         display: block;
                     }
 
@@ -60,7 +60,7 @@
                         }
 
                     .wrapper .sidebar ul li:hover {
-                        background-color: #594f8d;
+                        background-color: #717171;
                     }
 
                         .wrapper .sidebar ul li:hover a {
@@ -187,15 +187,15 @@
     <div class="wrapper">
         <!-- Left Sidebar Navigation -->
         <div class="sidebar">
-            <h2>Dashboard</h2>
+            <h2>Drawer</h2>
             <ul>
-                <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fas fa-list"></i> Initialize Float</a></li>
+                <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fa-sharp fa-solid fa-cash-register"></i> &ensp;Initialize Float</a></li>
                 @*<li><a href="@Url.Action("AdminChange", "Home")"><i class="fas fa-utensils"></i> Collect Change</a></li>*@
                 @*<li><a href="@Url.Action("CollectedChange", "Home")"><i class="fas fa-utensils"></i> Collect Order Change</a></li>*@
-                <li><a href="@Url.Action("Transactions", "Home")"><i class="fas fa-money"></i> POS Transactions</a></li>
+                <li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>
                 @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
-                <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fas fa-table"></i> Withdrawals</a></li>
-                <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fas fa-table"></i>Discrepancy </a></li>
+                <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fa-solid fa-money-bill-transfer"></i>&ensp; Withdrawals</a></li>
+                <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fa-solid fa-right-from-bracket"></i>&ensp;Discrepancy </a></li>
                 <!-- Add more links as needed -->
             </ul>
         </div>
@@ -235,7 +235,6 @@
                             <th>Debit</th>
                             <th>Closing Balance</th>
 
-                            <th>Tip</th>
                             <!-- Add more columns as needed -->
                         </tr>
                         @foreach (var item in Model)
@@ -251,7 +250,7 @@
                                 <td>@item.Credit</td>
                                 <td>@item.Debit</td>
                                 <td>@item.ClosingBalance</td>
-                                
+
                                 <!-- Add more columns as needed -->
                             </tr>
                         }
