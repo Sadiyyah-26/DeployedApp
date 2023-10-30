@@ -1,60 +1,36 @@
-﻿<style>
-    h1 {
-        text-align: center;
-        color: black !important;
-    }
+﻿
+<head>
+    <title>Order With Supplier</title>
+</head>
 
-    hr.new1 {
-        border: 10px solid black;
-        border-radius: 5px;
-    }
+<style>
 
     .card {
-        border: 3px solid orange;
+        border: 3px solid grey;
+        width: 800px; /* Set a fixed width for the card */
     }
 
-    .card-body {
-        text-align: center;
+    .card-img {
+        width: 100%; /* Ensure the image takes the full width of the card */
+        height: 500px; /* Set a fixed height for the image */
+        object-fit: cover; /* Maintain image aspect ratio and cover the container */
     }
-
-    .form-group {
-        display: flex !important;
-        flex-direction: column !important;
-        font-size: 23px;
-    }
-
-    .textReset {
-        align-self: flex-start !important;
-    }
-
-    .text-danger {
-        color: orangered !important;
-        font-size: 20px;
-    }
-
-    .custom-orange-button {
-        background-color: orange; /* Set your desired shade of orange */
-        color: white; /* Set the text color to contrast with the background */
-        font-size: 20px; /* Set the font size to your preference */
-        font-weight: bold; /* Make the text bold if desired */
-        border: none;
-    }
-
-        .custom-orange-button:hover {
-            background-color: darkorange;
-            color: white;
-        }
 </style>
 <br />
-<div class="col-sm-7 mx-auto">
-    <div class="card">
-        <div class="card-body">
-            <h2>Purchase Order Has Been Created and Emailed Successfully To Supplier/s.</h2>
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <div class="card-body">
+                <h2>@TempData["OrderStatusMessage"]</h2>
+
+            </div>
         </div>
-
+        <div class="col-md-6">
+            <br />
+            <img src="~/Images/ingredients.jpeg" class="card-img" alt="..." />
+        </div>
     </div>
-
 </div>
 <br />
-<br />
+
 

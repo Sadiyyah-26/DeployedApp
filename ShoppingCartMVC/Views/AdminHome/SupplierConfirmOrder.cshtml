@@ -1,14 +1,31 @@
 ﻿@model  List<IGrouping<int?, ShoppingCartMVC.Models.tblAdminOrder>>
 <head>
-  
+  <title>Delivery Order Confirmation</title>
     <style>
         .card {
-            border: 2px solid #00ff90;
+            border: 2px solid grey;
         }
+        input[type="checkbox"] {
+            width: 20px; /* Adjust the width to make the checkbox wider */
+            height: 20px; /* Adjust the height to make the checkbox taller */
+        }
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
     </style>
 </head>
 
-
+<br />
+<br />
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
@@ -25,7 +42,7 @@
                             firstOrder = group.First();
                             <h3 style="text-align:center;">Invoice ID: @(firstOrder.TblAdminInvoice.InvoiceId)</h3>
 
-                            <p>Supplier: @(firstOrder.TblSupplier.SupplName)</p>
+                            <p>Supplier: @(firstOrder.TblSupplier.SupplName)</p>                           
                             <p>Total Paid: R @(firstOrder.TblAdminInvoice.Bill).00</p>
                             <p>Order Date: @(firstOrder.TblAdminInvoice.InvoiceDate)</p>
                             <br />
@@ -38,9 +55,9 @@
                                     <div class="card col-lg-12 grid-margin mx-auto">
                                         <div class="card-body">
                                             <h4 class="card-title" style="text-align:center"><u>Receiving Checklist </u></h4>
-                                            <h3>Item with Order No # @orderInfo.OrderId</h3>
+                                            <h3>Item with Order No # @orderInfo.OrderId</h3>                                          
                                             <p>By accepting the terms below, I assume full accountability for the inspection process of received ingredients and certify that I have diligently examined and completed all necessary checks in all relevant aspects.</p>
-                                           
+
                                             <input type="checkbox" name="inOrder[@orderInfo.OrderId]" value="Condition1" /><label>&ensp; I confirm that this order has arrived </label>
                                             <br />
                                             <input type="checkbox" name="inOrder[@orderInfo.OrderId]" value="Condition2" /><label>&ensp; I confirm that no inventory is damaged </label>
@@ -55,7 +72,7 @@
 
 
                             <br />
-                            <p style="text-align:center"><input type="submit" value="Confirm" class="btn btn-success" /> </p>
+                            <p style="text-align:center"><input type="submit" value="Confirm"  class="btn custom-orange-button  py-3 px-5" /> </p>
                             <br />
                         }
                     </div>

@@ -2,67 +2,86 @@
 <head>
     <title>Refund Request</title>
     <style>
+        h1{
+            text-align:center;
+        }
         .card {
-            border: 2px solid #0094ff;
+            border: 2px solid grey;
         }
 
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
         .btn-dark {
-            color: white;
+            font-size: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <br />
 <br />
+<h1 class="card-title" style="text-align:center"><u>Submit Refund Request</u></h1>
+<br />
 <div class="col-lg-5 grid-margin stretch-card mx-auto">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title" style="text-align:center"><u>Submit Refund Request</u></h4>
 
             @using (Html.BeginForm("Create", "tblRefunds", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
+            <div class="form-horizontal">
 
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <p> Email Address: &ensp;&ensp;&ensp;<b>@Html.DisplayFor(model => model.EmailID, new { htmlAttributes = new { @class = "form-control" } })</b></p>
-            @*sem 2 changes*@
-        </div>
-
-            @Html.HiddenFor(model => model.OrderId, new { @Value = Request.QueryString["orderId"] })
-
-
-            <div class="form-group">
-               Refund Reason
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.RefundReason, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.RefundReason, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <p> Email Address: &ensp;&ensp;&ensp;<b>@Html.DisplayFor(model => model.EmailID, new { htmlAttributes = new { @class = "form-control" } })</b></p>
+                    @*sem 2 changes*@
                 </div>
-            </div>
+                <br />
+                @Html.HiddenFor(model => model.OrderId, new { @Value = Request.QueryString["orderId"] })
 
-            <div class="form-group">
-                <span>Select Image:</span>
-                <input type="file" name="Image" />
-            </div>
 
-            <br />
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10" style="text-align:center">
-                    <input type="submit" value="Submit" class="btn btn-danger" />
+                <div class="form-group">
+                    Refund Reason
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.RefundReason, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RefundReason, "", new { @class = "text-danger" })
+                    </div>
                 </div>
+                <br />
+                <div class="form-group">
+                    <span>Select Image:</span>
+                    <input type="file" name="Image" />
+                </div>
+
+                <br />
+                <div class="form-group" style="text-align:center;">
+
+                    <input type="submit" value="Submit" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                    <p style="display: inline; margin-left: 10px;">
+                        <a href="@Url.Action("Refund","Home",new {id=@Session["uid"]})" class="btn btn-dark  py-3 px-5">Back</a>
+                    </p>
+                </div>
+
+
             </div>
-            <div class="back">
-                <a href="@Url.Action("Refund","Home",new {id=@Session["uid"]})" class="btn btn-dark">Back</a>
-            </div>
-        </div>
             }
         </div>
-     </div>
+    </div>
 </div>
- <br />
-<br />           
+<br />
+<br />
 

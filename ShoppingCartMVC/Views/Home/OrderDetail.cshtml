@@ -33,7 +33,8 @@
         }
     </style>
 </head>
-
+<br />
+<h1 style="text-align:center;">Order History</h1>
 @{
     // Order the data by OrderID in descending order
     var sortedOrders = Model.OrderByDescending(o => o.OrderId).ToList();

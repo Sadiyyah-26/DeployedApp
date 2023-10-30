@@ -1,20 +1,39 @@
-﻿@model List<IGrouping<int?,ShoppingCartMVC.Models.tblOrder>>
+﻿@model List<IGrouping<int?, ShoppingCartMVC.Models.tblOrder>>
 
 <head>
     <title>Update Customer Order Status</title>
 
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <br />
+<h1 class="card-title" style="text-align:center"><u> Order Information </u></h1>
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title" style="text-align:center"><u> Order Information </u></h4>
+
             @using (Html.BeginForm("ConfirmOrder", "Home", FormMethod.Post))
             {
                 foreach (var group in Model)
@@ -41,25 +60,40 @@
                             <div class="card col-lg-5 grid-margin mx-auto">
                                 <div class="card-body">
                                     <p style="text-align:center;"><b>Update Order Status: </b></p>
-                                    <input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>
-                                    <br />
-                                    <input style="text-align: center;" type="radio" name="Status" value="Order Collected" /><label>&ensp; Order Collected</label>
+                                    @*<input style="text-align:center" type="radio" name="Status" value="Order Placed" checked /><label>&ensp; Order Placed</label>*@
+                                    <input style="text-align: center;" type="radio" name="Status" value="Order Collected" checked /><label>&ensp; Order Collected</label>
                                     <br />
                                 </div>
                             </div>
-                            <br />
-                            <p style="text-align:center;"><input type="submit" value="Update" class="btn btn-success" /></p>
-                        }
-                    }
 
-                    <p style="text-align:center"> <a href="@Url.Action("GetAllOrderDetail", "Home")" class="btn btn-dark">Back</a></p>
+                            <br />
+                            <div class="form-group" style="text-align:center;">
+
+                                <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                                <p style="display: inline; margin-left: 10px;">
+                                    <a href="@Url.Action("GetAllOrderDetail", "Home")" class="btn btn-dark  py-3 px-5">Back</a>
+                                </p>
+                            </div>
+
+
+                        }
+                        else
+                        {
+                            <br />
+                            <div class="form-group" style="text-align:center;">
+                                <a href="@Url.Action("GetAllOrderDetail", "Home")" class="btn btn-dark  py-3 px-5">Back</a>
+                            </div>
+                        }
+                     }
+
+
+                    }
                 }
-            }
         </div>
 
 
 
-    </div>
+        </div>
 </div>
 <br />
 <br />

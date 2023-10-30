@@ -5,8 +5,24 @@
     </title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
             text-align:center
+        }
+
+        h1 {
+            text-align: center;
+            background-color: rgb(255, 106, 0);
+            color: #fff;
+            margin: 0;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .orange-link {
+            font-size: 20px;
+            font-weight: bold;
+         
         }
     </style>
 </head>
@@ -14,8 +30,8 @@
     ViewBag.Title = "Details";
 }
 
-<h2 style="text-align:center" class="bg-primary text-white">Donation Details</h2>
-
+<h1 style="text-align:center" >Donation Details</h1>
+<br />
 <div class="col-md-6 mx-auto">
     <hr />
     <div class="card mx-auto">
@@ -42,7 +58,7 @@
 
         </dl>
         <p>
-            @Html.ActionLink("Back to List", "DonationDetails")
+            @Html.ActionLink("Back to List", "DonationDetails", null, new { @class = "orange-link" })
         </p>
     </div>
 </div>

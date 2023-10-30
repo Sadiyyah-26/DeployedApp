@@ -7,10 +7,34 @@
 <head>
     <title>Low Stock Ingredients for Supplier</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+    <style>
+        h1 {
+            text-align: center;
+        }
+        p {
+            font-size: 25px !important;
+            font-weight:bold;
+        }
 
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+    </style>
+</head>
+<br />
+<h1>Low Stock Product</h1>
+<br />
 <div class="container">
-    <h2>Low Stock Products</h2>
+
     <p>Supplier: @ViewBag.SupplierName</p>
 
     @using (Html.BeginForm("CreatePurchaseOrder", "Ingredients", FormMethod.Post))
@@ -19,6 +43,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Ing Name</th>
                     <th>Image</th>
                     <th>Qty Remaining</th>
                     <th>Quantity to Order</th>
@@ -31,10 +56,11 @@
                 {
                     <tr>
                         <td>@Model.LowStockItems[i].Ing_ID</td>
+                        <td>@Model.LowStockItems[i].Ing_Name</td>
                         <td><img src="~/Uploads/@Model.LowStockItems[i].IngImage" style="width:150px; height:100px;" /></td>
                         <td>@Model.LowStockItems[i].StockQty</td>
                         <td>
-                           
+
                             @Html.HiddenFor(model => model.LowStockItems[i].Ing_ID)
                             @Html.HiddenFor(model => model.LowStockItems[i].UnitCost)
                             @Html.TextBoxFor(model => model.LowStockItems[i].Quantity, new { @class = "form-control quantity-input" })
@@ -45,24 +71,27 @@
                 }
             </tbody>
         </table>
-
+        <br />
+        <div class="text-right">
+            <p>Final Total: <span id="final-total">0.00</span></p>
+        </div>
+        <br />
         <div>
             <label for="contact">Contact:</label>
             @Html.TextBoxFor(model => model.Contact, new { @class = "form-control" })
         </div>
+        <br />
         <div>
             <label for="address">Address:</label>
             @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
         </div>
         <br />
 
-        <input type="submit" value="Create Purchase Order" class="btn btn-success" id="create-order-btn" />
+        <input type="submit" value="Create Purchase Order"  class="btn custom-orange-button  py-3 px-5" id="create-order-btn" />
     }
-    <div class="text-right">
-        <p>Final Total: <span id="final-total">0.00</span></p>
-    </div>
-</div>
 
+</div>
+<br /><br />
 <script>
     // JavaScript to handle real-time calculations
     $(document).ready(function () {
@@ -72,7 +101,7 @@
             var unitCost = parseFloat(row.find('.total-cost').prev().text()) || 0;
             var totalCost = (quantity * unitCost).toFixed(2);
             row.find('.total-cost').text(totalCost);
-            
+
             // Calculate the final total
             var finalTotal = 0;
             $('.total-cost').each(function () {

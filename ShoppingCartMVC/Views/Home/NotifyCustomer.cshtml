@@ -4,16 +4,35 @@
     <title>Notify for Collection</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+        input[type="checkbox"] {
+            width: 20px; /* Adjust the width to make the checkbox wider */
+            height: 20px; /* Adjust the height to make the checkbox taller */
         }
     </style>
 </head>
 
-
+<br />
+<br />
+<h1 class="card-title" style="text-align:center"><u>Notify Customer for Collection</u></h1>
 <div class="col-lg-5 grid-margin stretch-card mx-auto">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title" style="text-align:center"><u>Notify Customer for Collection</u></h4>
+
             @using (Html.BeginForm("NotifyCustomer", "Home", FormMethod.Post))
             {
                 foreach (var group in Model)
@@ -38,13 +57,13 @@
 
                         <br />
                         <div class="inputbox">
-                            <p style="text-align:center;">Order Ready for collection : <input type="checkbox" id="orderReady" name="orderReady" value="true" checked />Order #@group.Key Ready</p><br />
+                            <p style="text-align:center;">Order Ready for collection : <input type="checkbox" id="orderReady" name="orderReady" value="true" checked /> Order #@group.Key Ready</p><br />
 
                         </div>
 
                     }
                     <br />
-                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> </p>
+                    <p style="text-align:center;"><input type="submit" value="Send" class="btn custom-orange-button py-3 px-5" /> </p>
                     @*</form>*@
                 }
             }

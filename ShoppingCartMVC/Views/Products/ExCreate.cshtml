@@ -26,14 +26,14 @@
 </head>
 
 <br />
-<h2 class="card-title" style="text-align:center"><u> Add Extras </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Add Extras </u></h1>
 <br />
-<h3 style="color:red;">@TempData["msg"]</h3>
-<br />
+
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm())
             {
                 <div class="bg-white p-5 contact-form">
@@ -56,7 +56,7 @@
                     <br />
 
                     <div class="form-group">
-                        <input type="submit" value="Add Extra" class="btn custom-orange-button  py-3 px-5">
+                        <input type="submit" value="Add" class="btn custom-orange-button  py-3 px-5">
                     </div>
                 </div>
             }

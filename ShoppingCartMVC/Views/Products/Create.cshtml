@@ -31,18 +31,23 @@
                 background-color: darkorange;
                 color: white;
             }
+
+        input[type="checkbox"] {
+            width: 20px; /* Adjust the width to make the checkbox wider */
+            height: 20px; /* Adjust the height to make the checkbox taller */
+        }
     </style>
 </head>
 
 <br />
-<h2 class="card-title" style="text-align:center"><u> Add Product </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Add Product </u></h1>
 <br />
-<h3 style="color:red;">@TempData["msg"]</h3>
-<br />
+
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
 
@@ -93,10 +98,10 @@
                     <br />
                     <br />
                     <div class="form-group">
-                        <input type="submit" value="Add Product" class="btn custom-orange-button  py-3 px-5">
+                        <input type="submit" value="Add" class="btn custom-orange-button  py-3 px-5">
                     </div>
                 </form>
-               
+
 
             }
 

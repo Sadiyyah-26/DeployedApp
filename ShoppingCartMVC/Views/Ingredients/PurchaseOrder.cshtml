@@ -105,7 +105,7 @@
                     <br />
                     <br />
                     <div class="py-2">
-                        <h5 class="font-size-15">Order Summary</h5>
+                        <h3 class="font-size-15" style="text-align:center;">Order Summary</h3>
 
                         <div class="table-responsive">
                             <table class="table align-middle table-nowrap table-centered mb-0" @*style="width: 70%;"*@>
@@ -127,7 +127,7 @@
                                         {
                                             <tr>
                                                 <td>@ingredient.Ing_Name</td> <!-- Display the ingredient name -->
-                                                <td>@item.UnitCost</td>
+                                                <td>R @item.UnitCost.00</td>
                                                 <td>@item.Quantity</td>
                                                 @{
                                                     decimal total = item.Quantity * (decimal)item.UnitCost;
