@@ -312,6 +312,7 @@
                         {
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
+                            <li class="nav-item"><a href="@Url.Action("AboutUS", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-video"></span>About us</a></li>
                             <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-history"></span> Order History</a></li>
                             <li class="nav-item"><a href="@Url.Action("Refund", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-undo"></span>Refunds</a></li>
                             // <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
@@ -375,7 +376,9 @@
                                     <a class="dropdown-item" href="@Url.Action("ReturnedOrdersList", "AdminHome")"><span class="fas fa-redo"></span> Returned Stock</a>
 
                                 </div>
-                            </li>                           
+                            </li>
+
+
 
                             <li class="nav-item"><a href="@Url.Action("UserDetails", "Account", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-user-circle"></span> My Profile</a></li>
                             <li class="nav-item"><a href="@Url.Action("Signout","Account")" class="nav-link"><span class="fas fa-sign-out-alt"></span> Log Out</a></li>

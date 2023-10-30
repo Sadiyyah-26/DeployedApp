@@ -169,17 +169,25 @@
             }
 
             .dashboard-table th {
-                background-color: #f2f2f2;
+                white-space: nowrap; /* Prevent text from wrapping onto two lines */
+                overflow: hidden; /* Hide any overflow text */
+                text-overflow: ellipsis; /* Display an ellipsis (...) for overflow text */
+                width: 400px;
             }
-
             .dashboard-table tr:nth-child(even) {
                 background-color: #f2f2f2;
             }
 
             .dashboard-table td {
                 line-height: 2;
-                width: 70%; /* Increase the width to make the info field longer */
+                width: 100%; /*Increase the width to make the info field longer */
+                padding: 10px;
             }
+
+        .image-column {
+            width: 100px;
+
+        }
     </style>
 </head>
 <body>
@@ -221,7 +229,7 @@
                         <tr>
                             <th>EmployeeID</th>
                             <th>EmployeeName</th>
-                            <th>Image</th>
+                            <th class="image-column">Image</th>
                             <th>Tip Amount</th>
 
 
@@ -232,10 +240,10 @@
                             <tr>
                                 <td>@item.EmpId</td>
                                 <td>@item.EmpName</td>
-                                <td>
+                                <td class="image-column">
                                     @if (!string.IsNullOrEmpty(item.EmpImage))
                                     {
-                                        <img src="~/Uploads/@item.EmpImage" class="img-fluid" style="height: 100px" alt="@item.EmpName's Image">
+                                        <img src="~/Uploads/@item.EmpImage" class="img-fluid" style="width: 100%;" alt="@item.EmpName's Image">
                                     }
                                     else
                                     {

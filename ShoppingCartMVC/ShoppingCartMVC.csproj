@@ -506,9 +506,11 @@
     <Content Include="Images\Reg2.png" />
     <Content Include="Images\Reg5.png" />
     <Content Include="Images\Reg6.png" />
+    <Content Include="Images\register.png" />
     <Content Include="Images\res.jpg" />
     <Content Include="Images\ReserveSuccess.png" />
     <Content Include="Images\sales-receipt %281%29.png" />
+    <Content Include="Images\Turbo Meals %281%29.mp4" />
     <Content Include="Images\Vop-logo-retina.png" />
     <Content Include="Images\WFPLogo.png" />
     <Content Include="js\aos.js" />
@@ -675,6 +677,7 @@
     <Content Include="Views\Home\Withdrawals.cshtml" />
     <Content Include="Views\Home\Discrepancy.cshtml" />
     <Content Include="Views\Home\Tips.cshtml" />
+    <Content Include="Views\Home\AboutUS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
