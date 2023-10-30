@@ -4,11 +4,29 @@
     <title>Driver Order Collection</title>
     <style>
         .card {
-            border: 2px solid #0094ff;
+            border: 2px solid grey;
+        }
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        input[type="checkbox"] {
+            width: 20px; /* Adjust the width to make the checkbox wider */
+            height: 20px; /* Adjust the height to make the checkbox taller */
         }
     </style>
 </head>
-
+<br />
+<br />
 
 
 @using (Html.BeginForm("DriverGetOrder", "Home", FormMethod.Post))
@@ -19,7 +37,7 @@
         <div class="col-lg-10 grid-margin stretch-card mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title" style="text-align:center"><u>Order Collection For Delivery</u></h4>
+                    <h2 class="card-title" style="text-align:center"><u>Order Collection For Delivery</u></h2>
                     <br />
                     <p class="card-description">
                         Customer Orders with Invoice No : <b>#@group.Key </b>
@@ -62,7 +80,7 @@
 
 
                     <br />
-                    <input type="submit" value="Directions" class="btn btn-info" />
+                    <input type="submit" value="Directions" class="btn custom-orange-button py-3 px-5" />
 
                 </div>
             </div>
