@@ -666,6 +666,9 @@
     <Content Include="Views\AdminHome\PaymentSuccess.cshtml" />
     <Content Include="Views\Home\AdminCashFloat.cshtml" />
     <Content Include="Views\Home\CashDrawer.cshtml" />
+    <Content Include="Views\Home\Transactions.cshtml" />
+    <Content Include="Views\Home\Withdrawals.cshtml" />
+    <Content Include="Views\Home\Discrepancy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -493,19 +493,51 @@ namespace ShoppingCartMVC.Controllers
                 .GroupBy(m => m.InvoiceId).ToList();
             return View(query);
         }
-
         [HttpPost]
-        public ActionResult ConfirmOrder( string Status)
+        public ActionResult ConfirmOrder(string Status)
         {
             int id = (int)TempData["orderNum"];
             tblInvoice tblInvoice = db.tblInvoices.Find(id);
             tblInvoice.Status = Status;
-            if (Status== "Order Collected")
+
+            if (Status == "Order Collected")
             {
-                
                 tblInvoice.Payment_Status = "Paid";
                 tblInvoice.Time_CD = DateTime.Now;
+
+                // Get the existing cash float for the current date
+                DateTime date = DateTime.Now.Date;
+                var existingCashFloat = db.tblCashFloats
+                    .Where(c => c.Date == date)
+                    .FirstOrDefault();
+
+                if (existingCashFloat != null)
+                {
+                    // Check if the Payment field for the order is "Cash"
+                    if (tblInvoice.Payment == "Cash")
+                    {
+                        Transactions transaction = new Transactions
+                        {
+                            FloatID = existingCashFloat.FloatID, // Get the existing cash float for the day
+                            Transaction = "Collection",
+                            InStoreOrderID = null, // Set as needed
+                            OnlineOrderID = id, // Set the OnlineOrderID as the invoice ID
+                            TransactionTime = DateTime.Now,
+                            UserID = Convert.ToInt16(Session["uid"]), // Replace with the actual User ID
+                            UserName = Session["User"] as string, // Replace with the actual username
+                            Current = existingCashFloat.Amount, // Use the existing cash float amount
+                            Credit = (int)tblInvoice.Bill, // Set credit as the bill amount
+                            GivenAmt = 0,
+                            Debit = 0,
+                            ClosingBalance = existingCashFloat.Amount + (int)tblInvoice.Bill
+                        };
+
+                        db.tblTransactions.Add(transaction);
+                        existingCashFloat.Amount = existingCashFloat.Amount + (int)tblInvoice.Bill;
+                    }
+                }
             }
+
             db.Entry(tblInvoice).State = EntityState.Modified;
             db.SaveChanges();
 
@@ -514,11 +546,8 @@ namespace ShoppingCartMVC.Controllers
             string toEmail = tblInvoice.TblUser.Email;
             string name = tblInvoice.TblUser.Name;
 
-
             var body = "Dear " + name + ",<br><br>" +
-           "Your Order with Invoice #" + oId + " has been collected from Turbo Meals.<br><br>Payment Status: Paid.<br><br>Thank you for choosing Turbo Meals!";
-
-
+            "Your Order with Invoice #" + oId + " has been collected from Turbo Meals.<br><br>Payment Status: Paid.<br><br>Thank you for choosing Turbo Meals!";
 
             var message = new MailMessage();
             message.To.Add(new MailAddress(toEmail));
@@ -533,7 +562,6 @@ namespace ShoppingCartMVC.Controllers
             }
 
             return RedirectToAction("GetAllOrderDetail");
-
         }
 
         #endregion
@@ -817,7 +845,48 @@ namespace ShoppingCartMVC.Controllers
                 }
 
                 db.SaveChanges();
+
+
+                DateTime date = DateTime.Now.Date;
+                var existingCashFloat = db.tblCashFloats
+                    .Where(c => c.Date == date)
+                    .FirstOrDefault();
+
+
+
+                if (existingCashFloat != null)
+                {
+                    // Get the existing float amount for the "current" balance
+                    int currentBalance = existingCashFloat.Amount;
+
+                    // Calculate the closing balance by adding credit (bill) to the current balance
+                    int closingBalance = currentBalance + (int)firstOrder.TblInvoice.Bill;
+
+                    // Create a new transaction record for delivery
+                    Transactions transaction = new Transactions
+                    {
+                        FloatID = existingCashFloat.FloatID, // Get the existing cash float for the day
+                        Transaction = "Delivery",
+                        InStoreOrderID = null, // Set as needed
+                        OnlineOrderID = invoiceId, // Set the OnlineOrderID as the invoice ID
+                        TransactionTime = DateTime.Now,
+                        UserID = Convert.ToInt16(Session["uid"]), // Replace with the actual User ID
+                        UserName = userName, // Use the user's name from the order
+                        Current = currentBalance, // Use the current balance
+                        Credit = (int)firstOrder.TblInvoice.Bill, // Set credit as the bill amount
+                        GivenAmt = 0,
+                        Debit = 0,
+                        ClosingBalance = closingBalance
+                    };
+
+                    db.tblTransactions.Add(transaction);
+
+                    // Update the existing cash float's amount to the closing balance
+                    existingCashFloat.Amount = closingBalance;
+                }
+
             }
+            db.SaveChanges();
             string oId = invoiceId.ToString();
             string toEmail = userEmail;
             string name = userName;
@@ -832,8 +901,7 @@ namespace ShoppingCartMVC.Controllers
             var body = "Dear " + name + ",<br><br>" +
                 "Your Order with Invoice #" + oId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
                 "Thank you for choosing Turbo Meals!<br>" +
-                "Use the following link to rate and tip your driver: <a href=" + link + ">Driver Rating</a>"; ;
-
+                "Click here to rate and tip your driver: " + link;
 
 
             var message = new MailMessage();
@@ -851,7 +919,6 @@ namespace ShoppingCartMVC.Controllers
             return RedirectToAction("DeliveryDetails", new { InvoiceID = invoiceId });
 
         }
-
         #endregion
 
 
@@ -1494,39 +1561,69 @@ namespace ShoppingCartMVC.Controllers
             var existingOrder = db.TblInStoreOrders.FirstOrDefault(o => o.OrderNumber == orderNumber);
             return existingOrder != null;
         }
+
         [HttpPost]
-        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod)
+        public ActionResult ConfirmInStore(List<SelectedProductModel> selectedProducts, string tableNumber, bool isDineIn, string paymentMethod, int? changeDue)
         {
             if (selectedProducts == null || selectedProducts.Count == 0)
             {
                 return RedirectToAction("Index");
             }
 
-
             string waiterName = Session["User"] as string;
             int waiterID = Convert.ToInt16(Session["uid"]);
-
             string payMethod = Request.Form["paymentOption"];
-
             DateTime orderDateTime = DateTime.Now;
-
             string cellN = Request.Form["inputCell"];
             string emailU = Request.Form["inputEmail"];
+            int changeDueValue = changeDue ?? 0;
 
-            var ordersToInsert = new List<tblInStoreOrder>();
+            // Initialize totalAmount, closingBalance, and previousClosingBalance
+            int totalAmount = 0;
+            int closingBalance = 0;
+            //int? previousClosingBalance = null;
+            DateTime currentDate = DateTime.Now.Date;
 
+            // Check if there is a record for the current date in tblCashFloat
+            var cashFloatEntry = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
 
-            var billsToInsert = new List<tblBill>();
+            if (cashFloatEntry != null)
+            {
+                // Use the existing float amount for the "current" balance
+                int currentBalance = cashFloatEntry.Amount;
+                int initialFloatAmount = currentBalance;
 
+                // Deduct the changeDueValue from the current day's cash float
+                cashFloatEntry.Amount -= changeDueValue;
 
-            int totalAmount = (int)selectedProducts.Sum(product => product.Total);
+                // Save changes to the database
+                db.SaveChanges();
+
+                // Calculate the closing balance using the initial float amount
+                closingBalance = initialFloatAmount - totalAmount;
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "";
+            }
 
             string orderNumber = GenerateOrderNumber();
 
+            // Iterate through selected products to create orders and transactions
+            var ordersToInsert = new List<tblInStoreOrder>();
+            var billsToInsert = new List<tblBill>();
+            var transactionsToInsert = new List<Transactions>();
 
             foreach (var product in selectedProducts)
             {
                 string method = isDineIn ? "Dine-in" : "Takeaway";
+
+                // Update the cash float
+                if (cashFloatEntry != null)
+                {
+                    cashFloatEntry.Amount = closingBalance + totalAmount;
+                    db.SaveChanges();
+                }
 
                 var order = new tblInStoreOrder
                 {
@@ -1545,20 +1642,44 @@ namespace ShoppingCartMVC.Controllers
                     Status = "Preparing",
                     TableNumber = string.IsNullOrEmpty(tableNumber) ? "NONE" : tableNumber,
                     ReservedDate = null,
-                    ReservedTime = null
+                    ReservedTime = null,
+                    Change = changeDueValue,
+                    Amountgiven = changeDueValue + product.TotalPrice
                 };
 
-
                 db.TblInStoreOrders.Add(order);
-                db.SaveChanges();
 
+                if (!isDineIn)
+                {
+                    // Use the existing float amount for the "current" balance
+                    int currentBalance = cashFloatEntry != null ? cashFloatEntry.Amount : 0; // Default to 0 if no existing cash float
 
-                int orderId = order.OrderId;
+                    // Create a transaction for Takeaway orders
+                    var transaction = new Transactions
+                    {
+                        FloatID = cashFloatEntry != null ? cashFloatEntry.FloatID : 0,
+                        Transaction = method,
+                        InStoreOrderID = order.OrderId,
+                        OnlineOrderID = null,
+                        TransactionTime = DateTime.Now,
+                        UserID = waiterID,
+                        UserName = waiterName,
+                        Current = currentBalance, // Use the current balance as the "current" amount
+                        Credit = product.TotalPrice,
+                        GivenAmt = changeDueValue + product.TotalPrice,
+                        Debit = changeDueValue,
+                        ClosingBalance = currentBalance + product.TotalPrice // Calculate closing balance
+                    };
 
+                    db.tblTransactions.Add(transaction);
+                    db.SaveChanges();
+
+                    totalAmount += product.TotalPrice; // Update the total amount
+                }
 
                 var bill = new tblBill
                 {
-                    OrderId = orderId,
+                    OrderId = order.OrderId,
                     OrderNumber = order.OrderNumber,
                     OrderDateTime = order.OrderDateTime,
                     WaiterName = order.WaiterName,
@@ -1571,10 +1692,17 @@ namespace ShoppingCartMVC.Controllers
                     PayMethod = order.PayMethod ?? "Pending"
                 };
 
-
                 db.TblBills.Add(bill);
+            }
+
+            // Update the cash float for the last transaction if it exists
+            if (cashFloatEntry != null)
+            {
+                cashFloatEntry.Amount = closingBalance + totalAmount;
                 db.SaveChanges();
             }
+
+            db.SaveChanges();
 
             if (!isDineIn && paymentMethod == "Card")
             {
@@ -1593,17 +1721,14 @@ namespace ShoppingCartMVC.Controllers
             }
             if (isDineIn)
             {
-
                 return RedirectToAction("InStoreSuccess");
             }
             else
             {
                 var lastBill = db.TblBills.OrderByDescending(b => b.OrderDateTime).FirstOrDefault();
 
-
                 if (lastBill != null)
                 {
-
                     var viewModel = new InStoreSuccessCashViewModel
                     {
                         OrderNumber = lastBill.OrderNumber,
@@ -1626,11 +1751,11 @@ namespace ShoppingCartMVC.Controllers
                 }
                 else
                 {
-
                     return RedirectToAction("Index");
                 }
             }
         }
+
         #endregion
 
         #region Generate Bill
@@ -2127,7 +2252,7 @@ namespace ShoppingCartMVC.Controllers
 
         #region Update Payment Method
         [HttpPost]
-        public ActionResult UpdatePaymentMethod(string orderNumber, string paymentMethod)
+        public ActionResult UpdatePaymentMethod(string orderNumber, string paymentMethod, int? changeDue, double? tipAmount)
         {
             using (var dbContext = new dbOnlineStoreEntities())
             {
@@ -2146,6 +2271,10 @@ namespace ShoppingCartMVC.Controllers
                     foreach (var order in orders)
                     {
                         order.PayMethod = paymentMethod;
+
+                        // Update the change amount that was calculated in the view
+                        order.Change = changeDue;
+                        order.Tip = tipAmount;
                     }
 
                     // Save changes to the database
@@ -2164,11 +2293,52 @@ namespace ShoppingCartMVC.Controllers
                             "</script>");
 
                     }
+
+                    // Get the existing cash float for the current date
+                    DateTime currentDate = DateTime.Now.Date;
+                    var existingCashFloat = dbContext.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
+
+                    if (existingCashFloat != null)
+                    {
+                        // Calculate the total amount based on all bills with the same order number
+                        int totalAmount = dbContext.TblBills
+                            .Where(b => b.OrderNumber == orderNumber)
+                            .Sum(b => (int)b.Total);
+
+                        // Use the existing float amount for the "current" balance
+                        int currentBalance = existingCashFloat.Amount;
+
+                        // Create a new transaction record for Dine-in
+                        Transactions transaction = new Transactions
+                        {
+                            FloatID = existingCashFloat.FloatID,
+                            Transaction = "Dine-in",
+                            InStoreOrderID = orders[0].OrderId, // Set as needed
+                            OnlineOrderID = null,
+                            TransactionTime = DateTime.Now,
+                            UserID = orders[0].WaiterID, // Assuming waiter's ID is used as the User ID
+                            UserName = orders[0].WaiterName, // Use the waiter's name from the order
+                            Current = currentBalance, // Use the existing float amount for the day
+                            Credit = totalAmount, // Set credit as the total amount from bills
+                            GivenAmt = 0, // Include the change due in the given amount
+                            Debit = changeDue.GetValueOrDefault(0),
+                            ClosingBalance = currentBalance + totalAmount // Calculate closing balance
+                        };
+
+                        dbContext.tblTransactions.Add(transaction);
+
+                        // Update the existing cash float's amount to the closing balance
+                        existingCashFloat.Amount = currentBalance + totalAmount;
+                        dbContext.SaveChanges();
+
+                    }
                 }
             }
 
             return RedirectToAction("GenerateBill", new { orderNumber });
         }
+
+
         #endregion
 
         #region Complete Order
@@ -2610,7 +2780,7 @@ namespace ShoppingCartMVC.Controllers
 
      
 
-        #region AdminCashDrawer
+        #region AdminHandling
 
         public ActionResult AdminCashFloat()
         {
@@ -2738,23 +2908,345 @@ namespace ShoppingCartMVC.Controllers
 
         //    return View("CashDrawer", cashFloat);
         //}
-        //public ActionResult Transactions()
-        //{
-        //    List<tblInStoreOrder> instore;
+        public ActionResult Transactions()
+        {
+            List<Transactions> transaction;
 
-        //    using (var context = new dbOnlineStoreEntities())
-        //    {
-        //        instore = context.TblInStoreOrders.ToList();
-        //    }
+            using (var context = new dbOnlineStoreEntities())
+            {
+                transaction = context.tblTransactions.ToList();
+            }
 
-        //    return View(instore);
-        //}
+            return View(transaction);
+        }
 
         //public ActionResult ShortageFloat()
         //{
         //    return View();
         //}
 
+        #endregion
+
+        # region Withdrawals
+        public ActionResult Withdrawals()
+        {
+
+            using (var dbContext = new dbOnlineStoreEntities()) // Replace 'YourDbContext' with your actual DbContext class
+            {
+                var transactions = dbContext.tblTransactions.ToList(); // Fetch all transactions
+                return View(transactions);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult WithdrawTips(int? OrderID, string WithdrawalType, int? OperatingExpenses, int? ChangeTakenOut)
+        {
+            if (WithdrawalType == "Employee Tips")
+            {
+                // Get all employees
+                var employees = db.tblEmployees.ToList();
+
+                // Calculate the total tips to withdraw
+                double totalTips = employees.Sum(e => e.Tips);
+
+                // Create a new transaction record for tips withdrawal
+                var currentDate = DateTime.Now.Date;
+                var existingFloat = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
+
+                if (existingFloat != null)
+                {
+                    var lastTransaction = db.tblTransactions
+                        .OrderByDescending(t => t.TransactionID)
+                        .FirstOrDefault();
+
+                    var closingBalance = lastTransaction != null
+                        ? lastTransaction.ClosingBalance
+                        : existingFloat.Amount; // Use the existing float amount for the day
+
+                    string userName = Session["User"] as string;
+                    int userID = Convert.ToInt16(Session["uid"]);
+
+                    // Create a new transaction record for tips withdrawal
+                    var transaction = new Transactions
+                    {
+                        FloatID = existingFloat.FloatID,
+                        Transaction = "Tips", // Set the transaction type to "Tips"
+                        OnlineOrderID = null,
+                        InStoreOrderID = OrderID,
+                        TransactionTime = DateTime.Now,
+                        UserID = userID,
+                        UserName = userName,
+                        Current = existingFloat.Amount, // Current balance is the float amount for the day
+                        Credit = 0,
+                        Debit = (int)totalTips, // Debit is the total tips
+                        ClosingBalance = existingFloat.Amount - (int)totalTips // Calculate closing balance
+                    };
+
+                    db.tblTransactions.Add(transaction);
+
+                    // Update employee tips to 0
+                    foreach (var employee in employees)
+                    {
+                        employee.Tips = 0;
+                    }
+
+                    db.SaveChanges();
+
+                    // Update the float amount for the day
+                    existingFloat.Amount = transaction.ClosingBalance;
+                    db.SaveChanges();
+                }
+            }
+            else if (WithdrawalType == "Refunds")
+            {
+                // Ensure OrderID matches a record in tblInstore
+                var inStoreOrder = db.TblInStoreOrders.SingleOrDefault(o => o.OrderId == OrderID && o.PayMethod == "Cash");
+
+                if (inStoreOrder != null)
+                {
+                    // Get the total for the selected InStoreOrder
+                    int totalRefund = (int)inStoreOrder.Total;
+
+                    // Rest of the logic is similar to Employee Tips withdrawal
+                    var currentDate = DateTime.Now.Date;
+                    var existingFloat = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
+
+                    if (existingFloat != null)
+                    {
+                        var lastTransaction = db.tblTransactions
+                            .OrderByDescending(t => t.TransactionID)
+                            .FirstOrDefault();
+
+                        var closingBalance = lastTransaction != null
+                            ? lastTransaction.ClosingBalance
+                            : existingFloat.Amount;
+
+                        string userName = Session["User"] as string;
+                        int userID = Convert.ToInt16(Session["uid"]);
+
+                        var transaction = new Transactions
+                        {
+                            FloatID = existingFloat.FloatID,
+                            Transaction = "Refunds", // Set the transaction type to "Refunds"
+                            OnlineOrderID = null,
+                            InStoreOrderID = OrderID,
+                            TransactionTime = DateTime.Now,
+                            UserID = userID,
+                            UserName = userName,
+                            Current = existingFloat.Amount,
+                            Credit = 0,
+                            Debit = totalRefund, // Debit is the total refund amount
+                            ClosingBalance = existingFloat.Amount - totalRefund
+                        };
+
+                        db.tblTransactions.Add(transaction);
+
+                        // Update the float amount for the day
+                        existingFloat.Amount = transaction.ClosingBalance;
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    TempData["OrderNotFound"] = "Order not found";
+                    return RedirectToAction("WithDrawals");
+                }
+            }
+            else if (WithdrawalType == "Operating Expenses")
+            {
+                if (OperatingExpenses.HasValue)
+                {
+                    // Get the existing float for the day
+                    var currentDate = DateTime.Now.Date;
+                    var existingFloat = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
+
+                    if (existingFloat != null)
+                    {
+                        // Calculate the closing balance
+                        int currentBalance = existingFloat.Amount;
+                        int debit = OperatingExpenses.Value;
+                        int closingBalance = currentBalance - debit;
+
+                        // Create a new transaction record for operating expenses withdrawal
+                        string userName = Session["User"] as string;
+                        int userID = Convert.ToInt16(Session["uid"]);
+
+                        var transaction = new Transactions
+                        {
+                            FloatID = existingFloat.FloatID,
+                            Transaction = "Operating Expenses", // Set the transaction type to "Operating Expenses"
+                            OnlineOrderID = null,
+                            InStoreOrderID = OrderID, // Set as needed
+                            TransactionTime = DateTime.Now,
+                            UserID = userID,
+                            UserName = userName, // Use the user's name from the order
+                            Current = currentBalance, // Use the current balance
+                            Credit = 0,
+                            Debit = debit, // Debit is the operating expenses amount
+                            ClosingBalance = closingBalance
+                        };
+
+                        db.tblTransactions.Add(transaction);
+
+                        // Update the float amount for the day
+                        existingFloat.Amount = closingBalance;
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    TempData["InvalidAmount"] = "Please enter a valid operating expenses amount.";
+                }
+            }
+            else if (WithdrawalType == "DeliveryChange")
+            {
+                if (ChangeTakenOut.HasValue)
+                {
+                    // Get the existing float for the day
+                    var currentDate = DateTime.Now.Date;
+                    var existingFloat = db.tblCashFloats.FirstOrDefault(cf => cf.Date == currentDate);
+
+                    if (existingFloat != null)
+                    {
+                        // Calculate the closing balance
+                        int currentBalance = existingFloat.Amount;
+                        int debit = ChangeTakenOut.Value;
+                        int closingBalance = currentBalance - debit;
+
+                        // Create a new transaction record for "Change Taken Out for Delivery/Other"
+                        string userName = Session["User"] as string;
+                        int userID = Convert.ToInt16(Session["uid"]);
+
+                        var transaction = new Transactions
+                        {
+                            FloatID = existingFloat.FloatID,
+                            Transaction = "Delivery Change", // Set the transaction type
+                            OnlineOrderID = null,
+                            InStoreOrderID = OrderID, // Set as needed
+                            TransactionTime = DateTime.Now,
+                            UserID = userID,
+                            UserName = userName, // Use the user's name from the order
+                            Current = currentBalance, // Use the current balance
+                            Credit = 0,
+                            Debit = debit, // Debit is the change taken out amount
+                            ClosingBalance = closingBalance
+                        };
+
+                        db.tblTransactions.Add(transaction);
+
+                        // Update the float amount for the day
+                        existingFloat.Amount = closingBalance;
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    TempData["InvalidAmount"] = "Please enter a valid change taken out amount.";
+                }
+            }
+            // Handle other withdrawal types here
+
+            return RedirectToAction("Withdrawals");
+        }
+
+
+        #endregion
+        #region Discrepancy
+        public ActionResult Discrepancy()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateDiscrepancy(Discrepancy model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Fetch the current day's FloatID and calculate initial and closing balances
+                int floatID = FindFloatIDForCurrentDay(model.Date);
+                int initialBalance = FindInitialBalanceForFloatID(floatID);
+                int closingBalance = FindClosingBalanceForFloatID(floatID);
+
+                // Calculate Cash Discrepancy
+                int cashDiscrepancy = closingBalance - model.CountedBalance;
+
+                // Create and save the Discrepancy record with calculated Cash Discrepancy
+                var discrepancy = new Discrepancy
+                {
+                    Date = model.Date,
+                    InitalFloat = initialBalance,
+                    ClosingBalance = closingBalance,
+                    CountedBalance = model.CountedBalance,
+                    CashDiscrepancy = cashDiscrepancy
+                };
+
+                // Save the Discrepancy record to your database
+                db.tblDiscrepancy.Add(discrepancy);
+                db.SaveChanges();
+
+                // Redirect to a success page or perform other actions
+                return RedirectToAction("DiscrepancyCreated");
+            }
+
+            // If there are validation errors, redisplay the form with error messages
+            return View(model);
+        }
+
+        // Other controller actions
+
+        // Helper methods to find FloatID, initial balance, and closing balance
+        private int FindFloatIDForCurrentDay(DateTime? selectedDate)
+        {
+            if (selectedDate.HasValue)
+            {
+                // Find the FloatID for the current day based on the selected date
+                var selectedDateValue = selectedDate.Value;
+                var firstTransactionForDay = db.tblTransactions
+                    .OrderBy(t => t.TransactionTime)
+                    .FirstOrDefault(t => DbFunctions.TruncateTime(t.Float.Date) == DbFunctions.TruncateTime(selectedDateValue));
+
+                if (firstTransactionForDay != null)
+                {
+                    return firstTransactionForDay.FloatID;
+                }
+            }
+
+            return 0; // Return 0 or any other default value if not found
+        }
+
+
+
+        private int FindInitialBalanceForFloatID(int floatID)
+        {
+            // Find the initial balance based on the first transaction for the given FloatID
+            var initialTransaction = db.tblTransactions
+                .Where(t => t.FloatID == floatID)
+                .OrderBy(t => t.TransactionTime)
+                .FirstOrDefault();
+
+            if (initialTransaction != null)
+            {
+                return initialTransaction.Current;
+            }
+
+            return 0; // Return 0 or any other default value if not found
+        }
+
+
+        private int FindClosingBalanceForFloatID(int floatID)
+        {
+            var closingTransaction = db.tblTransactions
+                .Where(t => t.FloatID == floatID)
+                .OrderByDescending(t => t.TransactionTime)
+                .FirstOrDefault();
+
+            if (closingTransaction != null)
+            {
+                return closingTransaction.ClosingBalance;
+            }
+
+            return 0; // Return 0 or any other default value if not found
+        }
         #endregion
     }
 }
