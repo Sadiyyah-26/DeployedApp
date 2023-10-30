@@ -1,26 +1,266 @@
-﻿@model ShoppingCartMVC.Models.Discrepancy
+﻿@model List<ShoppingCartMVC.Models.Discrepancy>
 
-@{
-    ViewBag.Title = "Create Discrepancy";
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CashDrawer</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <style>
+        @@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 
-<h2>Create Discrepancy</h2>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif; /* Use the Roboto font for a professional look */
+        }
 
-@using (Html.BeginForm("CreateDiscrepancy", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+        body {
+            background-color: #f3f5f9;
+        }
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Date)
-        @Html.TextBoxFor(model => model.Date, new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(model => model.Date)
+        .wrapper {
+            display: flex;
+            position: relative;
+        }
+
+            .wrapper .sidebar {
+                width: 260px;
+                height: 100%;
+                background: #343a40;
+                padding: 30px 0px;
+                position: fixed;
+            }
+
+                .wrapper .sidebar h2 {
+                    color: #fff;
+                    text-transform: uppercase;
+                    text-align: center;
+                    margin-bottom: 30px;
+                    font-weight: 700; /* Use a bold font weight for headings */
+                }
+
+                .wrapper .sidebar ul li {
+                    padding: 15px;
+                    border-bottom: 1px solid #bdb8d7;
+                    border-bottom: 1px solid rgba(0,0,0,0.05);
+                    border-top: 1px solid rgba(255,255,255,0.05);
+                }
+
+                    .wrapper .sidebar ul li a {
+                        color: #fff;
+                        display: block;
+                    }
+
+                        .wrapper .sidebar ul li a .fas {
+                            width: 25px;
+                        }
+
+                    .wrapper .sidebar ul li:hover {
+                        background-color: #717171;
+                    }
+
+                        .wrapper .sidebar ul li:hover a {
+                            color: #fff;
+                        }
+
+                .wrapper .sidebar .social_media {
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                }
+
+                    .wrapper .sidebar .social_media a {
+                        display: block;
+                        width: 40px;
+                        background: #594f8d;
+                        height: 40px;
+                        line-height: 45px;
+                        text-align: center;
+                        margin: 0 5px;
+                        color: #bdb8d7;
+                        border-top-left-radius: 5px;
+                        border-top-right-radius: 5px;
+                    }
+
+            .wrapper .main_content {
+                width: calc(100% - 250px);
+                margin-left: 250px;
+            }
+
+                .wrapper .main_content .header {
+                    padding: 20px;
+                    background: #fff;
+                    color: #717171;
+                    border-bottom: 1px solid #e0e4e8;
+                    font-weight: 700; /* Use a bold font weight for headings */
+                }
+
+                .wrapper .main_content .info {
+                    margin: 20px;
+                    color: #717171;
+                    line-height: 25px;
+                }
+
+                    .wrapper .main_content .info div {
+                        margin-bottom: 20px;
+                    }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns */
+            gap: 20px;
+            padding: 50px;
+        }
+
+        /* Blue border */
+        .dashboard-block.blue {
+            border-left: 6px solid #007bff;
+        }
+
+        /* Orange border */
+        .dashboard-block.orange {
+            border-left: 6px solid #FFA500;
+        }
+
+        /* Green border */
+        .dashboard-block.green {
+            border-left: 6px solid #008000;
+        }
+
+        .dashboard-block {
+            padding: 30px; /* Increased padding for wider blocks */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f2f2f2;
+            border-radius: 9px; /* Increased border radius */
+        }
+
+        .dashboard-icon {
+            font-size: 36px; /* Larger font size for icons */
+            margin-right: 15px; /* Increased margin */
+        }
+
+        .dashboard-big-text {
+            font-size: 30px;
+            margin-top: 10px; /* Add some spacing between the texts */
+        }
+
+        .dashboard-container {
+            padding: 50px;
+        }
+
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px; /* Change the font size as needed */
+        }
+
+            .dashboard-table th,
+            .dashboard-table td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+                color: #333; /* Change the font color to the desired color */
+                font-weight: normal; /* Use 'normal' or 'bold' based on your preference */
+            }
+
+            .dashboard-table th {
+                background-color: #f2f2f2;
+                color: #333; /* Change the font color to the desired color */
+                font-size: 18px; /* Change the font size as needed */
+            }
+
+            .dashboard-table tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .dashboard-table td {
+                line-height: 1.5;
+                width: 70%; /* Adjust the width as needed */
+                font-weight: normal; /* Use 'normal' or 'bold' based on your preference */
+            }
+    </style>
+</head>
+<body>
+
+    @*@if (TempData["OrderNotFound"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["OrderNotFound"]
+            </div>
+        }*@
+
+    <div class="wrapper">
+        <!-- Left Sidebar Navigation -->
+        <div class="sidebar">
+            <h2>Drawer</h2>
+            <ul>
+                <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fa-sharp fa-solid fa-cash-register"></i> &ensp;Initialize Float</a></li>
+                @*<li><a href="@Url.Action("AdminChange", "Home")"><i class="fas fa-utensils"></i> Collect Change</a></li>*@
+                @*<li><a href="@Url.Action("CollectedChange", "Home")"><i class="fas fa-utensils"></i> Collect Order Change</a></li>*@
+                <li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>
+                @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
+                <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fa-solid fa-money-bill-transfer"></i>&ensp; Withdrawals</a></li>
+                <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fa-solid fa-right-from-bracket"></i>&ensp;Discrepancy </a></li>
+                <!-- Add more links as needed -->
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main_content">
+            <div class="header">CashDrawer</div>
+            <div class="info">
+                <div class="info">
+                    <h2>Discrepancy</h2>
+
+                    @using (Html.BeginForm("CreateDiscrepancy", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.Label("Date")
+                            @Html.TextBox("Date", null, new { @class = "form-control", type = "date" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Counted Balance")
+                            @Html.TextBox("CountedBalance", null, new { @class = "form-control" })
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Report Discrepancy</button>
+                    }
+                </div>
+                <div class="dashboard-container">
+                    @*<h2>Discrepancy Records</h2>*@
+
+                    <table class="table">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Counted Balance</th>
+                            <th>Cash Discrepancy</th>
+                        </tr>
+                        @foreach (var discrepancyRecord in Model)
+                        {
+                            <tr>
+                                <td>@discrepancyRecord.ID</td>
+                                <td>@(discrepancyRecord.Date.HasValue ? discrepancyRecord.Date.Value.ToShortDateString() : string.Empty)</td>
+                                <td>@discrepancyRecord.CountedBalance</td>
+                                <td>@discrepancyRecord.CashDiscrepancy</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.CountedBalance)
-        @Html.TextBoxFor(model => model.CountedBalance, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.CountedBalance)
-    </div>
-
-    <button type="submit" class="btn btn-primary">Create</button>
-}
+</body>
+</html>
