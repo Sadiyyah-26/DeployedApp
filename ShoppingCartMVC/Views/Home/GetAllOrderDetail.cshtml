@@ -2,9 +2,10 @@
 <head>
     <title>All Orders</title>
     <style>
-        h1{
-            text-align:center;
+        h1 {
+            text-align: center;
         }
+
         .btn-info {
             font-size: 20px;
             font-weight: bold;
@@ -36,6 +37,19 @@
         }
     </style>
 </head>
+
+<script src="~/js/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#searchBox").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
 @{
     // Order the data by OrderID in descending order
     var sortedOrders = Model.OrderByDescending(o => o.OrderId).ToList();
@@ -45,137 +59,139 @@
 
 <h1>All Orders</h1>
 
-
+<div class="form-group">
+    <input type="text" class="form-control col-lg-4 ml-auto" placeholder="Search Here" id="searchBox" />
+</div>
 <br />
-    <table class="table">
+<table class="table">
 
-        <tr>
-            <th>
-                Invoice ID
-            </th>
-            <th>
-                Customer
-            </th>
+    <tr>
+        <th>
+            Invoice ID
+        </th>
+        <th>
+            Customer
+        </th>
 
-            <th>
-                Total
-            </th>
-            <th>
-                Pay Method
-            </th>
-            <th>
-                Payment Status
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TblInvoice.DC_Method)
-            </th>
+        <th>
+            Total
+        </th>
+        <th>
+            Pay Method
+        </th>
+        <th>
+            Payment Status
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TblInvoice.DC_Method)
+        </th>
 
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
 
-            <th>Order Status</th>
-            <th>Action</th>
-            <th></th>
-        </tr>
-        <tbody id="myTable">
-            @foreach (var item in sortedOrders)
-            {
-                <tr>
-                    <td>
-                        #@Html.DisplayFor(modelItem => item.InvoiceId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TblInvoice.TblUser.Name)
-                    </td>
+        <th>Order Status</th>
+        <th>Action</th>
+        <th></th>
+    </tr>
+    <tbody id="myTable">
+        @foreach (var item in sortedOrders)
+        {
+            <tr>
+                <td>
+                    #@Html.DisplayFor(modelItem => item.InvoiceId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TblInvoice.TblUser.Name)
+                </td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TblInvoice.Bill)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TblInvoice.Payment)
-                    </td>
-                    <td>
-                        @if (item.TblInvoice.Payment_Status == "Paid")
-                        {
-                            <span class="badge badge-success">Paid</span>
-                        }
-                        else
-                        {
-                            <span class="badge badge-warning">Pending</span>
-                        }
+                <td>
+                    @Html.DisplayFor(modelItem => item.TblInvoice.Bill)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TblInvoice.Payment)
+                </td>
+                <td>
+                    @if (item.TblInvoice.Payment_Status == "Paid")
+                    {
+                        <span class="badge badge-success">Paid</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning">Pending</span>
+                    }
 
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TblInvoice.DC_Method)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TblInvoice.InvoiceDate)
-                    </td>
-
-
-                    <td>
-                        @if (item.TblInvoice.Status == "Order Placed")
-                        {
-
-                            <a href="@Url.Action("ConfirmOrder","Home", new { InvoiceId = item.InvoiceId })" class="btn btn-dark">Order Ready</a>
-                        }
-                        else if (item.TblInvoice.Status == "Out for Delivery")
-                        {
-                            <span class="btn btn-warning">Out for Delivery</span>
-                        }
-                        else if (item.TblInvoice.Status == "Order Delivered")
-                        {
-                            <span class="btn btn-success">Delivered</span>
-                        }
-                        else if (item.TblInvoice.Status == "Ready for Collection")
-                        {
-                            <a href="@Url.Action("ConfirmOrder","Home", new { InvoiceId = item.InvoiceId })" class="btn btn-warning">Ready for Collection</a>
-                        }
-                        else if (item.TblInvoice.Status == "Order Collected")
-                        {
-                            <span class="btn btn-success">Collected</span>
-                        }
-                        else
-                        if (item.TblInvoice.Status == "Cancelled")
-                        {
-                            <span class="btn btn-danger">Cancelled</span>
-                        }
-
-                    </td>
-
-                    <td>
-                        @if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Order Placed"))
-                        {
-                            <a href="@Url.Action("AssignDriver","Home", new { InvId = item.InvoiceId })" class="btn btn-info">Assign Driver</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TblInvoice.DC_Method)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TblInvoice.InvoiceDate)
+                </td>
 
 
-                        }
-                        else if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Out for Delivery"))
-                        {
-                            <span class="btn btn-primary">Driver Dispatched</span>
-                        }
-                        else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Order Placed"))
-                        {
-                            <a href="@Url.Action("NotifyCustomer","Home", new { InvoiceID = item.InvoiceId })" class="btn btn-info"> Notify Customer</a>
+                <td>
+                    @if (item.TblInvoice.Status == "Order Placed")
+                    {
+
+                        <a href="@Url.Action("ConfirmOrder","Home", new { InvoiceId = item.InvoiceId })" class="btn btn-dark">Order Ready</a>
+                    }
+                    else if (item.TblInvoice.Status == "Out for Delivery")
+                    {
+                        <span class="btn btn-warning">Out for Delivery</span>
+                    }
+                    else if (item.TblInvoice.Status == "Order Delivered")
+                    {
+                        <span class="btn btn-success">Delivered</span>
+                    }
+                    else if (item.TblInvoice.Status == "Ready for Collection")
+                    {
+                        <a href="@Url.Action("ConfirmOrder","Home", new { InvoiceId = item.InvoiceId })" class="btn btn-warning">Ready for Collection</a>
+                    }
+                    else if (item.TblInvoice.Status == "Order Collected")
+                    {
+                        <span class="btn btn-success">Collected</span>
+                    }
+                    else
+                    if (item.TblInvoice.Status == "Cancelled")
+                    {
+                        <span class="btn btn-danger">Cancelled</span>
+                    }
+
+                </td>
+
+                <td>
+                    @if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Order Placed"))
+                    {
+                        <a href="@Url.Action("AssignDriver","Home", new { InvId = item.InvoiceId })" class="btn btn-info">Assign Driver</a>
 
 
-                        }
-                        else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Ready for Collection"))
-                        {
-                            <span class="btn btn-primary">Collection</span>
-                        }
-                        else
-                        {
-                            <span class="btn btn-success">Complete</span>
-                        }
+                    }
+                    else if ((item.TblInvoice.DC_Method == "Delivery") && (item.TblInvoice.Status == "Out for Delivery"))
+                    {
+                        <span class="btn btn-primary">Driver Dispatched</span>
+                    }
+                    else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Order Placed"))
+                    {
+                        <a href="@Url.Action("NotifyCustomer","Home", new { InvoiceID = item.InvoiceId })" class="btn btn-info"> Notify Customer</a>
 
-                    </td>
 
-                </tr>
-            }
-        </tbody>
-    </table>
+                    }
+                    else if ((item.TblInvoice.DC_Method == "Collection") && (item.TblInvoice.Status == "Ready for Collection"))
+                    {
+                        <span class="btn btn-primary">Collection</span>
+                    }
+                    else
+                    {
+                        <span class="btn btn-success">Complete</span>
+                    }
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
 
 
 

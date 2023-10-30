@@ -32,17 +32,22 @@
             font-size: 20px;
             font-weight: bold;
         }
+        input[type="checkbox"] {
+            width: 20px; /* Adjust the width to make the checkbox wider */
+            height: 20px; /* Adjust the height to make the checkbox taller */
+        }
     </style>
 </head>
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Update Product </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Update Product </u></h1>
 <br />
-<h3 style="color:red;">@TempData["msg"]</h3>
-<br />
+
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
 
@@ -85,7 +90,7 @@
 
                         </div>
                     </div>
-
+                    <br />
                     <div class="form-group">
                         <span>Select Category: </span>
                         <div class="col-md-10">
@@ -93,7 +98,7 @@
 
                         </div>
                     </div>
-
+                    <br />
                     <div class="checkbox-grid">
                         <h4>Ingredients:</h4>
                         @foreach (var ing in ViewBag.AllIngredients)
@@ -107,7 +112,7 @@
                         }
                     </div>
 
-
+                    <br />
                     <div class="form-group">
 
                         <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
@@ -115,7 +120,7 @@
                             <a href="@Url.Action("Index", "Products")" class="btn btn-dark py-3 px-5">Back</a>
                         </p>
                     </div>
-                    
+
 
                 </div>
 

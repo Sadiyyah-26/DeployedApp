@@ -3,17 +3,31 @@
     <title>Update Unit Cost</title>
     <style>
         .card {
-            border: 2px solid #00ff90;
+            border: 2px solid grey;
         }
 
         .form-group {
             text-align: center;
         }
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        
     </style>
 </head>
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Update Unit Cost </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Update Unit Cost </u></h1>
 <div class="col-sm-5 mx-auto">
     <div class="card">
         <div class="card-body">
@@ -35,7 +49,7 @@
 
                 <br />
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-success" />
+                    <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" />
                 </div>
             }
         </div>

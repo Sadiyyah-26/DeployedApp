@@ -1,11 +1,11 @@
-﻿@model List<IGrouping<int?,ShoppingCartMVC.Models.tblOrder>>
+﻿@model List<IGrouping<int?, ShoppingCartMVC.Models.tblOrder>>
 @{
     ViewBag.Title = "CancelOrder";
 }
 <head>
-        <title>
-            Order Details
-        </title>
+    <title>
+        Order Details
+    </title>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -16,14 +16,26 @@
             text-align: center;
         }
 
-        .card{
-            border:2px solid #0094ff;
+        .card {
+            border: 2px solid grey;
+        }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            font-size: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 
+
 <br />
 <br />
+<h1 class="card-title" style="text-align:center"><u>Order Details</u></h1>
 <br />
 <body>
     @using (Html.BeginForm())
@@ -31,7 +43,7 @@
         <div class="col-lg-5 grid-margin stretch-card mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title" style="text-align:center"><u>Order Details</u></h4>
+
                     <br />
 
                     @foreach (var group in Model)
@@ -52,8 +64,8 @@
                             <p class="cncl"> Payment Status: @firstOrder.TblInvoice.Payment_Status </p>
                         }
                     }
-
-                    <p class="cncl"><a href="@Url.Action("OrderDetail","Home", new { id = Model.FirstOrDefault()?.First()?.TblInvoice.TblUser.UserId ?? 0 })" class="btn btn-dark">Back</a> &ensp;<input type="submit" id="cancelButton" value="Cancel Order" class="btn btn-danger" /> </p>
+                    <br />
+                    <p class="cncl"><a href="@Url.Action("OrderDetail","Home", new { id = Model.FirstOrDefault()?.First()?.TblInvoice.TblUser.UserId ?? 0 })" class="btn btn-dark py-3 px-5">Back</a> &ensp;<input type="submit" id="cancelButton" value="Cancel Order" class="btn btn-danger py-3 px-5" /> </p>
 
                 </div>
             </div>

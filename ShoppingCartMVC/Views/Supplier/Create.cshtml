@@ -3,7 +3,7 @@
     <title>Add Supplier</title>
     <style>
         .card {
-            border: 2px solid #00ff90;
+            border: 2px solid grey;
         }
 
         .form-group {
@@ -15,126 +15,155 @@
             grid-template-columns: repeat(3, 2fr); /* Adjust the number of columns as needed */
             gap: 10px; /* Adjust the gap between checkboxes */
         }
+
+        input[type="checkbox"] {
+            width: 20px; /* Adjust the width to make the checkbox wider */
+            height: 20px; /* Adjust the height to make the checkbox taller */
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Add Supplier </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Add Supplier </u></h1>
 <div class="col-sm-7 mx-auto">
     <div class="card">
         <div class="card-body">
+            <br />
+            <h3 style="color:red;">@TempData["msg"]</h3>
             @using (Html.BeginForm())
             {
 
 
-                            <form class="bg-white p-5 contact-form">
-                                <div class="form-group">
-                                    <span>Supplier Name:</span>
-                                    @Html.TextBoxFor(m => m.SupplName, new { @class = "form-control" })
-                                </div>
+                <form class="bg-white p-5 contact-form">
+                    <div class="form-group">
+                        <span>Supplier Name:</span>
+                        @Html.TextBoxFor(m => m.SupplName, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
+                    <div class="form-group">
 
-                                    <label for="state">Supplier Type:</label>
-                                    <select name="supplType">
-                                        <option value="" disabled selected></option>
-                                        <option value="Produce">Produce</option>
-                                        <option value="Bakery">Bakery </option>
-                                        <option value="Beverage">Beverage</option>
-                                        <option value="Dairy">Dairy</option>
-                                        <option value="Meat">Meat</option>
-                                        <option value="Condiments">Condiments</option>
-                                        <option value="General">General</option>
-                                        @*<option value="EC">Eastern Cape</option>
+                        <label for="state">Supplier Type:</label>
+                        <select name="supplType">
+                            <option value="" disabled selected></option>
+                            <option value="Produce">Produce</option>
+                            <option value="Bakery">Bakery </option>
+                            <option value="Beverage">Beverage</option>
+                            <option value="Dairy">Dairy</option>
+                            <option value="Meat">Meat</option>
+                            <option value="Condiments">Condiments</option>
+                            <option value="General">General</option>
+                            @*<option value="EC">Eastern Cape</option>
                 <option value="NC">Northern Cape</option>
                 <option value="FS">Free State</option>*@
 
 
-                                    </select>
-                                </div>
+                        </select>
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Contact Person:</span>
-                                    @Html.TextBoxFor(m => m.ContactPerson, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span>Contact Person:</span>
+                        @Html.TextBoxFor(m => m.ContactPerson, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Contact Person Position:</span>
-                                    @Html.TextBoxFor(m => m.ContactPersonPos, new { @class = "form-control" })
-                                </div>
-                                <div class="form-group">
-                                    <span>Contact Number:</span>
-                                    @Html.TextBoxFor(m => m.ContactNum, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span>Contact Person Position:</span>
+                        @Html.TextBoxFor(m => m.ContactPersonPos, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <span>Contact Number:</span>
+                        @Html.TextBoxFor(m => m.ContactNum, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Email:</span>
-                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span>Email:</span>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span> Telephone:</span>
-                                    @Html.TextBoxFor(m => m.Tel, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span> Telephone:</span>
+                        @Html.TextBoxFor(m => m.Tel, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Company Registration Number:</span>
-                                    @Html.TextBoxFor(m => m.CompanyRegNum, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span>Company Registration Number:</span>
+                        @Html.TextBoxFor(m => m.CompanyRegNum, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span> Physical Address:</span>
-                                    @Html.TextBoxFor(m => m.PhysicalAddress, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span> Physical Address:</span>
+                        @Html.TextBoxFor(m => m.PhysicalAddress, new { @class = "form-control" })
+                    </div>
 
-                                <div class="col-sm-4" >
-                                    <div class="card" >
-                                        <div class="card-body">
-                                            <span class="card-title">Active:</span>
-                                            <br />
-                                            <input type="radio" name="Active" value="Yes" /><label>&ensp;Yes</label>
-                                            <br />
-                                            <input type="radio" name="Active" value="No" /><label>&ensp; No</label>
-
-                                        </div>
-                                    </div>
-                                </div>
-
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="card-title">Active:</span>
                                 <br />
-                                <div class="checkbox-grid">
-                                    <h4>Ingredients To be Supplied:</h4>
-                                    <br />
-                                    <br />
-                                    @foreach (var ing in ViewBag.IngrNames)
-                                    {
-                                        <div class="form-group">
-                                            <label>
-                                                <input type="checkbox" name="selectedIngrs[]" value="@ing.IngName" />
-                                                @ing.IngName
-                                            </label>
-                                            <br />
-                                                <span>Unit Cost:</span>
-                                                <input type="text" name="unitCosts[@ing.IngName]" />
-                                            
-                                        </div>
+                                <input type="radio" name="Active" value="Yes" /><label>&ensp;Yes</label>
+                                <br />
+                                <input type="radio" name="Active" value="No" /><label>&ensp; No</label>
 
-                                    }
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="checkbox-grid">
+                        <h4>Ingredients To be Supplied:</h4>
+                        <br />
+                        <br />
+                        @foreach (var ing in ViewBag.IngrNames)
+                        {
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="selectedIngrs[]" value="@ing.IngName" />
+                                    @ing.IngName
+                                </label>
+                                <br />
+                                <span>Unit Cost:</span>
+                                <input type="text" name="unitCosts[@ing.IngName]" />
+
+                            </div>
+
+                        }
 
 
-                                </div>
+                    </div>
 
-                                <div class="form-group">
-                                    <input type="submit" value="Add Supplier" class="btn btn-primary py-3 px-5">
-                                </div>
-                            </form>
-                            <h3 style="color:red;">@TempData["msg"]</h3>
+                    <br />
+                    <div class="form-group" style="text-align:center;">
 
-                      
+                        <input type="submit" value="Add" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                            <a href="@Url.Action( "Index","Supplier")" class="btn btn-dark  py-3 px-5">Back</a>
+                        </p>
+                    </div>
+                   
+                </form>
+
+
+
             }
 
-            <div>
-                @Html.ActionLink("Back to List", "Index")
-            </div>
+            
         </div>
     </div>
 </div>

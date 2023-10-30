@@ -3,7 +3,7 @@
     <title>Update A Category</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
         }
 
         .form-group {
@@ -32,14 +32,14 @@
 
 <br />
 @*sem 2 changes*@
-<h2 class="card-title" style="text-align:center"><u> Update Category </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Update Category </u></h1>
 <br />
-<h3 style="color:red;">@TempData["msg"]</h3>
-<br />
+
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
-
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm())
             {
 

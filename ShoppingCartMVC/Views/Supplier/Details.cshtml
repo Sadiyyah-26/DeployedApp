@@ -4,7 +4,7 @@
     <title> Supplier Details</title>
     <style>
         .card {
-            border: 2px solid #00ff90;
+            border: 2px solid grey;
         }
 
         .form-group {
@@ -17,12 +17,28 @@
             gap: 10px; /* Adjust the gap between checkboxes */
         }
 
-        
+        .orange-link {
+            color: orange;
+            font-size: 25px !important; /* Increase the font size to your desired value */
+            font-weight: bold; /* Make the text bold */
+            text-decoration: none; /* Remove the underline (if needed) */
+        }
+
+            .orange-link:hover {
+                color: orangered;
+            }
+
+        a {
+            color: orange;
+            font-size: 25px !important; /* Increase the font size to your desired value */
+            font-weight: bold; /* Make the text bold */
+            text-decoration: none;
+        }
     </style>
 </head>
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Supplier Details</u></h2>
+<h1 class="card-title" style="text-align:center"><u> Supplier Details</u></h1>
 <div class="col-sm-7 mx-auto">
     <div class="card">
         <div class="card-body">
@@ -84,9 +100,9 @@
 
                 <p style="text-align:center">
 
-                    <a href="@Url.Action("Index", "AdminHome",new {id=Model.SupplierId})">Order Ingredients</a>|
-                    @Html.ActionLink("Edit", "Edit", new { id = Model.SupplierId }) |
-                    @Html.ActionLink("Back to List", "Index")
+                    @*<a href="@Url.Action("Index", "AdminHome",new {id=Model.SupplierId})">Order Ingredients</a>|*@
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.SupplierId },new { @class = "orange-link" }) |
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "orange-link" })
                 </p>
         </div>
     </div>

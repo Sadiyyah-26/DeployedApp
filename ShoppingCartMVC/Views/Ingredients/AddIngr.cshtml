@@ -3,63 +3,90 @@
     <title>Add Ingredient</title>
     <style>
         .card {
-            border: 2px solid #00ff90;
+            border: 2px solid grey;
         }
 
         .form-group {
             text-align: center;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Add Ingredient </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Add Ingredient </u></h1>
+
+
+
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
+            <br />
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm("AddIngr", "Ingredients", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
 
-               
 
-                            <form class="bg-white p-5 contact-form">
-                                <div class="form-group">
-                                    <span>Ingredient Name:</span>
-                                    @Html.TextBoxFor(m => m.Ing_Name, new { @class = "form-control" })
-                                </div>
 
-                                <div class="form-group">
-                                    <span>Standard Qty:</span>
-                                    @Html.TextBoxFor(m => m.Ing_StandardQty, new { @class = "form-control" })
-                                </div>
+                <form class="bg-white p-5 contact-form">
+                    <div class="form-group">
+                        <span>Ingredient Name:</span>
+                        @Html.TextBoxFor(m => m.Ing_Name, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Standard Qty Unit of Measurement:</span>
-                                    @Html.TextBoxFor(m => m.StdQty_UnitMeaseurement, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span>Standard Qty:</span>
+                        @Html.TextBoxFor(m => m.Ing_StandardQty, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Stock Qty:</span>
-                                    @Html.TextBoxFor(m => m.Ing_StockyQty, new { @class = "form-control" })
-                                </div>
+                    <div class="form-group">
+                        <span>Standard Qty Unit of Measurement:</span>
+                        @Html.TextBoxFor(m => m.StdQty_UnitMeaseurement, new { @class = "form-control" })
+                    </div>
 
-                                <div class="form-group">
-                                    <span>Select Image:</span>
-                                    <input type="file" name="Image" />
-                                </div>
+                    <div class="form-group">
+                        <span>Stock Qty:</span>
+                        @Html.TextBoxFor(m => m.Ing_StockyQty, new { @class = "form-control" })
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <span>Select Image:</span>
+                        <input type="file" name="Image" />
+                    </div>
+                    <br />
 
-                                <div class="form-group">
-                                    <input type="submit" value="Add Ingrdient" class="btn btn-primary py-3 px-5">
-                                </div>
-                            </form>
-                            <h3 style="color:red;">@TempData["msg"]</h3>
+                    <div class="form-group" style="text-align:center;">
 
-                      
+                        <input type="submit" value="Add" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                            <a href="@Url.Action( "IngIdex","Ingredients")" class="btn btn-dark  py-3 px-5">Back</a>
+                        </p>
+                    </div>
+                </form>
+
+
+
             }
 
-            <div>
-                @Html.ActionLink("Back to List", "IngIdex")
-            </div>
+
         </div>
     </div>
 </div>

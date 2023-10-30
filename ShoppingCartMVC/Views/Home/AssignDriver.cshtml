@@ -5,17 +5,32 @@
 
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
     </style>
 </head>
-
+<br />
+<br />
+<h1 class="card-title" style="text-align:center"><u> Assign Driver </u></h1>
 @using (Html.BeginForm())
 {
     <div class="col-lg-5 grid-margin stretch-card mx-auto">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title" style="text-align:center"><u> Assign Driver </u></h4>
+
                 <br />
                 <p style="text-align:center;">Invoice No. : #@Model.InvoiceId</p>
                 <p style="text-align:center">Delivery Address : @Model.Address </p>
@@ -23,12 +38,11 @@
                 <p style="text-align:center;">Select Driver : @Html.DropDownListFor(m => m.SelectedUserId, Model.DriverSelectList, "--Choose Driver--")</p>
 
                 <br>
-                <p style="text-align:center;"><input type="submit" value="Dispatch Driver" class="btn btn-success" /></p>
+                <p style="text-align:center;"><input type="submit" value="Dispatch Driver" class="btn custom-orange-button py-3 px-5" /></p>
                 <br />
 
             </div>
         </div>
     </div>
 }
-<br />
-<br />
+

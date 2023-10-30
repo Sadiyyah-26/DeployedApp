@@ -3,87 +3,111 @@
     <title>Update Ingredient</title>
     <style>
         .card {
-            border: 2px solid #00ff90;
+            border: 2px solid grey;
         }
 
         .form-group {
             text-align: center;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Update Ingredient </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Update Ingredient </u></h1>
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
+            <br />
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            
             @using (Html.BeginForm("EditIngr", "Ingredients", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
 
 
 
-               <div class="form-horizontal">
+                <div class="form-horizontal">
 
-                   @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                   @Html.HiddenFor(model => model.Ing_ID)
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Ing_ID)
 
-                   <div class="form-group">
-                       Ingredient Name:
-                       <div class="col-md-10">
-                           @Html.EditorFor(model => model.Ing_Name, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="form-group">
+                        Ingredient Name:
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Ing_Name, new { htmlAttributes = new { @class = "form-control" } })
 
-                       </div>
-                   </div>
+                        </div>
+                    </div>
 
-                   <div class="form-group">
-                       Standard Qty of Ingredient:
-                       <div class="col-md-10">
-                           @Html.EditorFor(model => model.Ing_StandardQty, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="form-group">
+                        Standard Qty of Ingredient:
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Ing_StandardQty, new { htmlAttributes = new { @class = "form-control" } })
 
-                       </div>
-                   </div>
+                        </div>
+                    </div>
 
-                   <div class="form-group">
-                       Standard Qty Unit of Measurement for Ingredient:
-                       <div class="col-md-10">
-                           @Html.EditorFor(model => model.StdQty_UnitMeaseurement, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="form-group">
+                        Standard Qty Unit of Measurement for Ingredient:
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.StdQty_UnitMeaseurement, new { htmlAttributes = new { @class = "form-control" } })
 
-                       </div>
-                   </div>
+                        </div>
+                    </div>
 
 
-                   <div class="form-group">
-                       Ingredient Stock Qty:
-                       <div class="col-md-10">
-                           @Html.EditorFor(model => model.Ing_StockyQty, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="form-group">
+                        Ingredient Stock Qty:
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Ing_StockyQty, new { htmlAttributes = new { @class = "form-control" } })
 
-                       </div>
-                   </div>
-                   <div class="form-group">
-                       <span>Select Image:</span>
-                       <div class="col-md-10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span>Select Image:</span>
+                        <div class="col-md-10">
 
-                           <img src="~/Uploads/@Model.Ing_Image" style="width:150px; height:100px;" class="img-responsive" />
-                           <br />
-                           <input type="file" name="Image" />
+                            <img src="~/Uploads/@Model.Ing_Image" style="width:150px; height:100px;" class="img-responsive" />
+                            <br />
+                            <input type="file" name="Image" />
 
-                       </div>
-                   </div>
+                        </div>
+                    </div>
+                    <br />
 
-                   <div class="form-group">
-                       <div class="col-md-offset-2 col-md-10">
-                           <input type="submit" value="Update" class="btn btn-success" />
-                       </div>
-                   </div>
-               </div>
-                <h3 style="color:red;">@TempData["msg"]</h3>
+
+                    <div class="form-group" style="text-align:center;">
+
+                        <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                            <a href="@Url.Action( "IngIdex","Ingredients")" class="btn btn-dark  py-3 px-5">Back</a>
+                        </p>
+                    </div>
+                   
+                </div>
+
 
 
             }
 
-            <div>
-                @Html.ActionLink("Back to List", "IngIdex")
-            </div>
+           
         </div>
     </div>
 </div>

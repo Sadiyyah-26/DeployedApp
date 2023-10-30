@@ -99,7 +99,7 @@ namespace ShoppingCartMVC.Controllers
                     // Save changes to all records
                     db.SaveChanges();
                 }
-
+                string orderStatusMessage = string.Empty;
                 // Send invoice as PDF via email if any order is "Ordered"
                 if (supplierGroup.Any(ing => ing.StockAvailabilityConfirmed))
                 {
@@ -111,11 +111,19 @@ namespace ShoppingCartMVC.Controllers
 
                     // Send the email with the PDF invoice
                     SendEmailWithInvoice(invoiceData.SupplName, Convert.ToInt32(TempData["Invoice"]), invoiceData.ContactPerson, invoiceData.ContactNum, invoiceData.ContactPersonPos, pdfBytes);
+                    orderStatusMessage += "One or more of your orders have been successfully placed. Purchase Order created and sent successfully to Supplier/s.<br/>";
+                }
+
+                if (supplierGroup.Any(ing => !ing.StockAvailabilityConfirmed))
+                {
+                    // Order(s) "Cancelled"
+                    orderStatusMessage += "One or more of your orders have been cancelled. ";
                 }
 
                 // Clear TempData to ensure it's not reused on subsequent requests
                 TempData["PendingOrdersData"] = null;
 
+                TempData["OrderStatusMessage"] = orderStatusMessage;
                 // Redirect to a success or confirmation page
                 return RedirectToAction("PaymentSuccess");
             }
