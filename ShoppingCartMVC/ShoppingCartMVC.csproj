@@ -488,6 +488,7 @@
     <Content Include="Images\edit6.png" />
     <Content Include="Images\HomepageBD.png" />
     <Content Include="Images\LoginPic.png" />
+    <Content Include="Images\LoginPic2.png" />
     <Content Include="Images\Logo2.png" />
     <Content Include="Images\LogoPlain.png" />
     <Content Include="Images\LogoW.png" />
