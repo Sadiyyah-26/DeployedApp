@@ -1,31 +1,87 @@
 ﻿@model ShoppingCartMVC.Models.tblEmployee
-@{
-    ViewBag.Title = "UserDetails";
-}
+<head>
+    <title>Profile</title>
+    <style>
+        h1 {
+            font-size: 50px;
+            text-align: center;
+        }
 
-<h2>My Details</h2>
+        .card {
+            border: 3px solid grey;
+        }
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-            <input type="hidden" name="id" value="@Model.UserID" />
-            <img src="~/Uploads/@Model.EmpImage" style="height:250px;width:100%" />
-        </div>
+        .card-body {
+            text-align: center;
+        }
 
-        <div class="col-lg-6">
-            <h3>@Model.EmpName</h3>
-            <p>@Model.TblUser.Email</p>
 
-            @if (Model.TblUser.RoleType != 2)
-            {
-                <p><h2><strong>@Model.avgRating</strong></h2></p>
-                <p>Tips <strong>@Model.Tips</strong></p>
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
             }
-        </div>
 
-        <div>
-            <p><a href="@Url.Action("EditAccount", "Account", new { id = Model.UserID})" class="btn btn-primary">Edit</a></p>
+        .image {
+            text-align: center !important;
+        }
 
+        .details {
+            display: inline-block; /* Make the details display inline */
+            vertical-align: middle; /* Vertically align elements in the middle */
+            text-align: left; /* Align details text to the left */
+        }
+
+        .Edit {
+            text-align: center !important;
+            margin-top: 20px; /* Add margin for spacing */
+            width: 100%; /* Set the width to 100% to match the parent container */
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<br />
+<h1>My Details</h1>
+
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-10">
+            <div class="card-body">
+                <div class="row">
+                    <div class="image">
+                        <input type="hidden" name="id" value="@Model.UserID" />
+                        <img src="~/Uploads/@Model.EmpImage" style="height:250px;width:100%" />
+                    </div>
+                    &ensp;
+                    <div class="details">
+                      
+                        <br />
+                        <h3>@Model.EmpName</h3>
+                        <p>@Model.TblUser.Email</p>
+
+                        @if (Model.TblUser.RoleType != 2)
+                        {
+                            <p>Avg Rating:<span style="font-size:30px;"> <strong>@Model.avgRating</strong></span></p>
+                            <p>Tips: <strong>R @Model.Tips.00</strong></p>
+                        }
+                    </div>
+                    <br/>
+                    <div class="Edit">
+                        <a href="@Url.Action("EditAccount", "Account", new { id = Model.UserID})" class="btn custom-orange-button py-3 px-5">Edit</a>
+
+                    </div>
+                    <br />
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

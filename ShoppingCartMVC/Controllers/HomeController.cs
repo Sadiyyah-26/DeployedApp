@@ -901,7 +901,7 @@ namespace ShoppingCartMVC.Controllers
             var body = "Dear " + name + ",<br><br>" +
                 "Your Order with Invoice #" + oId + " has been successfully delivered to you at " + address + ".<br><br>" + payment +
                 "Thank you for choosing Turbo Meals!<br>" +
-                "Click here to rate and tip your driver: " + link;
+               "Use the following link to rate your driver: <a href=" + link + ">Driver Rating</a>";
 
 
             var message = new MailMessage();

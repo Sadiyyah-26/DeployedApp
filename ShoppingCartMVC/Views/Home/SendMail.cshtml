@@ -4,18 +4,37 @@
     <title>Notify Customer</title>
     <style>
         .card {
-            border: 2px solid #0094ff;
+            border: 2px solid grey;
         }
+
+        .btn-success {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
     </style>
 </head>
-
+<br />
 @using (Html.BeginForm("SendMail", "Home", FormMethod.Post))
 {
     
     <div class="col-lg-5 grid-margin stretch-card mx-auto">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title" style="text-align:center"><u>Delivery Notification</u></h4>
+                <h3 class="card-title" style="text-align:center"><u>Delivery Notification</u></h3>
                 <br />
 
                 <form method="post" action="~/Controllers/Home/SendMail">
@@ -38,7 +57,7 @@
                     <br />
 
                     <br />
-                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> &ensp;<a href="@Url.Action("DeliveryDetails","Home", new { InvoiceID = Model.TblOrder.InvoiceId })" class="btn btn-info">Complete Delivery</a></p>
+                    <p style="text-align:center;"><input type="submit" value="Send" class="btn btn-success" /> &ensp;<a href="@Url.Action("DeliveryDetails","Home", new { InvoiceID = Model.TblOrder.InvoiceId })" class="btn custom-orange-button py-3 px-5">Complete Delivery</a></p>
                 </form>
 
 

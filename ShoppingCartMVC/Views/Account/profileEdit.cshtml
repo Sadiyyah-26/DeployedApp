@@ -3,9 +3,11 @@
     <title>Update Account</title>
     <style>
         .card {
-            border: 2px solid green;
+            border: 2px solid grey;
         }
-
+        .image {
+            text-align: center !important;
+        }
         .form-group {
             text-align: center;
         }
@@ -15,15 +17,40 @@
             grid-template-columns: repeat(3, 2fr);
             gap: 10px;
         }
+       
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .form-group {
+            text-align: center;
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
     </style>
 </head>
 
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Update Photo </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Update Photo </u></h1>
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
+          
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm("profileEdit", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <div class="form-horizontal">
@@ -32,23 +59,23 @@
 
                     <div class="form-group">
                         <span>Select Image:</span>
-                        <div class="col-md-10">
-                            <img src="~/Uploads/@Model.userProfileImage" style="width:150px; height:100px;" class="img-responsive" />
-                            <input type="file" name="Image" />
+                        <div class="image">
+                            <img src="~/Uploads/@Model.userProfileImage" style="width:250px; height:100%;" class="img-responsive" />
+                            <br /> <input type="file" name="Image" />
                         </div>
                     </div>
 
+                    <br />
 
-
-                    <div class="form-group">
-                        <input type="submit" value="Update" class="btn btn-success" />
+                    <div class="form-group" style="text-align:center;">
+                        <input type="submit" value="Update" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                            <a href="@Url.Action("AccProfile", "Account")" class="btn btn-dark  py-3 px-5">Back</a>
+                        </p>
                     </div>
 
-                    <p style="text-align:center">
-                        <a href="@Url.Action("AccProfile", "Account")" class="btn btn-dark">Back</a>
-                    </p>
                 </div>
-                <p>@TempData["msg"]</p>
+
             }
         </div>
     </div>

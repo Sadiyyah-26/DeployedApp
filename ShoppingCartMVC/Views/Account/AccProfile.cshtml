@@ -1,28 +1,86 @@
 ﻿@model ShoppingCartMVC.Models.tblAccProfile
-@{
-    ViewBag.Title = "AccProfile";
-}
+<head>
+    <title>Profile</title>
+    <style>
+        h1 {
+            font-size: 50px;
+            text-align:center;
+        }
 
-<h2>My Details</h2>
+        .card {
+            border: 3px solid grey;
+        }
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-            <input type="hidden" name="id" value="@Model.UserID" />
-            <img src="~/Uploads/@Model.userProfileImage" style="height:250px;width:100%" />
+        .card-body {
+            text-align: center;
+        }
+
+       
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+            
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+            .image{
+                text-align:center !important;
+            }
+
+        .details {
+            display: inline-block; /* Make the details display inline */
+            vertical-align: middle; /* Vertically align elements in the middle */
+            text-align: left; /* Align details text to the left */
+        }
+
+        .Edit {
+            text-align: center !important;
+            margin-top: 20px; /* Add margin for spacing */
+            width: 100%; /* Set the width to 100% to match the parent container */
+            display: flex;
+            justify-content: center;
+        }
+      
+    </style>
+</head>
+<br />
+<h1>My Details</h1>
+
+<div class="card mx-auto" style="max-width: fit-content;">
+    <div class="row no-gutters">
+        <div class="col-md-10">
+            <div class="card-body">
+                <div class="row">
+                    <div class="image">
+                        <input type="hidden" name="id" value="@Model.UserID" />
+                        <img src="~/Uploads/@Model.userProfileImage" style="height:250px;width:100%" />
+                    </div>
+
+
+
+                    <div class="details">
+                        <br />
+                        <br />
+                        <h3>@Model.userName</h3>
+                        <p>@Model.TblUser.Email</p>
+                    </div>
+
+                    <div class="Edit">
+                        <a href="@Url.Action("profileEdit", "Account")" class="btn custom-orange-button py-3 px-5">Edit</a>
+
+                    </div>
+                    <br />
+                </div>
+            </div>
         </div>
-
-        <div class="col-lg-6">
-            <h3>@Model.userName</h3>
-            <p>@Model.TblUser.Email</p>
-         
-        </div>
-
-        <div>
-            <p><a href="@Url.Action("profileEdit", "Account")" class="btn btn-primary">Edit</a></p>
-
-        </div>
-    </div>
+    </div> 
 </div>
 
 

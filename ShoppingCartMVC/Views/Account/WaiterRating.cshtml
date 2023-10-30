@@ -3,7 +3,7 @@
     <title>Turbo Meals Waiter Rating</title>
     <style>
         .card {
-            border: 3px solid #04d47a;
+            border: 3px solid grey;
         }
 
         .form-group {
@@ -15,15 +15,51 @@
             grid-template-columns: repeat(3, 2fr);
             gap: 10px;
         }
+
+        .details {
+            text-align: left; /* Align details text to the left */
+        }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
+
+        .btn-dark {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+
+        .smaller-textbox {
+            width: 150px; /* Adjust the width to your preference */
+            justify-content: center;
+        }
+
+        .center-textbox {
+            text-align: center !important;
+            margin-left: 230px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
 <br />
 
-<h2 class="card-title" style="text-align:center"><u> Rate </u></h2>
+<h1 class="card-title" style="text-align:center"><u> Rate Waiter</u></h1>
 <div class="col-sm-6 mx-auto">
     <div class="card">
         <div class="card-body">
+            <h3 style="color:red;">@TempData["msg"]</h3>
+            <br />
             @using (Html.BeginForm("WaiterRating", "Account", FormMethod.Post))
             {
                 <div class="form-horizontal">
@@ -32,11 +68,11 @@
                         <img src="~/Uploads/@Model.WaiterImage" style="height:250px;width:100%" />
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="details">
                         <h3>@Model.WaiterName</h3>
-                        <p>@Model.WaiterEmail</p>
+                        <p>Email: @Model.WaiterEmail</p>
 
-                        <p>Current Avg Rating: <h2><strong>@Model.WaiterAvgRating</strong></h2></p>
+                        <p>Current Avg Rating: <span><strong>@Model.WaiterAvgRating <span class="fas fa-star"></span></strong> </span></p>
                     </div>
 
                     <div class="form-group">
@@ -57,20 +93,26 @@
                     <div class="form-group">
                         <span>Your Tip:</span>
                         <div class="radio-group">
-                            @Html.RadioButtonFor(model => model.IsCustomTip, true) Custom Amount
-                            <br />
-                            @Html.RadioButtonFor(model => model.IsCustomTip, false) No Tip
-                            @Html.TextBoxFor(model => model.CustomTip, new { @class = "form-control" })
+                            <span> @Html.RadioButtonFor(model => model.IsCustomTip, true) Custom Amount</span>
+                            &ensp; &ensp;
+                            <span> @Html.RadioButtonFor(model => model.IsCustomTip, false) No Tip</span>
+
+                            <div class="center-textbox">
+                                @Html.TextBoxFor(model => model.CustomTip, new { @class = "form-control smaller-textbox" })
+                            </div>
                         </div>
                     </div>
+                    <br />
 
-                    <div class="form-group" style="display: flex;">
-                        <input type="submit" value="Proceed" class="btn btn-success" />
-                        &ensp;
-                        <a href="@Url.Action("Index", "Home")" class="btn btn-dark">Home</a>
+                    <div class="form-group" style="text-align:center;">
+                        <input type="submit" value="Proceed" class="btn custom-orange-button  py-3 px-5" style="display: inline-block;" />
+                        <p style="display: inline; margin-left: 10px;">
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-dark  py-3 px-5">Home</a>
+                        </p>
+
                     </div>
                 </div>
-                <p>@TempData["msg"]</p>
+               
             }
         </div>
     </div>

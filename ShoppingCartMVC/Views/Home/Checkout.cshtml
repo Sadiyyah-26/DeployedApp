@@ -17,8 +17,21 @@
         .text-center {
             color: black;
         }
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
+            .custom-orange-button:hover {
+                background-color: darkorange;
+                color: white;
+            }
     </style>
 </head>
+<br />
 <div class="container">
     @if (TempData["total"] == null)
     {
@@ -29,7 +42,7 @@
     {
 
         <div class="row">
-
+            <br />
             <div class="col-md-12 ftco-animate fadeInUp ftco-animated">
                 <div class="cart-list">
                     <h3>Total Item : @TempData["item_count"]</h3>
@@ -57,7 +70,7 @@
                                     <td class="product-remove"><a href="@Url.Action("remove", "Home", new { id = item.proid })"><span class="fa fa-remove fa-1x"></span></a></td>
 
                                     <td class="product-name">
-                                        <h3>@item.proname</h3>
+                                        @item.proname
 
                                     </td>
 
@@ -88,10 +101,10 @@
         <div class="row justify-content-end">
             <div class="col-lg-4 mt-5 cart-wrap ftco-animate fadeInUp ftco-animated">
                 <div class="cart-total mb-3">
-                    <h3>Cart Total</h3>
+                    Cart Total
                     <hr>
                     <p class="d-flex total-price">
-                        <span>Total</span>
+                        <span class="total">Total</span>
                         <span id="totalValue">R @TempData["total"].00</span>
                     </p>
                 </div>
@@ -137,7 +150,7 @@
 
                     <br />
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Delivery Method :</h5>
@@ -154,7 +167,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Payment Method:</h5>
@@ -169,8 +182,8 @@
 
 
                     <br />
-                    <input type="submit" value="Checkout" class="btn btn-primary py-3 px-4" />
-                    <a href="@Url.Action("ReserveOrder", "Home")" class="btn btn-primary">Reserve Order</a>
+                    <input type="submit" value="Checkout" class="btn custom-orange-button py-3 px-5" />
+                    <a href="@Url.Action("ReserveOrder", "Home")" class="btn custom-orange-button py-3 px-5">Reserve Order</a>
                     <br />
 
 
