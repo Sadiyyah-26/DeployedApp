@@ -180,6 +180,12 @@
                 line-height: 2;
                 width: 70%; /* Increase the width to make the info field longer */
             }
+
+        .btn-lg {
+            font-size: 18px; /* Adjust the font size as needed */
+            padding: 15px 25px; /* Adjust the padding as needed to make the button larger */
+        }
+
     </style>
 </head>
 <body>
@@ -202,6 +208,7 @@
                 <li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>
                 @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
                 <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fa-solid fa-money-bill-transfer"></i>&ensp; Withdrawals</a></li>
+                <li><a href="@Url.Action("Tips", "Home")"><i class="fa-solid fa-coins"></i>&ensp;Tips</a></li>
                 <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fa-solid fa-right-from-bracket"></i>&ensp;Discrepancy </a></li>
                 <!-- Add more links as needed -->
             </ul>
@@ -242,7 +249,8 @@
                             @Html.TextBox("ChangeTakenOut", null, new { @class = "form-control" })
                         </div>
 
-                        <input type="submit" name="WithdrawAction" value="Withdraw" class="btn btn-primary" />
+                        <input type="submit" name="WithdrawAction" value="Withdraw" class="btn btn-primary btn-lg" />
+
                     }
                 </div>
                 <div class="dashboard-container">
