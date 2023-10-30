@@ -673,6 +673,7 @@
     <Content Include="Views\Home\Transactions.cshtml" />
     <Content Include="Views\Home\Withdrawals.cshtml" />
     <Content Include="Views\Home\Discrepancy.cshtml" />
+    <Content Include="Views\Home\Tips.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

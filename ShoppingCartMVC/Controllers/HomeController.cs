@@ -16,7 +16,7 @@ using System.Net;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.Threading.Tasks;
-
+using Microsoft.Owin.Security;
 
 namespace ShoppingCartMVC.Controllers
 {
@@ -2782,10 +2782,10 @@ namespace ShoppingCartMVC.Controllers
 
         #region AdminHandling
 
-        public ActionResult AdminCashFloat()
-        {
-            return View();
-        }
+        //public ActionResult AdminCashFloat()
+        //{
+        //    return View();
+        //}
 
         [HttpPost]
         public ActionResult SaveCashFloatAdmin(tblCashFloat cashFloat)
@@ -2825,14 +2825,171 @@ namespace ShoppingCartMVC.Controllers
 
         #endregion
 
+        public ActionResult AdminCashFloat()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                // Retrieve the cash float for the current day
+                var currentDay = DateTime.Now.Date;
+                var cashFloat = context.tblCashFloats
+                    .Where(c => c.Date == currentDay)
+                    .FirstOrDefault();
+
+                decimal totalCashPaymentsAdmin = CalculateTotalCashPaymentsAdmin(); // Calculate total cash payments
+                decimal totalCashPaymentsWaiter = CalculateTotalCashPaymentsWaiter();
+                decimal totalCashFloatWaiter = GetCashFloatWaiter();
+                decimal totalCashFloatAdmin = GetCashFloatAdmin();
+                decimal totalCardPaymentsAdmin = CalculateTotalCardPaymentsAdmin();
+                decimal totalCardPaymentsWaiter = CalculateTotalCardPaymentsWaiter();
+                decimal totalCashRevenue = CalculateTotalCashRevenue();
+                decimal totalCardRevenue = CalculateTotalCardRevenue();
+                decimal totalFunds = TotalFunds();
+
+                if (cashFloat != null)
+                {
+                    // Pass the cash float and total cash payments for the current day to the view
+                    ViewBag.CashFloat = cashFloat;
+                    ViewBag.TotalCashPaymentsAdmin = totalCashPaymentsAdmin;
+                    ViewBag.TotalCashPaymentsWaiter = totalCashPaymentsWaiter;
+                    ViewBag.TotalCashFloatWaiter = totalCashFloatWaiter;
+                    ViewBag.TotalCashFloatAdmin = totalCashFloatAdmin;
+                    ViewBag.TotalCardPaymentsAdmin = totalCardPaymentsAdmin;
+                    ViewBag.TotalCardPaymentsWaiter = totalCardPaymentsWaiter;
+                    ViewBag.TotalCashRevenue = totalCashRevenue;
+                    ViewBag.TotalCardRevenue = totalCardRevenue;
+                    ViewBag.TotalFunds = totalFunds;
+                    return View(cashFloat);
+                }
+            }
+
+            // If there's no cash float for the current day, pass a new CashFloat object and the total cash payments
+            ViewBag.TotalCashPaymentsAdmin = CalculateTotalCashPaymentsAdmin();
+            ViewBag.TotalCashPaymentsWaiter = CalculateTotalCashPaymentsWaiter();
+            ViewBag.TotalCashFloatWaiter = GetCashFloatWaiter();
+            ViewBag.TotalCashFloatAdmin = GetCashFloatAdmin();
+            ViewBag.TotalCardPaymentsAdmin = CalculateTotalCardPaymentsAdmin();
+            ViewBag.TotalCardPaymentsWaiter = CalculateTotalCardPaymentsWaiter();
+            ViewBag.TotalCashRevenue = CalculateTotalCashRevenue();
+            ViewBag.TotalCardRevenue = CalculateTotalCardRevenue();
+            ViewBag.TotalFunds = TotalFunds();
+            return View(new tblCashFloat());
+        }
+
+        public decimal CalculateTotalCashPaymentsAdmin()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                decimal totalCashPaymentsAdmin = context.tblInvoices
+                    .Where(i => i.Payment == "Cash" && i.Payment_Status == "Paid")
+                    .Sum(i => i.Bill) ?? 0;
+
+                return totalCashPaymentsAdmin;
+            }
+        }
+
+        public decimal CalculateTotalCashPaymentsWaiter()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                decimal totalCashPaymentsWaiter = context.TblInStoreOrders
+                    .Where(order => order.PayMethod == "Cash")
+                    .Sum(order => (decimal?)order.Total) ?? 0;
+
+                return totalCashPaymentsWaiter;
+            }
+        }
+
+
+        public decimal GetCashFloatAdmin()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                DateTime currentDate = DateTime.Today;
+                decimal cashFloatForCurrentDayAdmin = context.tblCashFloats
+                    .Where(cf => cf.Date == currentDate)
+                    .Select(cf => (decimal?)cf.Amount)
+                    .FirstOrDefault() ?? 0;
+
+                return cashFloatForCurrentDayAdmin;
+            }
+        }
+        public decimal GetCashFloatWaiter()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                DateTime currentDate = DateTime.Today;
+                decimal cashFloatForCurrentDay = context.tblCashFloats
+                    .Where(cf => cf.Date == currentDate)
+                    .Select(cf => (decimal?)cf.Amount)
+                    .FirstOrDefault() ?? 0;
+
+                return cashFloatForCurrentDay;
+            }
+        }
+
+        public decimal CalculateTotalCardPaymentsAdmin()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                decimal totalCardPaymentsAdmin = context.tblInvoices
+                    .Where(i => i.Payment == "Card" && i.Payment_Status == "Paid")
+                    .Sum(i => i.Bill) ?? 0;
+
+                return totalCardPaymentsAdmin;
+            }
+        }
+        public decimal CalculateTotalCardPaymentsWaiter()
+        {
+            using (var context = new dbOnlineStoreEntities())
+            {
+                decimal totalCardPaymentsWaiter = context.TblInStoreOrders
+                    .Where(order => order.PayMethod == "Card")
+                    .Sum(order => (decimal?)order.Total) ?? 0;
+
+                return totalCardPaymentsWaiter;
+            }
+        }
+
+        public decimal CalculateTotalCashRevenue()
+        {
+            decimal totalCashRevenue = CalculateTotalCashPaymentsAdmin() + CalculateTotalCashPaymentsWaiter();
+            return totalCashRevenue;
+
+        }
+
+        public decimal CalculateTotalCardRevenue()
+        {
+            decimal totalCardRevenue = CalculateTotalCardPaymentsAdmin() + CalculateTotalCardPaymentsWaiter();
+            return totalCardRevenue;
+
+        }
+        public decimal TotalFunds()
+        {
+            decimal total = CalculateTotalCashRevenue() + CalculateTotalCardRevenue() + GetCashFloatAdmin() + GetCashFloatWaiter();
+            return total;
+
+        }
+
+        public decimal Profit()
+        {
+            decimal total = CalculateTotalCashRevenue() + CalculateTotalCardRevenue() + GetCashFloatAdmin() + GetCashFloatWaiter();
+            return total;
+
+        }
+
+
         #region WaiterCashDrawer
 
         public ActionResult CashDrawer()
         {
-            // Get the last record from tblCashFloat (you need to implement this logic)
-            var lastCashFloat = db.tblCashFloats.OrderByDescending(cf => cf.Date).FirstOrDefault();
+            List<Transactions> transaction;
 
-            return View(lastCashFloat);
+            using (var context = new dbOnlineStoreEntities())
+            {
+                transaction = context.tblTransactions.ToList();
+            }
+
+            return View(transaction);
         }
         
         public JsonResult GetCurrentFloatAmount()
@@ -2918,6 +3075,18 @@ namespace ShoppingCartMVC.Controllers
             }
 
             return View(transaction);
+        }
+
+        public ActionResult Tips()
+        {
+            List<tblEmployee> tips;
+
+            using (var context = new dbOnlineStoreEntities())
+            {
+                tips = context.tblEmployees.Where(e => e.Tips != 0).ToList();
+            }
+
+            return View(tips);
         }
 
         //public ActionResult ShortageFloat()

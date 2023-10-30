@@ -1,5 +1,5 @@
 ﻿
-@model List<ShoppingCartMVC.Models.Transactions>
+@model List<ShoppingCartMVC.Models.tblEmployee>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -190,7 +190,6 @@
             <h2>Drawer</h2>
             <ul>
                 <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fa-sharp fa-solid fa-cash-register"></i> &ensp;Initialize Float</a></li>
-                @*<li><a href="@Url.Action("AdminChange", "Home")"><i class="fas fa-utensils"></i> Collect Change</a></li>*@
                 @*<li><a href="@Url.Action("CollectedChange", "Home")"><i class="fas fa-utensils"></i> Collect Order Change</a></li>*@
                 <li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>
                 @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
@@ -205,54 +204,45 @@
         <div class="main_content">
             <div class="header">CashDrawer</div>
             <div class="info">
-                @*@using (Html.BeginForm("SaveCashFloatAdmin", "Home", FormMethod.Post))
-                    {
+                @*<div class="search-form">
+                    <form action="@Url.Action("SearchCashFloat", "Home")" method="post">
                         @Html.AntiForgeryToken()
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.Amount)
-                            @Html.TextBoxFor(model => model.Amount, new { @class = "form-control" })
-
+                            @Html.Label("Search by Date")
+                            @Html.TextBox("searchDate", null, new { @class = "form-control", type = "date" })
                         </div>
 
-
-
-                        <input type="submit" name="SaveAction" value="Proceed" class="btn btn-primary" />
-
-
-                    }*@
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>*@
                 <div class="dashboard-container">
                     <table class="dashboard-table">
                         <tr>
-                            <th>TransactionID</th>
-                            <th>FloatID</th>
-                            <th>Time</th>
-                            <th>Transaction</th>
-                            <th>InStoreOrderID</th>
-                            <th>OnlineOrderID</th>
-                            <th>User</th>
-                            <th>Current Balance</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Closing Balance</th>
+                            <th>EmployeeID</th>
+                            <th>EmployeeName</th>
+                            <th>Image</th>
+                            <th>Tip Amount</th>
+
 
                             <!-- Add more columns as needed -->
                         </tr>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.TransactionID</td>
-                                <td>@item.FloatID</td>
-                                <td>@item.TransactionTime</td>
-                                <td>@item.Transaction</td>
-                                <td>@item.InStoreOrderID</td>
-                                <td>@item.OnlineOrderID</td>
-                                <td>@item.UserName</td>
-                                <td>@item.Current</td>
-                                <td>@item.Credit</td>
-                                <td>@item.Debit</td>
-                                <td>@item.ClosingBalance</td>
-
+                                <td>@item.EmpId</td>
+                                <td>@item.EmpName</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.EmpImage))
+                                    {
+                                        <img src="~/Uploads/@item.EmpImage" class="img-fluid" style="height: 100px" alt="@item.EmpName's Image">
+                                    }
+                                    else
+                                    {
+                                        <span>No Image Available</span>
+                                    }
+                                </td>
+                                <td>@item.Tips</td>
                                 <!-- Add more columns as needed -->
                             </tr>
                         }
