@@ -1,82 +1,266 @@
-﻿@model ShoppingCartMVC.Models.tblCashFloat
+﻿
+@model List<ShoppingCartMVC.Models.Transactions>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CashDrawer</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <style>
+        @@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 
-@{
-    ViewBag.Title = "CashDrawer";
-}
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-<style>
-    .row {
-        margin: 0; /* Remove margin to move the row to the left */
-    }
-
-    /* Style for the left sidebar */
-    .sidebar {
-        height: 100%;
-        width: 250px;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #00008B;
-        padding-top: 20px;
-    }
-
-        /* Style for the sidebar links */
-        .sidebar a {
-            padding: 15px 25px;
-            text-align: center;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
             text-decoration: none;
-            font-size: 20px;
-            color: #ffffff; /* Text color white */
-            background-color: #00008B; /* Blue background */
-            display: block;
+            font-family: 'Roboto', sans-serif; /* Use the Roboto font for a professional look */
         }
 
-            .sidebar a:hover {
-                background-color: #333;
+        body {
+            background-color: #f3f5f9;
+        }
+
+        /*.wrapper {
+            display: flex;
+            position: relative;
+        }
+
+            .wrapper .sidebar {
+                width: 260px;
+                height: 100%;
+                background: #343a40;
+                padding: 30px 0px;
+                position: fixed;
             }
 
-    /* Style for the main content area */
-    .content {
-        margin-left: 260px;
-        padding: 20px;
-    }
-</style>
+                .wrapper .sidebar h2 {
+                    color: #fff;
+                    text-transform: uppercase;
+                    text-align: center;
+                    margin-bottom: 30px;
+                    font-weight: 700;*/ /* Use a bold font weight for headings */
+                /*}
 
-<br />
-<br />
-<br />
-<br />
+                .wrapper .sidebar ul li {
+                    padding: 15px;
+                    border-bottom: 1px solid #bdb8d7;
+                    border-bottom: 1px solid rgba(0,0,0,0.05);
+                    border-top: 1px solid rgba(255,255,255,0.05);
+                }
 
-<div class="container">
-    <!--<div class="row">-->
+                    .wrapper .sidebar ul li a {
+                        color: #fff;
+                        display: block;
+                    }
+
+                        .wrapper .sidebar ul li a .fas {
+                            width: 25px;
+                        }
+
+                    .wrapper .sidebar ul li:hover {
+                        background-color: #717171;
+                    }
+
+                        .wrapper .sidebar ul li:hover a {
+                            color: #fff;
+                        }
+
+                .wrapper .sidebar .social_media {
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                }
+
+                    .wrapper .sidebar .social_media a {
+                        display: block;
+                        width: 40px;
+                        background: #594f8d;
+                        height: 40px;
+                        line-height: 45px;
+                        text-align: center;
+                        margin: 0 5px;
+                        color: #bdb8d7;
+                        border-top-left-radius: 5px;
+                        border-top-right-radius: 5px;
+                    }
+
+            .wrapper .main_content {
+                width: calc(100% - 250px);
+                margin-left: 250px;
+            }
+
+                .wrapper .main_content .header {
+                    padding: 20px;
+                    background: #fff;
+                    color: #717171;
+                    border-bottom: 1px solid #e0e4e8;
+                    font-weight: 700;*/ /* Use a bold font weight for headings */
+                /*}
+
+                .wrapper .main_content .info {
+                    margin: 20px;
+                    color: #717171;
+                    line-height: 25px;
+                }
+
+                    .wrapper .main_content .info div {
+                        margin-bottom: 20px;
+                    }*/
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns */
+            gap: 20px;
+            padding: 50px;
+        }
+
+        /* Blue border */
+        .dashboard-block.blue {
+            border-left: 6px solid #007bff;
+        }
+
+        /* Orange border */
+        .dashboard-block.orange {
+            border-left: 6px solid #FFA500;
+        }
+
+        /* Green border */
+        .dashboard-block.green {
+            border-left: 6px solid #008000;
+        }
+
+        .dashboard-block {
+            padding: 30px; /* Increased padding for wider blocks */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f2f2f2;
+            border-radius: 9px; /* Increased border radius */
+        }
+
+        .dashboard-icon {
+            font-size: 36px; /* Larger font size for icons */
+            margin-right: 15px; /* Increased margin */
+        }
+
+        .dashboard-big-text {
+            font-size: 30px;
+            margin-top: 10px; /* Add some spacing between the texts */
+        }
+
+        .dashboard-container {
+            padding: 50px;
+        }
+
+        .dashboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .dashboard-table th,
+            .dashboard-table td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }
+
+            .dashboard-table th {
+                background-color: #f2f2f2;
+            }
+
+            .dashboard-table tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .dashboard-table td {
+                line-height: 2;
+                width: 70%; /* Increase the width to make the info field longer */
+            }
+    </style>
+</head>
+<body>
+
+    <!--<div class="wrapper">
         <!-- Left Sidebar Navigation -->
-        <!--<div class="col-md-3 sidebar">
-            <a href="#" class="list-group-item">
-                <i class="fas fa-list"></i> Dashboard
-            </a>
-            <a href="#" class="list-group-item">
-                <i class="fas fa-utensils"></i> WaiterMenu
-            </a>
-            <a href="#" class="list-group-item">
-                <i class="fas fa-money"></i> GenerateBill
-            </a>
-            <a href="#" class="list-group-item">
-                <i class="fas fa-table"></i> Reserve Table
-            </a>-->
-            <!-- Add more links as needed -->
-        <!--</div>-->
+        <!--<div class="sidebar">
+            <h2>Drawer</h2>
+            <ul>
+                <li><a href="@Url.Action("AdminCashFloat", "Home")"><i class="fa-sharp fa-solid fa-cash-register"></i> &ensp;Initialize Float</a></li>-->
+                @*<li><a href="@Url.Action("AdminChange", "Home")"><i class="fas fa-utensils"></i> Collect Change</a></li>*@
+                @*<li><a href="@Url.Action("CollectedChange", "Home")"><i class="fas fa-utensils"></i> Collect Order Change</a></li>*@
+                <!--<li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>-->
+                @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
+                @*<li><a href="@Url.Action("Withdrawals", "Home")"><i class="fa-solid fa-money-bill-transfer"></i>&ensp; Withdrawals</a></li>
+                <li><a href="@Url.Action("Tips", "Home")"><i class="fa-solid fa-coins"></i>&ensp;Tips</a></li>
+                <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fa-solid fa-right-from-bracket"></i>&ensp;Discrepancy </a></li>-->*@
+                <!-- Add more links as needed -->
+            <!--</ul>
+        </div>-->
 
         <!-- Main Content Area -->
-        <div class="col-md-9 content">
-            <h2>CashDrawer</h2>
+        <div class="main_content">
+            @*<div class="header">CashDrawer</div>*@
+            <div class="info">
+                @*@using (Html.BeginForm("SaveCashFloatAdmin", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
 
-            <div class="form-group">
-                <label for="currentAmount">Current Amount in Drawer:</label>
-                <label id="currentAmount" class="form-control">@Model.Amount</label>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Amount)
+                            @Html.TextBoxFor(model => model.Amount, new { @class = "form-control" })
+
+                        </div>
+
+
+
+                        <input type="submit" name="SaveAction" value="Proceed" class="btn btn-primary" />
+
+
+                    }*@
+                <div class="dashboard-container">
+                    <table class="dashboard-table">
+                        <tr>
+                            <th>TransactionID</th>
+                            <th>FloatID</th>
+                            <th>Time</th>
+                            <th>Transaction</th>
+                            <th>InStoreOrderID</th>
+                            <th>OnlineOrderID</th>
+                            <th>User</th>
+                            <th>Current Balance</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Closing Balance</th>
+
+                            <!-- Add more columns as needed -->
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.TransactionID</td>
+                                <td>@item.FloatID</td>
+                                <td>@item.TransactionTime</td>
+                                <td>@item.Transaction</td>
+                                <td>@item.InStoreOrderID</td>
+                                <td>@item.OnlineOrderID</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Current</td>
+                                <td>@item.Credit</td>
+                                <td>@item.Debit</td>
+                                <td>@item.ClosingBalance</td>
+
+                                <!-- Add more columns as needed -->
+                            </tr>
+                        }
+                    </table>
+                </div>
+
             </div>
         </div>
-    </div>
-
-
+    @*</div>*@
+</body>
+</html>

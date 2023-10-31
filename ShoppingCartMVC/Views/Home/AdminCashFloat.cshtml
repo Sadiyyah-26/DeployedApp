@@ -197,6 +197,7 @@
                 <li><a href="@Url.Action("Transactions", "Home")"><i class="fa-sharp fa-solid fa-table-cells"></i> &ensp;POS Transactions</a></li>
                 @*<li><a href="@Url.Action("AllocateTips", "Home")"><i class="fas fa-money"></i> Allocate Tips</a></li>*@
                 <li><a href="@Url.Action("Withdrawals", "Home")"><i class="fa-solid fa-money-bill-transfer"></i>&ensp; Withdrawals</a></li>
+                <li><a href="@Url.Action("Tips", "Home")"><i class="fa-solid fa-coins"></i>&ensp;Tips</a></li>
                 <li><a href="@Url.Action("Discrepancy", "Home")"><i class="fa-solid fa-right-from-bracket"></i>&ensp;Discrepancy </a></li>
                 <!-- Add more links as needed -->
             </ul>
@@ -205,6 +206,7 @@
         <!-- Main Content Area -->
         <div class="main_content">
             &ensp;&ensp;<div class="header">Initialize Cash Drawer Float</div>
+            @*<p id="floatAmountLabel">Float Amount: R 0.00</p>*@
             <div class="info">
                 @using (Html.BeginForm("SaveCashFloatAdmin", "Home", FormMethod.Post))
                 {
