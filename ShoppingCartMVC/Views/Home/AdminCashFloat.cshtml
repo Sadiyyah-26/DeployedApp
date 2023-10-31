@@ -182,6 +182,15 @@
                 line-height: 2;
                 width: 70%; /* Increase the width to make the info field longer */
             }
+
+        .btn-lg {
+            font-size: 18px; /* Adjust the font size as needed */
+            padding: 15px 25px; /* Adjust the padding as needed to make the button larger */
+        }
+        .shorter-input {
+            width: 200px;
+        }
+
     </style>
 </head>
 <body>
@@ -207,81 +216,83 @@
         <div class="main_content">
             &ensp;&ensp;<div class="header">Initialize Cash Drawer Float</div>
             @*<p id="floatAmountLabel">Float Amount: R 0.00</p>*@
-            <div class="info">
-                @using (Html.BeginForm("SaveCashFloatAdmin", "Home", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
+        <div class="info">
+            @using (Html.BeginForm("SaveCashFloatAdmin", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <br />
+                <div class="form-group">
+                    <h1 style="font-size: 20px; color: gray;">How much is currently in the drawer today?</h1>
                     <br />
-                    <div class="form-group">
-                        <h1 style="font-size: 20px; color: gray;">How much is currently in the drawer today?</h1>
-                        <br />
-                        @Html.LabelFor(model => model.Amount)
-                        @Html.TextBoxFor(model => model.Amount, new { @class = "form-control" })
-
-                    </div>
+                    @Html.LabelFor(model => model.Amount)
+                    @Html.TextBoxFor(model => model.Amount, new { @class = "form-control shorter-input" })
 
 
-
-                    <input type="submit" name="SaveAction" value="Proceed" class="btn btn-primary" />
-
-
-                }
-                <div class="dashboard-container">
-                    <!-- Left Table -->
-                    <table class="dashboard-table">
-                        <tr>
-                            <th>Cash Flow</th>
-                            <th>Amounts</th>
-                        </tr>
-                        <tr>
-                            <td>Cash Float Admin Drawer</td>
-                            <td>R @ViewBag.TotalCashFloatAdmin.00</td>
-                        </tr>
-                        <tr>
-                            <td>Cash Float Waiter Drawer</td>
-                            <td>R @ViewBag.TotalCashFloatWaiter.00</td>
-                        </tr>
-                        <tr>
-                            <td>Cash Sales Revenue Admin: Cash collected from cash on delivery and collection orders</td>
-                            <td>R @ViewBag.TotalCashPaymentsAdmin.00</td>
-                        </tr>
-                        <tr>
-                            <td>Cash Sales Revenue Waiter : Cash collected from in-store orders</td>
-                            <td>R @ViewBag.TotalCashPaymentsWaiter.00</td>
-                        </tr>
-                        <tr>
-                            <td>Card Sales Revenue Admin </td>
-                            <td>R @ViewBag.TotalCardPaymentsAdmin.00</td>
-                        </tr>
-                        <tr>
-                            <td>Card Sales Revenue Waiter</td>
-                            <td>R @ViewBag.TotalCardPaymentsWaiter.00</td>
-                        </tr>
-                    </table>
-
-
-                    <table class="dashboard-table">
-                        <tr>
-                            <th>Cash Flow</th>
-                            <th>Amounts</th>
-                        </tr>
-                        <tr>
-                            <td>Current Cash Revenue (Cash Drawers)</td>
-                            <td>R @ViewBag.TotalCashRevenue.00</td>
-                        </tr>
-                        <tr>
-                            <td>Current Card Revenue (Bank Account)</td>
-                            <td>R @ViewBag.TotalCardRevenue.00</td>
-                        </tr>
-                        <tr>
-                            <td>Turbo Meals Total Revenue</td>
-                            <td>R @ViewBag.TotalFunds.00</td>
-                        </tr>
-                        <!-- Add more sections as needed -->
-                    </table>
                 </div>
 
+
+
+                <input type="submit" name="SaveAction" value="Proceed" class="btn btn-primary btn-lg" />
+
+
+
+            }
+            <div class="dashboard-container">
+                <!-- Left Table -->
+                <table class="dashboard-table">
+                    <tr>
+                        <th>Cash Flow</th>
+                        <th>Amounts</th>
+                    </tr>
+                    <tr>
+                        <td>Cash Float Admin Drawer</td>
+                        <td>R @ViewBag.TotalCashFloatAdmin.00</td>
+                    </tr>
+                    <tr>
+                        <td>Cash Float Waiter Drawer</td>
+                        <td>R @ViewBag.TotalCashFloatWaiter.00</td>
+                    </tr>
+                    <tr>
+                        <td>Cash Sales Revenue Admin: Cash collected from cash on delivery and collection orders</td>
+                        <td>R @ViewBag.TotalCashPaymentsAdmin.00</td>
+                    </tr>
+                    <tr>
+                        <td>Cash Sales Revenue Waiter : Cash collected from in-store orders</td>
+                        <td>R @ViewBag.TotalCashPaymentsWaiter.00</td>
+                    </tr>
+                    <tr>
+                        <td>Card Sales Revenue Admin </td>
+                        <td>R @ViewBag.TotalCardPaymentsAdmin.00</td>
+                    </tr>
+                    <tr>
+                        <td>Card Sales Revenue Waiter</td>
+                        <td>R @ViewBag.TotalCardPaymentsWaiter.00</td>
+                    </tr>
+                </table>
+
+
+                <table class="dashboard-table">
+                    <tr>
+                        <th>Cash Flow</th>
+                        <th>Amounts</th>
+                    </tr>
+                    <tr>
+                        <td>Current Cash Revenue (Cash Drawers)</td>
+                        <td>R @ViewBag.TotalCashRevenue.00</td>
+                    </tr>
+                    <tr>
+                        <td>Current Card Revenue (Bank Account)</td>
+                        <td>R @ViewBag.TotalCardRevenue.00</td>
+                    </tr>
+                    <tr>
+                        <td>Turbo Meals Total Revenue</td>
+                        <td>R @ViewBag.TotalFunds.00</td>
+                    </tr>
+                    <!-- Add more sections as needed -->
+                </table>
             </div>
+
+        </div>
         </div>
     </div>
 </body>

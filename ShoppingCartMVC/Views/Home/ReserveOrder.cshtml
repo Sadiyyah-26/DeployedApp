@@ -31,6 +31,15 @@
         .text-center{
             color:white;
         }
+
+        .custom-orange-button {
+            background-color: orange; /* Set your desired shade of orange */
+            color: white; /* Set the text color to contrast with the background */
+            font-size: 20px; /* Set the font size to your preference */
+            font-weight: bold; /* Make the text bold if desired */
+            border: none;
+        }
+
     </style>
 </head>
 
@@ -165,23 +174,24 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Reservation.Date, new { @class = "col-sm-2 col-form-label" })
- 
                                 <span class="word-with-space"></span>
-                                <br />
                                 <br />
                                 <div class="col-sm-10">
                                     @Html.EditorFor(model => model.Reservation.Date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                                     @Html.ValidationMessageFor(model => model.Reservation.Date, "", new { @class = "text-danger" })
                                 </div>
                             </div>
+
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Reservation.Time, new { @class = "col-sm-2 col-form-label" })
-    
+                                <span class="word-with-space"></span>
+                                <br />
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(model => model.Reservation.Time, new { @class = "form-control", @type = "time", @id = "timeInput", @value = "08:00" }) <!-- Set an initial value in "HH:mm" format -->
                                     @Html.ValidationMessageFor(model => model.Reservation.Time, "", new { @class = "text-danger" })
                                 </div>
                             </div>
+                            <br />
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Payment Method</h5>
@@ -220,7 +230,7 @@
                             <!-- Submit Button -->
                             <div class="form-group row">
                                 <div class="col-sm-10">
-                                    <input type="submit" value="Reserve Order" class="btn btn-primary" />
+                                    <a href="@Url.Action("ReserveOrder", "Home")" class="btn custom-orange-button py-3 px-5">Reserve Order</a>
                                 </div>
                             </div>
 

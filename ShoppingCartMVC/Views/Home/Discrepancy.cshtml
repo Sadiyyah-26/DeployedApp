@@ -186,6 +186,11 @@
                 width: 70%; /* Adjust the width as needed */
                 font-weight: normal; /* Use 'normal' or 'bold' based on your preference */
             }
+        .btn-lg {
+            font-size: 18px; /* Adjust the font size as needed */
+            padding: 15px 25px; /* Adjust the padding as needed to make the button larger */
+        }
+
     </style>
 </head>
 <body>
@@ -235,7 +240,8 @@
                             @Html.TextBox("CountedBalance", null, new { @class = "form-control" })
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Report Discrepancy</button>
+                        <button type="submit" class="btn btn-primary btn-lg">Report Discrepancy</button>
+
                     }
                 </div>
                 <div class="dashboard-container">
