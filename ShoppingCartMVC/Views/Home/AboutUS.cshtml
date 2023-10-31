@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "AboutUS";
+}
+
+<style>
+    /* Style for the "About US" text */
+    .about-heading {
+        font-family: 'Georgia', serif; /* Use a serif font for an elegant look */
+        font-size: 36px; /* Font size */
+        color: #333; /* Dark gray color */
+        text-align: center;
+        margin-top: 20px;
+        text-transform: uppercase; /* Uppercase text */
+        border: 5px solid #333; /* Thick border */
+        padding: 10px 20px; /* Padding inside the border */
+        border-radius: 10px; /* Rounded corners */
+        display: inline-block;
+    }
+
+    /* Style for the video container */
+    .video-container {
+        text-align: center;
+        margin: 0 auto;
+        max-width: 800px;
+        padding: 20px;
+        margin-left: 100px;
+        /* border: 2px solid #333;*/ /* Add a dark gray border */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Drop shadow */
+    }
+</style>
+
+<h2 style="background-color: rgb(255, 106, 0); color: #fff; padding: 10px; text-align: center; font-size: 50px; font-weight: bold;">About Us</h2>
+<div class="video-container">
+    <video id="myVideo" controls width="1500" height="1000">
+        <source src="~/Images/Turbo Meals (1).mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<script>
+    var video = document.getElementById("myVideo");
+
+    // Function to open fullscreen mode
+    function openFullscreen() {
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen();
+        }
+    }
+
+    // Automatically open video in full screen when the page loads
+    openFullscreen();
+</script>
+<br />
+<br />
+<br />
+<br />

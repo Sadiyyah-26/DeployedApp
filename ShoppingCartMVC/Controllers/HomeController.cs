@@ -3423,5 +3423,10 @@ namespace ShoppingCartMVC.Controllers
             return 0; // Return 0 or any other default value if not found
         }
         #endregion
+
+        public ActionResult AboutUS()
+        {
+            return View();
+        }
     }
 }
