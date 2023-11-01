@@ -249,7 +249,7 @@
                     {
 
                         <li class="nav-item active"><a href="@Url.Action("Index","Home")" class="nav-link"><span class="fas fa-hamburger"></span> Menu</a></li>
-                        <li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fas fa-info-circle"></span> About us</a></li>
+                        @*<li class="nav-item"><a href="@Url.Action("About","Home")" class="nav-link"><span class="fas fa-info-circle"></span> About us</a></li>*@
                         <li class="nav-item"><a href="@Url.Action("Turbo_Deals","Home")" class="nav-link"><span class="fas fa-tags"></span> Turbo Deals</a></li>
                         <li class="nav-item"><a href="@Url.Action("Login","Account")" class="nav-link"><span class="fas fa-sign-in-alt"></span> Log In</a></li>
                         <li class="nav-item"><a href="@Url.Action("Register", "Account")" class="nav-link"><span class="fas fa-registered"></span> Register</a></li>
@@ -301,7 +301,7 @@
                             <li class="nav-item"><a href="@Url.Action("Index", "tblRefunds")" class="nav-link">@*<span class="fa fa-list"></span>*@ Refunds</a></li>
                             <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link">@*<span class="fa fa-list"></span>*@ Reservation</a></li>
                             <li class="nav-item"><a href="@Url.Action("DonationDetails", "Donations")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Donation</a></li>
-                            <li class="nav-item"><a href="@Url.Action("Dashboard", "Home")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Dashboard</a></li>
+                            <!--<li class="nav-item"><a href="@Url.Action("Dashboard", "Home")" class="nav-link">-->@*<span class="fa fa-envelope"></span>*@ <!--Dashboard</a></li>-->
                             <li class="nav-item"><a href="@Url.Action("AdminCashFloat", "Home")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Drawer</a></li>
                             <li class="nav-item"><a href="@Url.Action("Chat", "LiveChat")" class="nav-link">@*<span class="fa fa-envelope"></span>*@ Chat</a></li>
                             <li class="nav-item"><a href="@Url.Action("AccProfile", "Account")" class="nav-link"> Profile</a></li>
@@ -312,7 +312,7 @@
                         {
 
                             <li class="nav-item "><span class="nav-link">Welcome @Session["User"]</span></li>
-                            <li class="nav-item"><a href="@Url.Action("AboutUS", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-video"></span>About us</a></li>
+                            @*<li class="nav-item"><a href="@Url.Action("AboutUS", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-video"></span>About us</a></li>*@
                             <li class="nav-item"><a href="@Url.Action("OrderDetail", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-history"></span> Order History</a></li>
                             <li class="nav-item"><a href="@Url.Action("Refund", "Home", new { id = @Session["uid"] })" class="nav-link"><span class="fas fa-undo"></span>Refunds</a></li>
                             // <li class="nav-item"><a href="@Url.Action("GetAllReservations", "Home")" class="nav-link"><span class="fa fa-list"></span>View Reservations</a></li>
@@ -429,8 +429,9 @@
                             <ul>
                                 <li><a href="@Url.Action("Index", "Home")">Home</a></li>
                                 <li><a href="@Url.Action("Index", "Home")">Menu</a></li>
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Reviews</a></li>
+                                @*<li><a href="#">About us</a></li>*@
+                                <li><a href="@Url.Action("Reviews","Home")"> Reviews</a></li>
+                                @*<li><a href="#">Reviews</a></li>*@
                                 <li><a href="@Url.Action("Login", "Account")">Login</a></li>
                                 <li><a href="@Url.Action("Register", "Account")">Register</a></li>
                             </ul>
@@ -440,9 +441,10 @@
                             <ul>
                                 <li><a href="@Url.Action("Contact", "Home")">Contact us</a></li>
                                 <li><a href="@Url.Action("Login", "Account")">Order</a></li>
-                                <li><a href="#">Payment</a></li>
-                                <li><a href="#">Delivery</a></li>
-                                <li><a href="#">payment options</a></li>
+                                <li><a href="@Url.Action("Bot", "Bot")">Chat Bot</a></li>
+                                @*<li><a href="#">Payment</a></li>
+        <li><a href="#">Delivery</a></li>
+        <li><a href="#">payment options</a></li>*@
                             </ul>
                         </div>
                         <div class="footer-col">
